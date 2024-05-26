@@ -56,3 +56,7 @@ server/live-stream-server/live-snaphots/target/
 mobile/
 
 server/rating-server/target/
+server/file-server/.env
+server/search-server/users_index
+server/rating-server/.env
+server/search-server/.env
