@@ -1,0 +1,58 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+cklient-web/node_modules
+cklient-web/.pnp
+cklient-web/.pnp.js
+cklient-web/.vscode
+
+server/main-backend/node_modules
+server/main-backend/.pnp
+server/main-backend/.pnp.js
+
+
+# next.js
+cklient-web/.next/
+cklient-web/out/
+
+# production
+cklient-web/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+
+# vercel
+cklient-web/.vercel
+
+# typescript
+cklient-web/*.tsbuildinfo
+cklient-web/next-env.d.ts
+
+server/main-backend/*.tsbuildinfo
+server/main-backend/.env
+server/main-backend/next-env.d.ts
+
+server/.mvn
+server/.vscode
+
+server/video-categorize-server/src/model
+server/video-categorize-server/src/data_images
+server/accounts/
+.svn/
+
+server/updateHistoryTables-server/target/
+server/live-stream-server/live-auth-server/target/
+server/live-stream-server/live-snaphots/target/
+mobile/
+
+server/rating-server/target/

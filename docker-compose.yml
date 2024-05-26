@@ -1,0 +1,24 @@
+version: '4.15'
+
+# !FOR DEPLOYMENT ONLY
+services:
+  nextjs:
+    build: ./client-web
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client-web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+  main-backend:
+    build: ./server/main-backend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client-web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev  
