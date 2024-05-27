@@ -3,18 +3,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //* MySql Config
-const MYSQL_HOST = process.env.MYSQL_HOST || '0.0.0.0';
-const MYSQL_DATABASE = process.env.MYSQL_DATABASE || 'gh_platform_db';
-const MYSQL_USER = process.env.MYSQL_USER || 'root';
-const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || 'root';
+const POSTGRESQL_HOST = process.env.POSTGRESQL_HOST || '0.0.0.0';
+const POSTGRESQL_DATABASE = process.env.POSTGRESQL_DATABASE || 'app_db';
+const POSTGRESQL_USER = process.env.POSTGRESQL_USER || 'root';
+const POSTGRESQL_PASSWORD = process.env.POSTGRESQL_PASSWORD || 'root';
 
-const MYSQL = {
-    host: MYSQL_HOST,
-    user: MYSQL_USER,
-    password: MYSQL_PASSWORD,
-    database: MYSQL_DATABASE,
+const POSTGRESQL = {
+    host: POSTGRESQL_HOST,
+    user: POSTGRESQL_USER,
+    password: POSTGRESQL_PASSWORD,
+    database: POSTGRESQL_DATABASE,
 };
-
 
 //* API config
 const SERVER_HSOTNAME = process.env.SERVER_HSOTNAME || 'localhost';
@@ -26,7 +25,7 @@ const SERVER = {
 };
 
 const config = {
-    mysql: MYSQL,
+    pg: POSTGRESQL,
     server: SERVER,
 };
 

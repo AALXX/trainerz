@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "0.0.0.0",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "trainerz_db",
+            "group": "serbvn",
+            "database": "trainerz_db",
+            "username": "alx"
+        }
+    ]
+}

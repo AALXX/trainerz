@@ -2,7 +2,7 @@ const NAMESPACE = 'TestServices';
 
 import { Response } from 'express';
 import { validationResult } from 'express-validator';
-import { CustomRequest, query } from '../../config/mysql';
+import { CustomRequest, query } from '../../config/postgresql';
 import logging from '../../config/logging';
 
 /**

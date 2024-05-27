@@ -51,7 +51,7 @@ const NavBar = () => {
             </div>
 
             <h1
-                className="self-center z-20 cursor-pointer text-white"
+                className="self-center z-20 cursor-pointer text-white ml-8"
                 onMouseEnter={() => {
                     setIsOpen(true)
                 }}

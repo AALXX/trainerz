@@ -21,4 +21,19 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-    command: npm run dev  
+    command: npm run dev
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: alx
+      POSTGRES_PASSWORD: serbvn
+      POSTGRES_DB: trainerz_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres-data:

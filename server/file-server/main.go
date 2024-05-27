@@ -34,7 +34,7 @@ func safeFileServer(dir string, db *sql.DB) http.Handler {
 		// Check if the requested file exists.
 		fileInfo, err := os.Stat(requestedPath)
 		if os.IsNotExist(err) {
-			http.ServeFile(w, r, "./AccountIcon.png")
+			http.ServeFile(w, r, "./AccountIcon.svg")
 
 			return
 		}
