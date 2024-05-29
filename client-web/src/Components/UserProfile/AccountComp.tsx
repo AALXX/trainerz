@@ -40,8 +40,10 @@ const AccountProfileComp = () => {
     useEffect(() => {
         /**
          * Get user profile Data
-         */ ;(async () => {
+         */
+        ;(async () => {
             const profileData = await getProfileData(userToken)
+
             setUserData(profileData.userData)
         })()
     }, [userToken])

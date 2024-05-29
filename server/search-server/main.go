@@ -20,6 +20,11 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
+	// Get the server host from the environment variable
+	serverHost := os.Getenv("SERVER_HOST")
+	if serverHost == "" {
+		log.Fatalf("SERVER_HOST environment variable not set")
+	}
 
 	// Specify the folder path you want to delete
 	folderPath := "users_index/"
@@ -71,5 +76,6 @@ func main() {
 	routes.InitRoutes(router, db, index)
 
 	// Start the server
-	router.Run("172.31.5.46:7300")
+	router.Run(serverHost)
+
 }

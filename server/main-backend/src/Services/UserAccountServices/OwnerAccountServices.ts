@@ -121,16 +121,16 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
             //     name: req.body.userName,
             // });
 
-            // const resp = await axios.post(`${process.env.SEARCH_SERVER}/index-user`, {
-            //     UserName: req.body.userName,
-            //     UserPrivateToken: userPrivateToken,
-            //     AccountType: req.body.accountType,
-            //     Sport: req.body.sport,
-            // });
+            const resp = await axios.post(`${process.env.SEARCH_SERVER}/index-user`, {
+                UserName: req.body.userName,
+                UserPrivateToken: userPrivateToken,
+                AccountType: req.body.accountType,
+                Sport: req.body.sport,
+            });
 
-            // if (resp.data.error == true) {
-            //     console.log('error');
-            // }
+            if (resp.data.error == true) {
+                logging.error('REGISTER_USER_FUNC', 'failed to index user');
+            }
 
             // Create a transporter with Gmail SMTP configuration
             const transporter = nodemailer.createTransport({
@@ -314,8 +314,116 @@ const GetUserAccountData = async (req: CustomRequest, res: Response) => {
     }
 };
 
+/**
+ * Checks if the account owner is valid for the given private token.
+ *
+ * @param {CustomRequest} req - The custom request object containing the account private token.
+ * @param {Response} res - The response object to send the result.
+ * @return {Response} A JSON response with the user data if the account owner is valid, or an error if the account owner is not valid or an error occurs.
+ */
+const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('CHECK_ACCOUNT_OWNER', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return { error: true };
+        }
+
+        const GetUserDataQueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken = '${req.body.accountPrivateToken}' AND UserPublicToken='${req.body.accountPublicToken}';`;
+
+        const data = await query(connection, GetUserDataQueryString);
+        if (Object.keys(data).length === 0) {
+            return res.status(200).json({
+                error: false,
+                isOwner: false,
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            isOwner: true,
+        });
+    } catch (error: any) {
+        logging.error(NAMESPACE, error.message);
+
+        res.status(202).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+/**
+ * Change  users data
+ * @param {CustomRequest} req
+ * @param {Response} res
+ * @return {Response}
+ */
+const ChangeUserData = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('CHANGE_ACCOUNT_DATA_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return { error: true };
+        }
+        const changeUserDataSQL = `UPDATE users SET 
+        UserName='${req.body.userName}', 
+        Description='${req.body.userDescription}',
+        UserEmail='${req.body.userEmail}', 
+        Sport='${req.body.sport}',
+        AccountPrice='${req.body.price}',
+        AccountType='${req.body.accountType}',
+        userVisibility='${req.body.userVisibility}' WHERE UserPrivateToken='${req.body.userPrivateToken}';`;
+        await query(connection, changeUserDataSQL);
+
+        const searchServerResp = await axios.post(`${process.env.SEARCH_SERVER}/update-indexed-user`, {
+            UserName: req.body.userName,
+            UserPrivateToken: req.body.userPrivateToken,
+            Sport: req.body.sport,
+            AccountType: req.body.accountType,
+        });
+
+        if (searchServerResp.data.error === true) {
+            return res.status(202).json({
+                error: true,
+            });
+        }
+
+        return res.status(202).json({
+            error: false,
+        });
+    } catch (error: any) {
+        logging.error(NAMESPACE, error.message);
+
+        res.status(202).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
 export default {
     RegisterUser,
     LoginUser,
     GetUserAccountData,
+    ChangeUserData,
+    CheckAccountOwner,
 };

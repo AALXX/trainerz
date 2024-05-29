@@ -8,10 +8,13 @@
         "start": "next start",
         "lint": "next lint"
     },
+    "type": "module",
     "dependencies": {
+        "@million/lint": "^1.0.0-rc.13",
         "@types/react-datepicker": "^6.2.0",
         "axios": "^1.7.2",
         "cookies-next": "^4.2.1",
+        "million": "^3.1.6",
         "next": "14.2.3",
         "react": "^18",
         "react-datepicker": "^6.9.0",

@@ -33,8 +33,8 @@ const accRegisterFunc = async (
         locationLat,
         locationLon
     })
-
     if (!res.data.error && res.data.userprivateToken != null) {
+        window.alert("an error has ocurred")
         setCookie('userToken', res.data.userprivateToken, { maxAge: 60 * 6 * 24 })
         setCookie('userPublicToken', res.data.userpublictoken, { maxAge: 60 * 6 * 24 })
         return true

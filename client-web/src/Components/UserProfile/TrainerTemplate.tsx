@@ -1,8 +1,11 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IUserData } from './IAccountProfile'
 import { getCookie } from 'cookies-next'
 import ProfileCards from './util/ProfileTabCards'
+import { ownerCheck } from '@/Auth-Security/Security'
+import PopupCanvas from '../CommonUi/util/PopupCanvas'
+import AccoutSettingsPopup from './util/UserAccountSettings'
 
 /**
  * Renders a template for a user's trainer profile.
@@ -11,12 +14,17 @@ import ProfileCards from './util/ProfileTabCards'
  */
 const TrainerTemplate = (props: IUserData) => {
     const [componentToShow, setComponentToShow] = useState<string>('LandingPage')
+    const [isOwner, setIsOwner] = useState<boolean>(false)
+
+    const [ToggledSettingsPopUp, setToggledSettingsPopUp] = useState(false)
+    const [ToggledIconChangePopUp, setToggledIconChangePopUp] = useState(false)
+
+    const [isAccIconHovered, setIsAccIconHovered] = useState(false)
 
     const renderComponent = () => {
         switch (componentToShow) {
             case 'LandingPage':
                 return <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 "></div>
-                break
             case 'Videos':
                 return (
                     <div>
@@ -28,16 +36,21 @@ const TrainerTemplate = (props: IUserData) => {
                     </div>
                 )
 
-                break
             case 'About':
                 return <h1>test</h1>
-                // return <AboutChanelTab userDescription={userData.UserDescription} />
-                break
+            // return <AboutChanelTab userDescription={userData.UserDescription} />
 
             default:
                 return <div>No matching component found</div>
         }
     }
+
+    useEffect(() => {
+        ;(async () => {
+            setIsOwner(await ownerCheck())
+        })()
+    }, [])
+
     return (
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-col  w-full h-44">
@@ -45,7 +58,21 @@ const TrainerTemplate = (props: IUserData) => {
                     <div className="flex w-60 self-center h-32 ">
                         <img className="z-10 rounded-full w-24 h-24 self-center " src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png`} alt="Picture of the author" />
                         <div className="self-center w-full ml-2">
-                            <h1 className="text-white mb-1">{props.username}</h1>
+                            {isOwner ? (
+                                <div className="flex ">
+                                    <h1 className="text-white mb-1">{props.username}</h1>
+                                    <img
+                                        className="z-10  w-5 h-5 self-center ml-auto text-white cursor-pointer"
+                                        src={`/assets/AccountIcons/Settings_icon.svg`}
+                                        alt="Picture of the author"
+                                        onClick={() => {
+                                            setToggledSettingsPopUp(!ToggledSettingsPopUp)
+                                        }}
+                                    />
+                                </div>
+                            ) : (
+                                <h1 className="text-white mb-1">{props.username}</h1>
+                            )}
                             <hr className="self-center w-full bg-white h-[0.1rem] " />
                             <h1 className="text-white mt-1">{props.accountfolowers} Folowers</h1>
                         </div>
@@ -56,7 +83,7 @@ const TrainerTemplate = (props: IUserData) => {
                             {props.rating == null ? (
                                 <>
                                     <h1 className="self-center ml-auto mr-2 text-white">0/5</h1>
-                                    <img className="z-10  w-10 h-10 self-center mr-4 text-white" src={`/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
+                                    <img className="z-10  w-10 h-10 self-center mr-4 text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
                                 </>
                             ) : (
                                 <>
@@ -78,6 +105,23 @@ const TrainerTemplate = (props: IUserData) => {
                 <ProfileCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} />
             </div>
             <hr className="w-sfull bg-white h-[0.1rem] " />
+            {ToggledSettingsPopUp ? (
+                <PopupCanvas
+                    closePopup={() => {
+                        setToggledSettingsPopUp(!ToggledSettingsPopUp)
+                    }}
+                >
+                    <AccoutSettingsPopup
+                        AccountPrice={props.accountprice}
+                        Sport={props.sport}
+                        AccountType={props.accounttype}
+                        UserName={props.username}
+                        UserEmail={props.useremail}
+                        UserVisibility="public"
+                        UserDescription={props.description}
+                    />
+                </PopupCanvas>
+            ) : null}
             <div className="w-full flex">{renderComponent()}</div>
         </div>
     )

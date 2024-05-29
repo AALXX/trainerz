@@ -22,3 +22,14 @@ export interface IProfileCards {
     TabName: string
     setComponentToShow: Dispatch<SetStateAction<string>>
 }
+
+
+export interface IAccoutSettingsPopup {
+    UserName: string
+    UserEmail: string
+    UserVisibility: string
+    UserDescription: string
+    Sport: string
+    AccountType: string
+    AccountPrice?: number
+}

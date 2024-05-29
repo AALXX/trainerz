@@ -281,7 +281,7 @@ export default function LoginRegisterScreen() {
                             <div className="flex flex-col self-center w-[85%] mt-[1.5rem]">
                                 <h1 className="text-white">Email</h1>
                                 <input
-                                    className=" h1-[#ffffff] mt-[1vh] bg-[#474084] h-[6vh] border-none rounded-xl w-full placeholder:text-white indent-3"
+                                    className=" h1-[#ffffff] mt-[1vh] bg-[#474084] h-[6vh] border-none rounded-xl w-full placeholder:text-white indent-3 text-white"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setLoginEmail(e.target.value)
                                     }}
@@ -293,7 +293,7 @@ export default function LoginRegisterScreen() {
                             <div className="flex flex-col self-center w-[85%] mt-[2rem]">
                                 <h1 className="text-white">Password</h1>
                                 <input
-                                    className=" h1-[#ffffff] mt-[1vh] bg-[#474084] h-[6vh] rounded-xl border-none w-full placeholder:text-white indent-3"
+                                    className=" h1-[#ffffff] mt-[1vh] text-white bg-[#474084] h-[6vh] rounded-xl border-none w-full placeholder:text-white indent-3"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setLoginPassword(e.target.value)
                                     }}
@@ -303,9 +303,20 @@ export default function LoginRegisterScreen() {
                                 />
                             </div>
                         </div>
+                        <button
+                            className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl"
+                            onClick={async e => {
+                                e.preventDefault()
+                                const succesfullLogin = await accLoginFunc(loginEmail, loginPassword)
+                                if (succesfullLogin) {
+                                    router.replace('/account')
+                                }
+                            }}
+                        >
+                            <h1 className="self-center text-white text-lg">Log Into Account!</h1>
+                        </button>
                         <div className="flex flex-col mt-auto w-full mb-4">
                             <div className="bg-white w-[100%] h-[.1rem] mb-2" />
-                            <input type="submit" value={'Log Into Account'} className="text-white cursor-pointer text-lg mt-auto`" />
                             <button>
                                 <h1
                                     className="text-[#9c9c9c]"
@@ -327,7 +338,6 @@ export default function LoginRegisterScreen() {
                         <div className="flex items-center h-[70%] w-[100%] flex-col">{renderComponent()}</div>
                         <div className="flex flex-col mt-auto w-full mb-4">
                             <div className="bg-white w-[100%] h-[.1rem] mb-2" />
-                            <input type="submit" value={'Log Into Account'} className="text-white cursor-pointer text-lg mt-auto`" />
                             <button>
                                 <h1
                                     className="text-[#9c9c9c]"
