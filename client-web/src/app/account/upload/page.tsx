@@ -21,10 +21,10 @@ const UploadPage = () => {
             {userLoggedIn ? (
                 <UploadComopnent />
             ) : (
-                <div>
-                    <h1>Account Not Found</h1>
-                    <Link href={'/account/login-register'}>
-                        <h1>Go TO LOGIN</h1>
+                <div className="flex w-full flex-col">
+                    <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
+                    <Link className="self-center" href={'/account/login-register'}>
+                        <h1 className="text-white">Login!</h1>
                     </Link>
                 </div>
             )}

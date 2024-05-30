@@ -106,7 +106,7 @@ export default function LoginRegisterScreen() {
                             <h1 className="h1-sm text-white">I train / i want to learn sport</h1>
                             <OptionPicker
                                 label="Select Sport"
-                                options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Other']}
+                                options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Bodybuilding', 'Other']}
                                 value={sport}
                                 onChange={value => setSport(value)}
                             />

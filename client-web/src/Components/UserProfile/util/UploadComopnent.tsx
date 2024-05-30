@@ -1,7 +1,8 @@
 'use client'
+import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import axios from 'axios'
 import { getCookie } from 'cookies-next'
-import React, { SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 interface IClipProps {
     url: string
@@ -40,10 +41,15 @@ const Clip = ({ url, videoRef, canvasRef }: IClipProps) => {
     )
 }
 
-const UploadComopnent = () => {
+const UploadComponent = () => {
     //* Video attributes states
     const [videoTitle, setvideoTitle] = useState<string>('')
     const [videoVisibility, setvideoVisibility] = useState<string>('public')
+    const [price, setPrice] = useState(0)
+    const [customPrice, setCustomPrice] = useState<boolean>(false)
+    const [videoWidth, setVideoWidth] = useState<number>(0)
+    const [videoHeight, setVideoHeight] = useState<number>(0)
+    const [sport, setSport] = useState<string>('')
 
     //* Video object states
     const [videoFile, setvideoFile] = useState<FileList | null>(null)
@@ -62,6 +68,38 @@ const UploadComopnent = () => {
     //* Upload Progress State
     const [progress, setProgress] = useState(0)
 
+    useEffect(() => {
+        const handleLoadedMetadata = () => {
+            if (videoRef.current) {
+                setVideoWidth(videoRef.current.videoWidth)
+                setVideoHeight(videoRef.current.videoHeight)
+            }
+        }
+
+        const videoElement = videoRef.current
+        if (videoElement) {
+            videoElement.addEventListener('loadedmetadata', handleLoadedMetadata)
+        }
+
+        return () => {
+            if (videoElement) {
+                videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata)
+            }
+        }
+    }, [ObjectUrl])
+
+    const dataURLtoFile = (dataurl: string, filename: string) => {
+        const arr = dataurl.split(',')
+        const mime = arr[0].match(/:(.*?);/)![1]
+        const bstr = atob(arr[1])
+        let n = bstr.length
+        const u8arr = new Uint8Array(n)
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n)
+        }
+        return new File([u8arr], filename, { type: mime })
+    }
+
     //* Uploads Video to server
     const uploadFile = async () => {
         if (videoFile![0] == null) {
@@ -70,14 +108,21 @@ const UploadComopnent = () => {
 
         const userToken: string = getCookie('userToken') as string
 
-        console.log(videoFile![0])
 
         const formData = new FormData()
         formData.append('VideoFile', videoFile![0])
         formData.append('VideoThumbnail', thumbnalFile!)
+        formData.append('VideoSport', sport)
+        formData.append('width', videoWidth.toString())
+        formData.append('height', videoHeight.toString())
         formData.append('VideoTitle', videoTitle)
         formData.append('VideoVisibility', videoVisibility)
         formData.append('UserPrivateToken', userToken)
+        if (customPrice) {
+            formData.append('Price', price.toString())
+        } else {
+            formData.append('Price', '0')
+        }
 
         const config = {
             headers: { 'content-type': 'multipart/formdata' },
@@ -103,22 +148,25 @@ const UploadComopnent = () => {
         // Ensure the video and canvas elements are loaded
         if (!videoRef.current || !canvasRef.current) return
 
-        const maxFrame = videoRef.current?.duration // Maximum time in the video
-        const scale = 0.21
+        const maxFrame = videoRef.current.duration // Maximum time in the video
+        const randomTime = Math.random() * maxFrame // Generate a random time in the video
 
-        // Generate a random time in the video
-        const randomTime = Math.random() * maxFrame
-        videoRef.current.currentTime = 2 * 60
-        const context = canvasRef.current.getContext('2d')
+        videoRef.current.currentTime = randomTime // Seek to the random time
 
-        // Draw the frame on the canvas
-        context?.drawImage(videoRef.current, 0, 0, videoRef.current.videoWidth * scale * 1.12, videoRef.current.videoHeight * scale)
-        // Convert the frame to a data URL (base64 image)
-        const frameData = canvasRef.current.toDataURL('image/jpeg')
-        // const thumbnailImage: SetStateAction<File | null> = UtilFunctions.dataURLtoFile(frameData, 'DefaultThumbnail.jpg')
-        // Set the captured frames in the state
-        setCapturedFrame(frameData)
-        // setThumbnalFile(thumbnailImage)
+        videoRef.current.onseeked = () => {
+            const context = canvasRef.current!.getContext('2d')
+            const scale = 0.21
+
+            // Draw the frame on the canvas
+            context?.drawImage(videoRef.current!, 0, 0, videoRef.current!.videoWidth * scale * 1.12, videoRef.current!.videoHeight * scale)
+            // Convert the frame to a data URL (base64 image)
+            const frameData = canvasRef.current!.toDataURL('image/jpeg')
+            // Convert the data URL to a File object
+            const thumbnailImage = dataURLtoFile(frameData, 'thumbnail.jpg')
+            // Set the captured frame and thumbnail file in the state
+            setCapturedFrame(frameData)
+            setThumbnalFile(thumbnailImage)
+        }
     }
 
     // *Creates a Url for preview video
@@ -191,7 +239,7 @@ const UploadComopnent = () => {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="flex flex-row items-center w-[100%] h-[19rem] ">
+            <div className="flex flex-row items-center w-[100%] h-[24rem] ">
                 <label htmlFor="VideoFile" className="flex border-2 border-white border-solid w-[20rem] h-[10rem] ml-[3vw] cursor-pointer">
                     <input
                         type="file"
@@ -205,36 +253,40 @@ const UploadComopnent = () => {
                                 captureFrame()
                             }, 300)
                         }}
-                        accept=".mov,.mp4,.mkv"
+                        accept=".mov, .mp4, .mkv"
                     />
                     <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="m-auto w-[7rem] h-[2rem]" />
                 </label>
-                <div className="flex w-[100%] h-[52%] flex-col items-center">
-                    <div className="relative h-[1.2rem] w-[62%] bg-[#292929] m-auto overflow-x-hidden rounded">
+                <div className="flex w-[100%]  flex-col items-center">
+                    <div className="relative h-[1.2rem] w-[60%] bg-[#292929] m-auto overflow-x-hidden rounded">
                         <div className="absolute h-[100%] rounded bg-blue-500" style={{ width: `${progress}%` }} />
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center w-[60%]">
                         <input
-                            className="bg-[#414141] border-hidden w-[20rem] text-white mt-[2vh] text-center"
+                            className="text-white mt-4 bg-[#474084] h-10 border-none rounded-xl w-full placeholder:text-white indent-3"
                             type="text"
-                            placeholder="Video Title"
+                            placeholder="Video title"
                             onChange={e => {
                                 setvideoTitle(e.target.value)
                             }}
+                            value={videoTitle}
                         />
 
-                        <select name="videoVisibility" onChange={e => setvideoVisibility(e.target.value)} value={videoVisibility} className="w-[20rem] mt-[2vh] bg-[#414141] text-white border-hidden">
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                        </select>
-
-                        <button
-                            className="text-white mt-5 bg-[#414141] w-[20rem]"
-                            onClick={async () => {
-                                await uploadFile()
-                            }}
-                        >
-                            Upload
+                        <div className="flex w-full flex-col self-center  mt-4">
+                            <h1 className="h1-sm text-white">Video Visibility</h1>
+                            <OptionPicker label="Video Visibility" options={['Public', 'Private']} value={videoVisibility} onChange={value => setvideoVisibility(value)} />
+                        </div>
+                        <div className="flex w-full flex-col self-center  mt-2">
+                            <h1 className="h1-sm text-white">Video Sport</h1>
+                            <OptionPicker
+                                label="Video Sport"
+                                options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Bodybuilding', 'Other']}
+                                value={sport}
+                                onChange={value => setSport(value)}
+                            />
+                        </div>
+                        <button className="self-center w-full h-10 bg-[#474084] active:bg-[#3b366c]  mb-4 mt-2  justify-center rounded-xl" onClick={async () => await uploadFile()}>
+                            <h1 className="self-center text-white text-lg">Upload Video!</h1>
                         </button>
                     </div>
                 </div>
@@ -261,4 +313,4 @@ const UploadComopnent = () => {
     )
 }
 
-export default UploadComopnent
+export default UploadComponent

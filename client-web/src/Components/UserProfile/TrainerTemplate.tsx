@@ -1,11 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { IUserData } from './IAccountProfile'
+import { IUserData, IVideoTemplate } from './IAccountProfile'
 import { getCookie } from 'cookies-next'
 import ProfileCards from './util/ProfileTabCards'
 import { ownerCheck } from '@/Auth-Security/Security'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
 import AccoutSettingsPopup from './util/UserAccountSettings'
+import axios from 'axios'
+import VideoTamplate from './util/VideoCardTemplate'
 
 /**
  * Renders a template for a user's trainer profile.
@@ -15,6 +17,7 @@ import AccoutSettingsPopup from './util/UserAccountSettings'
 const TrainerTemplate = (props: IUserData) => {
     const [componentToShow, setComponentToShow] = useState<string>('LandingPage')
     const [isOwner, setIsOwner] = useState<boolean>(false)
+    const [videosData, setVideosData] = useState<Array<IVideoTemplate>>([])
 
     const [ToggledSettingsPopUp, setToggledSettingsPopUp] = useState(false)
     const [ToggledIconChangePopUp, setToggledIconChangePopUp] = useState(false)
@@ -28,11 +31,22 @@ const TrainerTemplate = (props: IUserData) => {
             case 'Videos':
                 return (
                     <div>
-                        {/* <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 ">
-                            {videosData.map((video: IVideoTemplateProps, index: number) => (
-                                <VideoTamplate key={index} VideoTitle={video.VideoTitle} VideoToken={video.VideoToken} Likes={video.Likes} Dislikes={video.Dislikes} />
+                        <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                            {videosData.map((video: IVideoTemplate, index: number) => (
+                                <VideoTamplate
+                                    key={index}
+                                    videotitle={video.videotitle}
+                                    dislikes={video.dislikes}
+                                    likes={video.likes}
+                                    ownertoken={video.ownertoken}
+                                    publishdate={video.publishdate}
+                                    sportname={video.sportname}
+                                    videoprice={video.videoprice}
+                                    videotoken={video.videotoken}
+                                    visibility={video.visibility}
+                                />
                             ))}
-                        </div> */}
+                        </div>
                     </div>
                 )
 
@@ -47,6 +61,9 @@ const TrainerTemplate = (props: IUserData) => {
 
     useEffect(() => {
         ;(async () => {
+            const resp = await axios.get(`${process.env.SERVER_BACKEND}/videos-manager/get-account-videos/${getCookie('userPublicToken')}`)
+            console.log(resp.data)
+            setVideosData(resp.data.VideosData)
             setIsOwner(await ownerCheck())
         })()
     }, [])
@@ -122,7 +139,7 @@ const TrainerTemplate = (props: IUserData) => {
                     />
                 </PopupCanvas>
             ) : null}
-            <div className="w-full flex">{renderComponent()}</div>
+            {renderComponent()}
         </div>
     )
 }

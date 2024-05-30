@@ -2,8 +2,8 @@ import http from 'http';
 import express, { NextFunction } from 'express';
 
 //* imports from route folder
-import TestManager from '../routes/Test/TestManagerRoutes';
 import UserAccountManagerRoutes from '../routes/UserAccountManager/UserAccountManagerRoutes';
+import VideosManagerRoutes from '../routes/VideosManager/VideosManagerRoutes';
 
 //* Configs
 import config from '../config/config';
@@ -33,8 +33,8 @@ router.use((req: any, res: any, next: NextFunction) => {
 });
 
 //* Routes
-router.use('/api/tets-masnager/', TestManager);
 router.use('/api/user-account-manager/', UserAccountManagerRoutes);
+router.use('/api/videos-manager/', VideosManagerRoutes);
 
 //* Error Handleling
 router.use((req: any, res: any, next: NextFunction) => {

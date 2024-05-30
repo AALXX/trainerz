@@ -77,7 +77,7 @@ const checkEmailExists = async (pool: Pool, userEmail: string): Promise<boolean>
  */
 const getUserPrivateTokenFromPublicToken = async (pool: Pool, userToken: string): Promise<string | null> => {
     const NAMESPACE = 'GET_USER_PRIVATE_TOKEN_FUNC';
-    const QueryString = `SELECT UserPrivateToken FROM users WHERE UserPublicToken="${userToken}";`;
+    const QueryString = `SELECT UserPrivateToken FROM users WHERE UserPublicToken='${userToken}';`;
 
     try {
         if (userToken === 'undefined') {
@@ -104,7 +104,7 @@ const getUserPrivateTokenFromPublicToken = async (pool: Pool, userToken: string)
 
 const getUserEmailFromPrivateToken = async (pool: Pool, userPrivateToken: string): Promise<string | null> => {
     const NAMESPACE = 'GET_USER_EMAIL_FUNC';
-    const QueryString = `SELECT UserEmail FROM users WHERE UserPrivateToken="${userPrivateToken}";`;
+    const QueryString = `SELECT UserEmail FROM users WHERE UserPrivateToken='${userPrivateToken}';`;
 
     try {
         if (userPrivateToken === 'undefined') {
@@ -130,7 +130,7 @@ const getUserEmailFromPrivateToken = async (pool: Pool, userPrivateToken: string
 
 const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: string): Promise<string | null> => {
     const NAMESPACE = 'GET_USER_PRIVATE_TOKEN_FUNC';
-    const QueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken="${userPrivateToken}" ;`;
+    const QueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken='${userPrivateToken}';`;
 
     try {
         if (userPrivateToken === 'undefined') {
@@ -144,7 +144,7 @@ const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: 
 
         const resp = await query(connection, QueryString);
         if (Object.keys(resp).length != 0) {
-            return resp[0].UserPublicToken;
+            return resp[0].userpublictoken;
         } else {
             return null;
         }
@@ -156,7 +156,7 @@ const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: 
 
 const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: string): Promise<number | null> => {
     const NAMESPACE = 'GET_USER_ROLE_FUNCTION';
-    const QueryString = `SELECT RoleCategoryId FROM channel_roles_alloc WHERE UserPrivateToken="${userToken}" AND ChannelToken="${chanelPublicToken}";`;
+    const QueryString = `SELECT RoleCategoryId FROM channel_roles_alloc WHERE UserPrivateToken='${userToken}' AND ChannelToken='${chanelPublicToken}';`;
 
     try {
         if (userToken === 'undefined') {
@@ -181,7 +181,7 @@ const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: str
 
 const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanelPublicToken: string): Promise<{ isBanned: boolean; reason?: string }> => {
     const NAMESPACE = 'CHECK_USER_BAN_FUNCTION';
-    const QueryString = `SELECT * FROM blocked_list WHERE UserToken="${userPrivateToken}" AND CreatorToken="${chanelPublicToken}";`;
+    const QueryString = `SELECT * FROM blocked_list WHERE UserToken='${userPrivateToken}' AND CreatorToken='${chanelPublicToken}';`;
     try {
         if (userPrivateToken === 'undefined') {
             return {
@@ -216,7 +216,7 @@ const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanel
 
 const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPublicToken: string): Promise<boolean> => {
     const NAMESPACE = 'USER_FOLLOW_CHECK_FUNCTION';
-    const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken="${userToken}" AND accountToken="${accountPublicToken}";`;
+    const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken='${userToken}' AND accountToken='${accountPublicToken}';`;
 
     try {
         if (userToken === 'undefined') {
@@ -260,7 +260,7 @@ const CreateVideoToken = (): string => {
 
 const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
-    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken="${userToken}" AND videoToken="${VideoToken}";`;
+    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken='${userToken} AND videoToken='${VideoToken}';`;
 
     try {
         if (userToken === 'undefined') {
@@ -286,7 +286,7 @@ const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoT
 
 const getUserLikedOrDislikedStream = async (pool: Pool, userToken: string, StreamToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
-    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_stream_class WHERE userToken="${userToken}" AND StreamToken="${StreamToken}";`;
+    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_stream_class WHERE userToken='${userToken}' AND StreamToken='${StreamToken}';`;
 
     try {
         if (userToken === 'undefined') {
@@ -374,7 +374,7 @@ const CheckIfLive = async (pool: Pool, userPrivateToken: string, LiveToken: stri
         if (UserPublicToken == null) {
             return { isLive: false, error: true };
         }
-        const StatALiveQueryString = `SELECT id, Active FROM streams WHERE UserPublicToken="${UserPublicToken}" AND StreamToken="${LiveToken}"`;
+        const StatALiveQueryString = `SELECT id, Active FROM streams WHERE UserPublicToken=${UserPublicToken}' AND StreamToken='${LiveToken}';`;
 
         const results = await query(connection, StatALiveQueryString);
         const data = JSON.parse(JSON.stringify(results));

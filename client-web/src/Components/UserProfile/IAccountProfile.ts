@@ -4,7 +4,7 @@ export interface IUserData {
     username: string
     description: string
     birthDate: Date
-    accountfolowers:number,
+    accountfolowers: number
     locationlon: string
     locationlat: string
     sport: string
@@ -23,7 +23,6 @@ export interface IProfileCards {
     setComponentToShow: Dispatch<SetStateAction<string>>
 }
 
-
 export interface IAccoutSettingsPopup {
     UserName: string
     UserEmail: string
@@ -32,4 +31,16 @@ export interface IAccoutSettingsPopup {
     Sport: string
     AccountType: string
     AccountPrice?: number
+}
+
+export interface IVideoTemplate {
+    videotoken: string
+    ownertoken: string
+    videotitle: string
+    publishdate: Date
+    videoprice: Date
+    likes: number
+    dislikes: number
+    sportname: string
+    visibility: string
 }
