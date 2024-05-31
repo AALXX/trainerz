@@ -12,18 +12,19 @@ router.get('/get-video-data/:VideoToken/:UserPrivateToken', param('VideoToken').
 
 // *Video Owner related
 router.get('/get-account-videos/:UserPublicToken', param('UserPublicToken').not().isEmpty().trim(), OwnerVideoServices.GetAccountVideos);
-// router.get('/get-creator-video-data/:UserPrivateToken/:VideoToken', param('VideoToken').not().isEmpty(), AccountVideoServices.GetCreatorVideoData);
+router.get('/get-creator-video-data/:UserPrivateToken/:VideoToken', param('VideoToken').not().isEmpty(), OwnerVideoServices.GetCreatorVideoData);
 router.post('/upload-video', OwnerVideoServices.UploadVideoFileToServer);
-// router.post(
-//     '/update-creator-video-data',
-//     body('VideoTitle').not().isEmpty().isLength({ max: 40 }),
-//     body('VideoVisibility').not().isEmpty(),
-//     body('ShowComments').not().isEmpty(),
-//     body('ShowLikesDislikes').not().isEmpty(),
-//     body('VideoToken').not().isEmpty(),
-//     body('UserPrivateToken').not().isEmpty(),
-//     AccountVideoServices.UpdateCreatorVideoData,
-// );
+router.post(
+    '/update-creator-video-data',
+    body('VideoTitle').not().isEmpty().isLength({ max: 40 }),
+    body('VideoVisibility').not().isEmpty(),
+    // body('ShowComments').not().isEmpty(),
+    body('Sport').not().isEmpty(),
+    // body('ShowLikesDislikes').not().isEmpty(),
+    body('VideoToken').not().isEmpty(),
+    body('UserPrivateToken').not().isEmpty(),
+    OwnerVideoServices.UpdateCreatorVideoData,
+);
 // router.post('/delete-video', body('VideoToken').not().isEmpty(), body('UserPrivateToken').not().isEmpty(), AccountVideoServices.DeleteCreatorVideoData);
 // router.post('/change-thumbnail', AccountVideoServices.ChangeVideoThumbnail);
 // router.post('/update-video-alalytics', AccountVideoServices.UpdateVideoAnalytics);
