@@ -1,5 +1,5 @@
 import React, { Dispatch, RefObject, SetStateAction } from 'react'
-import { changeVolume } from '@/Components/VideoPLayer/UtilFunc'
+import { changeVolume } from '@/Components/VideoPlayer/UtilFunc'
 
 interface IOverlayProps {
     VideoRef: RefObject<HTMLVideoElement>
@@ -14,6 +14,7 @@ interface IOverlayProps {
     setPlaying: Dispatch<SetStateAction<boolean>>
     setVolume: Dispatch<SetStateAction<number>>
     setShowOverlay: Dispatch<SetStateAction<boolean>>
+    handleProgressChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 /**
@@ -21,7 +22,7 @@ interface IOverlayProps {
  * @param {OverlayProps} props
  * @return {JSX}
  */
-export default function PlayerOverlay(props: IOverlayProps) {
+const PlayerOverlay = (props: IOverlayProps) => {
     return (
         <div
             className="flex  absolute w-[66.8vw] h-[71.4vh] "
@@ -33,7 +34,8 @@ export default function PlayerOverlay(props: IOverlayProps) {
             }}
         >
             <div className="flex flex-col  w-full h-[8%] bg-[#00000041] z-10 self-end">
-                <div className="bg-red-800 h-[.3rem]" style={{ width: `${props.Progress}%` }} />
+                
+                <input type="range" className="w-full h-[.5rem]  appearance-none " min="0" max="100" step="0.01" value={props.Progress} onChange={props.handleProgressChange} />
                 <div className="flex h-full">
                     {props.Playing ? (
                         <img
@@ -124,3 +126,5 @@ export default function PlayerOverlay(props: IOverlayProps) {
         </div>
     )
 }
+
+export default PlayerOverlay

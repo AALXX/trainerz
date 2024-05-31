@@ -137,6 +137,12 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
         }
     }, [props.VideoToken])
 
+    const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTime = (Number(e.target.value) / 100) * VideoRef.current!.duration
+        VideoRef.current!.currentTime = newTime
+        setProgress(Number(e.target.value))
+    }
+
     return (
         // * PLayer Outer Border
         <div className="flex flex-col mt-[3rem] ml-[6rem]">
@@ -157,6 +163,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         VideoRef={VideoRef}
                         playOrPauseVideo={playOrPauseVideo}
                         setPlaying={setPlaying}
+                        handleProgressChange={handleProgressChange}
                         setShowOverlay={setShowOverlay}
                     />
                 ) : null}
