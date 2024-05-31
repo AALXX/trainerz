@@ -13,7 +13,7 @@ public class VideoStreamApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Server running on http://172.31.5.46:7500/");
+		System.out.println("Server running on http://192.168.72.81:7500/");
 	}
 
 }

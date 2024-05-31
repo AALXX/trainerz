@@ -214,6 +214,14 @@ const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanel
     }
 };
 
+/**
+ * Checks if a user is following an account based on the provided user token and account public token.
+ *
+ * @param {Pool} pool - The database connection pool.
+ * @param {string} userToken - The user's token.
+ * @param {string} accountPublicToken - The account's public token.
+ * @return {Promise<boolean>} A promise that resolves to true if the user is following the account, false otherwise.
+ */
 const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPublicToken: string): Promise<boolean> => {
     const NAMESPACE = 'USER_FOLLOW_CHECK_FUNCTION';
     const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken='${userToken}' AND accountToken='${accountPublicToken}';`;
@@ -260,7 +268,7 @@ const CreateVideoToken = (): string => {
 
 const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
-    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken='${userToken} AND videoToken='${VideoToken}';`;
+    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken='${userToken}' AND videoToken='${VideoToken}';`;
 
     try {
         if (userToken === 'undefined') {

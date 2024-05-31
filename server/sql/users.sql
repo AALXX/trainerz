@@ -20,5 +20,4 @@ CREATE TABLE users (
     UserVisibility VARCHAR(255) NOT NULL DEFAULT 'public'
     UNIQUE (UserPrivateToken)
     UNIQUE (UserPublicToken)
-
 );

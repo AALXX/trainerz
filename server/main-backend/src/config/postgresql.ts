@@ -35,14 +35,17 @@ const createPool = () => {
  * @param {PoolClient} client - The PostgreSQL client to use for the query.
  * @param {queryString} queryString - The SQL query string to execute.
  * @param {any[]} values - Optional array of values to substitute into the query string.
+ * @param {boolean} stopRelease - Optional boolean for multiple queris to not release the .
  * @return {Promise<any>} A Promise that resolves to the rows returned by the query.
  * @throws An error if the query fails to execute.
  */
-const query = async (client: PoolClient, queryString: string, values?: any[]): Promise<any> => {
+const query = async (client: PoolClient, queryString: string, values?: any[], stopRelease?: boolean): Promise<any> => {
     const NAMESPACE = 'PG_QUERY_FUNC';
     try {
         const result = await client.query(queryString, values);
-        client.release();
+        if (!stopRelease) {
+            client.release();
+        }
         return result.rows;
     } catch (error: any) {
         logging.error(NAMESPACE, error.message);

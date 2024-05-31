@@ -1,13 +1,13 @@
 import express from 'express';
 import { body, param } from 'express-validator';
-// import ClientVideoServices from '../../Services/VideosServices/ClientVideosServices';
+import ClientVideoServices from '../../Services/VideosServices/ClientVideosServices';
+import CommentsServices from '../../Services/VideosServices/CommentsServices';
 import OwnerVideoServices from '../../Services/VideosServices/OwnerVideosServices';
 const router = express.Router();
 
-
 // *client video related
-// router.post('/like-dislike-video/', body('userToken').not().isEmpty().trim(), body('videoToken').not().isEmpty().trim(), ClientVideosServices.LikeDislikeVideoFunc);
-// router.get('/get-video-data/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty(), param('UserPrivateToken').not().isEmpty(), ClientVideosServices.GetVideoDataByToken);
+router.post('/like-dislike-video/', body('UserPublicToken').not().isEmpty().trim(), body('videoToken').not().isEmpty().trim(), ClientVideoServices.LikeDislikeVideoFunc);
+router.get('/get-video-data/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty(), param('UserPrivateToken').not().isEmpty(), ClientVideoServices.GetVideoDataByToken);
 // router.get('/search-video/:search_query', param('search_query').not().isEmpty(), ClientVideosServices.SearchVideo);
 
 // *Video Owner related
@@ -29,9 +29,9 @@ router.post('/upload-video', OwnerVideoServices.UploadVideoFileToServer);
 // router.post('/update-video-alalytics', AccountVideoServices.UpdateVideoAnalytics);
 // router.get('/get-video-history-data/:UserPrivateToken/:VideoToken', AccountVideoServices.GetVideoHistory);
 
-// // *comment related
-// router.get('/get-video-comments/:videoToken', param('videoToken').not().isEmpty(), ClientVideosServices.GetVideoComments);
-// router.post('/post-comment', body('UserToken').not().isEmpty(), body('VideoToken').not().isEmpty(), body('Comment').not().isEmpty(), ClientVideosServices.PostCommentToVideo);
-// router.post('/delete-comment', body('UserToken').not().isEmpty(), body('VideoToken').not().isEmpty(), ClientVideosServices.PostCommentToVideo);
+// *comment related
+router.get('/get-video-comments/:videoToken', param('videoToken').not().isEmpty(), CommentsServices.GetVideoComments);
+router.post('/post-comment', body('UserPrivateToken').not().isEmpty(), body('VideoToken').not().isEmpty(), body('Comment').not().isEmpty(), CommentsServices.PostCommentToVideo);
+router.post('/delete-comment', body('UserPrivateToken').not().isEmpty(), body('VideoToken').not().isEmpty(), body('CommentID').not().isEmpty(), CommentsServices.DeleteComment);
 
 export = router;
