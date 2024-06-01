@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { IUserData, IVideoTemplate } from './IAccountProfile'
+import { IUserPrivateData, IVideoTemplate } from './IAccountProfile'
 import { getCookie } from 'cookies-next'
 import ProfileCards from './util/ProfileTabCards'
 import { ownerCheck } from '@/Auth-Security/Security'
@@ -8,21 +8,22 @@ import PopupCanvas from '../CommonUi/util/PopupCanvas'
 import AccoutSettingsPopup from './util/UserAccountSettings'
 import axios from 'axios'
 import VideoTamplate from './util/VideoCardTemplate'
+import ChangeAccountIconComp from './util/ChangeAccountIconComp'
 
 /**
  * Renders a template for a user's trainer profile.
  * @param props - An object containing the user's data.
  * @returns A React component that displays the trainer profile template.
  */
-const TrainerTemplate = (props: IUserData) => {
+const TrainerTemplate = (props: IUserPrivateData) => {
     const [componentToShow, setComponentToShow] = useState<string>('LandingPage')
     const [isOwner, setIsOwner] = useState<boolean>(false)
     const [videosData, setVideosData] = useState<Array<IVideoTemplate>>([])
 
-    const [ToggledSettingsPopUp, setToggledSettingsPopUp] = useState(false)
-    const [ToggledIconChangePopUp, setToggledIconChangePopUp] = useState(false)
+    const [ToggledSettingsPopUp, setToggledSettingsPopUp] = useState<boolean>(false)
+    const [ToggledIconChangePopUp, setToggledIconChangePopUp] = useState<boolean>(false)
 
-    const [isAccIconHovered, setIsAccIconHovered] = useState(false)
+    const [isAccIconHovered, setIsAccIconHovered] = useState<boolean>(false)
 
     const renderComponent = () => {
         switch (componentToShow) {
@@ -34,6 +35,7 @@ const TrainerTemplate = (props: IUserData) => {
                         <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                             {videosData.map((video: IVideoTemplate, index: number) => (
                                 <VideoTamplate
+                                    isOwner={isOwner}
                                     key={index}
                                     videotitle={video.videotitle}
                                     dislikes={video.dislikes}
@@ -61,10 +63,11 @@ const TrainerTemplate = (props: IUserData) => {
 
     useEffect(() => {
         ;(async () => {
-            const resp = await axios.get(`${process.env.SERVER_BACKEND}/videos-manager/get-account-videos/${getCookie('userPublicToken')}`)
-            console.log(resp.data)
+            const resp = await axios.get(`${process.env.SERVER_BACKEND}/videos-manager/get-account-videos/${props.userpublictoken}`)
             setVideosData(resp.data.VideosData)
-            setIsOwner(await ownerCheck())
+            if (getCookie('userToken') !== undefined) {
+                setIsOwner(await ownerCheck())
+            }
         })()
     }, [])
 
@@ -72,8 +75,36 @@ const TrainerTemplate = (props: IUserData) => {
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-col  w-full h-44">
                 <div className="flex h-full w-[90%] self-center ">
-                    <div className="flex w-60 self-center h-32 ">
-                        <img className="z-10 rounded-full w-24 h-24 self-center " src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png`} alt="Picture of the author" />
+                    <div className="flex w-720 self-center h-32 ">
+                        <div className="z-10 relative self-center w-40 h-24 ">
+                            <img
+                                className="flex rounded-full w-[full] h-full self-center "
+                                onMouseEnter={() => {
+                                    setIsAccIconHovered(true)
+                                }}
+                                onMouseLeave={() => {
+                                    setIsAccIconHovered(false)
+                                }}
+                                src={`${process.env.FILE_SERVER}/${props.userpublictoken}/Main_icon.png?cache=none`}
+                                alt="Picture of the author"
+                            />
+                            {isAccIconHovered ? (
+                                <div
+                                    className="flex absolute inset-0 rounded-full  w-full h-full m-auto bg-black bg-opacity-80 cursor-pointer"
+                                    onMouseEnter={() => {
+                                        setIsAccIconHovered(true)
+                                    }}
+                                    onMouseLeave={() => {
+                                        setIsAccIconHovered(false)
+                                    }}
+                                    onClick={() => {
+                                        setToggledIconChangePopUp(!ToggledIconChangePopUp)
+                                    }}
+                                >
+                                    <img className="w-[90%] h-[90%] m-auto rounded-full" src="/assets/AccountIcons/EditProfileIcon_Icon.svg" alt="Overlay image" />
+                                </div>
+                            ) : null}
+                        </div>
                         <div className="self-center w-full ml-2">
                             {isOwner ? (
                                 <div className="flex ">
@@ -137,6 +168,15 @@ const TrainerTemplate = (props: IUserData) => {
                         UserVisibility="public"
                         UserDescription={props.description}
                     />
+                </PopupCanvas>
+            ) : null}
+            {ToggledIconChangePopUp ? (
+                <PopupCanvas
+                    closePopup={() => {
+                        setToggledIconChangePopUp(!ToggledIconChangePopUp)
+                    }}
+                >
+                    <ChangeAccountIconComp />
                 </PopupCanvas>
             ) : null}
             {renderComponent()}

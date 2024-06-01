@@ -1,12 +1,11 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response } from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import FFmpeg from 'fluent-ffmpeg';
 import logging from '../../config/logging';
 import UtilFunc from '../../util/utilFunctions';
-import axios from 'axios';
 import utilFunctions from '../../util/utilFunctions';
-import { validationResult, body } from 'express-validator';
+import { validationResult } from 'express-validator';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 
 const NAMESPACE = 'AccountUploadServiceManager';

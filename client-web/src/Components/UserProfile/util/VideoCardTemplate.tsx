@@ -13,13 +13,15 @@ export const VideoTemplate = (props: IVideoTemplate) => {
     return (
         <Link href={`/watch?vt=${props.videotoken}`} className="relative w-full h-0 pb-[60%] overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-white cursor-pointer" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <img src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/${props.videotoken}/Thumbnail_image.jpg`} className="w-full h-full object-cover" />
+                <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="w-full h-full object-cover" />
                 {isHovered && (
                     <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between ">
                         <div className="flex justify-end p-2">
-                            <Link href={`/account/edit-video?vt=${props.videotoken}`} className="self-center">
-                                <Image src="/assets/AccountIcons/Settings_icon.svg" width={20} height={20} alt="Settings Icon" />
-                            </Link>
+                            {props.isOwner ? (
+                                <Link href={`/account/edit-video?vt=${props.videotoken}`} className="self-center">
+                                    <Image src="/assets/AccountIcons/Settings_icon.svg" width={20} height={20} alt="Settings Icon" />
+                                </Link>
+                            ) : null}
                         </div>
                         <div className="flex justify-between items-center p-2 bg-black bg-opacity-60 h-14">
                             <div>

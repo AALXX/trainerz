@@ -188,7 +188,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
 
             <div className="flex mt-[.5vh] h-[11vh] w-[66.8vw] bg-[#00000080] rounded-bl-xl">
                 <Link className="ml-4 self-center" href={`/user?id=${VideoData.OwnerToken}`}>
-                    <img className="z-10 rounded-full" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png`} width={50} height={50} alt="Picture of the author" />
+                    <img className="z-10 rounded-full w-14 h-14" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
                 </Link>
                 <div className="flex flex-col ml-4 self-center">
                     <h1 className="text-white mt-2 text-lg">{VideoData.VideoTitle}</h1>

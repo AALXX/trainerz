@@ -2,7 +2,7 @@ import express from 'express';
 import { body, param } from 'express-validator';
 
 import OwnerAccountServices from '../../Services/UserAccountServices/OwnerAccountServices';
-// import ClientAccountServices from '../../Services/UserAccountServices/ClientAcccountService';
+import ClientAccountServices from '../../Services/UserAccountServices/ClientAcccountService';
 
 const router = express.Router();
 
@@ -30,7 +30,6 @@ router.post('/account-owner-check', body('accountPrivateToken').not().isEmpty().
 
 router.get('/get-account-data/:accountPrivateToken', param('accountPrivateToken').not().isEmpty(), OwnerAccountServices.GetUserAccountData);
 
-
 router.post(
     '/change-user-data',
     body('userName').not().isEmpty(),
@@ -46,16 +45,15 @@ router.post(
 
 // router.post('/delete-user-account', body('userToken').not().isEmpty(), OwnerAccountServices.DeleteUserAccount);
 
+router.get('/get-creator-data/:profileToken/:userPublicToken', param('profileToken').not().isEmpty(), param('userPublicToken').not().isEmpty(), ClientAccountServices.GetCreatorAccountData);
 
 // router.post('/upload-user-image', OwnerAccountServices.UploadPhoto);
-// router.post('/change-user-icon', OwnerAccountServices.ChangeUserIcon);
+router.post('/change-user-icon', OwnerAccountServices.ChangeUserIcon);
 
 // router.get('/get-account-subscriptions/:userPrivateToken', param('userPrivateToken').not().isEmpty(), UserAccountServices.GetUserAccountSubscriptions);
 
 // router.get('/get-account-public-data/:accountPublicToken', param('accountPublicToken').not().isEmpty(), ClientAccountServices.GetUserAccountPublicData);
 
-
 // router.get('/get-account-photos/:accountPublicToken', param('accountPublicToken').not().isEmpty(), ClientAccountServices.GetAccountPhotos);
-
 
 export = router;

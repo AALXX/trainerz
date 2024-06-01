@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setCookie, getCookie, deleteCookie } from 'cookies-next'
+import { getCookie } from 'cookies-next'
 
 const ownerCheck = async () => {
     const res = await axios.post(`${process.env.SERVER_BACKEND}/user-account-manager/account-owner-check`, {

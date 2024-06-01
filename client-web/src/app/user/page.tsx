@@ -1,28 +1,23 @@
 'use client'
+import React from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { getCookie } from 'cookies-next'
 
-import { isLoggedIn } from '@/Auth-Security/Auth'
-import AccountProfileComp from '@/Components/UserProfile/AccountComp'
-import { IUserPrivateData } from '@/Components/UserProfile/IAccountProfile'
+import { IUserPublicData, IVideoTemplate } from '@/Components/UserProfile/IAccountProfile'
 import SportsPersonTemplate from '@/Components/UserProfile/SportsPersonTemplate'
 import TrainerTemplate from '@/Components/UserProfile/TrainerTemplate'
-import axios from 'axios'
-import { CookieValueTypes, getCookie } from 'cookies-next'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
 
-const Account = () => {
-    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
-
-    const userToken: string = getCookie('userToken') as string
-    const router = useRouter()
-
-    const [userData, setUserData] = useState<IUserPrivateData>({
+/**
+ * watch video page
+ * @return {JSX}
+ */
+export default function CreatorAccountPage() {
+    const urlParams = useSearchParams()
+    const [userData, setUserData] = useState<IUserPublicData>({
         username: '',
         description: '',
-        birthDate: new Date(),
-        locationlon: '',
-        locationlat: '',
         sport: '',
         useremail: '',
         phonenumber: '',
@@ -33,46 +28,42 @@ const Account = () => {
         accountprice: 0,
         accountfolowers: 0
     })
-
-    const getProfileData = async (userToken: CookieValueTypes) => {
-        const resData = await axios.get(`${process.env.SERVER_BACKEND}/user-account-manager/get-account-data/${userToken}`)
-        if (resData.data.error == true) {
-            router.push('/account/login-register')
-            return console.error('ERROR GET PROFILE DATA FAILED')
-        }
-        return resData.data
-    }
+    const [userFound, setUserFound] = useState<boolean>(false)
+    const [userFollwsAccount, setUserFollwsAccount] = useState<boolean>(false)
+    const [videosData, setVideosData] = useState<Array<IVideoTemplate>>([])
 
     useEffect(() => {
-        /**
-         * Get user profile Data
-         */
         ;(async () => {
-            const usrLoggedIn = await isLoggedIn()
-            setUserLoggedIn(usrLoggedIn)
+            const res = await axios.get(`${process.env.SERVER_BACKEND}/user-account-manager/get-creator-data/${urlParams.get('id')}/${getCookie('userPublicToken')}`)
+            setUserData(res.data.userData)
+            setUserFollwsAccount(res.data.userFollowsCreator)
+            console.log(res.data.userData)
+            if (res.data.userData == null) {
+                setUserFound(false)
+            } else {
+                setUserFound(true)
+            }
 
-            const profileData = await getProfileData(userToken)
-            setUserData(profileData.userData)
         })()
-    }, [userToken])
+    }, [])
 
     return (
         <div className="flex  flex-col ">
-            {userLoggedIn ? (
+            {userFound ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
                         <TrainerTemplate
                             accountfolowers={userData.accountfolowers}
                             accounttype={userData.accounttype}
-                            birthDate={userData.birthDate}
+                            birthDate={new Date()}
                             description={userData.description}
-                            locationlat={userData.locationlat}
-                            locationlon={userData.locationlon}
+                            locationlat=""
+                            locationlon=""
                             sport={userData.sport}
                             phonenumber={userData.phonenumber}
                             useremail={userData.useremail}
                             username={userData.username}
-                            userpublictoken={getCookie('userPublicToken') as string}
+                            userpublictoken={urlParams.get('id') as string}
                             uservisibility={userData.uservisibility}
                             accountprice={userData.accountprice}
                             rating={userData.rating}
@@ -94,15 +85,10 @@ const Account = () => {
                     )}
                 </>
             ) : (
-                <div className="flex w-full flex-col">
-                    <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
-                    <Link className="self-center" href={'/account/login-register'}>
-                        <h1 className="text-white">Login!</h1>
-                    </Link>
+                <div className="flex flex-col ">
+                    <h1 className="text-white self-center mt-[2rem]">User Not Found</h1>
                 </div>
             )}
         </div>
     )
 }
-
-export default Account

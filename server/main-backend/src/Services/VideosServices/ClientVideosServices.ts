@@ -3,8 +3,6 @@ import { validationResult } from 'express-validator';
 import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import UtilFunc from '../../util/utilFunctions';
-import utilFunctions from '../../util/utilFunctions';
-import axios from 'axios';
 
 const NAMESPACE = 'ClientVideosServiceManager';
 

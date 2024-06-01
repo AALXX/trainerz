@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req: CustomRequest, file: any, cb: any) => {
     // reject all files except jpeg
-    if (file.mimetype === 'image/jpeg') {
+    if (file.mimetype === 'image/jpeg' || 'image/png') {
         cb(null, true);
     } else {
         cb(null, false);
@@ -384,6 +384,7 @@ const ChangeUserData = async (req: CustomRequest, res: Response) => {
         if (connection == null) {
             return { error: true };
         }
+
         const changeUserDataSQL = `UPDATE users SET 
         UserName='${req.body.userName}', 
         Description='${req.body.userDescription}',
@@ -420,10 +421,49 @@ const ChangeUserData = async (req: CustomRequest, res: Response) => {
     }
 };
 
+const PhotoUploader = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+}).single('photo');
+
+const ChangeUserIcon = async (req: CustomRequest, res: Response) => {
+    PhotoUploader(req, res, async (err: any) => {
+        if (err) {
+            return res.status(200).json({
+                msg: 'falied to upload',
+                error: true,
+            });
+        }
+
+        const userPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        if (userPublicToken == null) {
+            return res.status(200).json({
+                error: true,
+            });
+        }
+
+        //* Directory Created Succesfully
+        fs.rename(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${req.file?.originalname}`, `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Main_Icon.png`, async (err) => {
+            if (err) {
+                logging.error(NAMESPACE, err.message);
+
+                return res.status(200).json({
+                    error: true,
+                });
+            }
+
+            return res.status(200).json({
+                error: false,
+            });
+        });
+    });
+};
+
 export default {
     RegisterUser,
     LoginUser,
     GetUserAccountData,
     ChangeUserData,
     CheckAccountOwner,
+    ChangeUserIcon,
 };

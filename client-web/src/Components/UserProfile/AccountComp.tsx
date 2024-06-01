@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { IUserData } from './IAccountProfile'
+import { IUserPrivateData } from './IAccountProfile'
 import { CookieValueTypes, getCookie } from 'cookies-next'
 import TrainerTemplate from './TrainerTemplate'
 import SportsPersonTemplate from './SportsPersonTemplate'
@@ -11,7 +11,7 @@ const AccountProfileComp = () => {
     const userToken: string = getCookie('userToken') as string
     const router = useRouter()
 
-    const [userData, setUserData] = useState<IUserData>({
+    const [userData, setUserData] = useState<IUserPrivateData>({
         username: '',
         description: '',
         birthDate: new Date(),

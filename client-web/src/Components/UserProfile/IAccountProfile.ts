@@ -1,12 +1,26 @@
 import { Dispatch, SetStateAction } from 'react'
 
-export interface IUserData {
+export interface IUserPrivateData {
     username: string
     description: string
     birthDate: Date
     accountfolowers: number
     locationlon: string
     locationlat: string
+    sport: string
+    useremail: string
+    phonenumber: string
+    uservisibility: string
+    accounttype: string
+    userpublictoken: string
+    rating?: number
+    accountprice?: number
+}
+
+export interface IUserPublicData {
+    username: string
+    description: string
+    accountfolowers: number
     sport: string
     useremail: string
     phonenumber: string
@@ -43,4 +57,5 @@ export interface IVideoTemplate {
     dislikes: number
     sportname: string
     visibility: string
+    isOwner: boolean
 }

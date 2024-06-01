@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
 
@@ -80,7 +79,7 @@ const NavBar = () => {
                 </div> */}
             </form>
             <Link className="ml-auto mr-16 self-center " href={'/account'}>
-                <img className="z-10 rounded-full" src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png`} width={50} height={50} alt="Picture of the author" />
+                <img className="z-10 rounded-full w-12 h-12" src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
             </Link>
         </div>
     )
