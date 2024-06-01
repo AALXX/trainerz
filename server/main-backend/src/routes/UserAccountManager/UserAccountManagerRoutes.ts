@@ -26,7 +26,13 @@ router.post(
 
 router.post('/login-account', body('userEmail').isEmail().not().isEmpty(), body('password').isLength({ min: 4 }).not().isEmpty().trim(), OwnerAccountServices.LoginUser);
 
-router.post('/account-owner-check', body('accountPrivateToken').not().isEmpty().trim(), body('accountPublicToken').not().isEmpty().trim(), OwnerAccountServices.CheckAccountOwner);
+router.post(
+    '/account-owner-check',
+    body('accountPrivateToken').not().isEmpty().trim(),
+    body('accountPublicToken').not().isEmpty().trim(),
+    body('profilePublicToken').not().isEmpty().trim(),
+    OwnerAccountServices.CheckAccountOwner,
+);
 
 router.get('/get-account-data/:accountPrivateToken', param('accountPrivateToken').not().isEmpty(), OwnerAccountServices.GetUserAccountData);
 
@@ -36,7 +42,7 @@ router.post(
     body('userEmail').not().isEmpty(),
     body('userDescription'),
     body('sport').not().isEmpty(),
-    body('price').not().isEmpty(),
+    body('price'),
     body('accountType').not().isEmpty(),
     body('userVisibility').not().isEmpty(),
     body('userPrivateToken').not().isEmpty(),

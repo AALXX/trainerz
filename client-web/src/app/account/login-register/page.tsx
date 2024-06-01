@@ -263,7 +263,7 @@ export default function LoginRegisterScreen() {
     }
 
     return (
-        <div className="flex justify-center flex-col h-[90%]">
+        <div className="flex justify-center flex-col h-full">
             {!registerForm ? (
                 <div className="flex flex-col w-[40%] h-[80vh] self-center bg-[#0000004d] rounded-3xl">
                     <form

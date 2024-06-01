@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { getCookie } from 'cookies-next'
 
-const ownerCheck = async () => {
+const ownerCheck = async (profilePublicToken: string) => {
     const res = await axios.post(`${process.env.SERVER_BACKEND}/user-account-manager/account-owner-check`, {
         accountPrivateToken: getCookie('userToken'),
-        accountPublicToken: getCookie('userPublicToken')
+        accountPublicToken: getCookie('userPublicToken'),
+        profilePublicToken: profilePublicToken
     })
 
     if (res.data.error === true) {

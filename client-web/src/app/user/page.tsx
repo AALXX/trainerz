@@ -48,7 +48,7 @@ export default function CreatorAccountPage() {
     }, [])
 
     return (
-        <div className="flex  flex-col ">
+        <div className="flex flex-col h-full ">
             {userFound ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (

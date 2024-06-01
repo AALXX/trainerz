@@ -9,6 +9,7 @@ import AccoutSettingsPopup from './util/UserAccountSettings'
 import axios from 'axios'
 import VideoTamplate from './util/VideoCardTemplate'
 import ChangeAccountIconComp from './util/ChangeAccountIconComp'
+import AboutUserTab from './util/AboutUserTab'
 
 /**
  * Renders a template for a user's trainer profile.
@@ -31,30 +32,31 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 return <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 "></div>
             case 'Videos':
                 return (
-                    <div>
-                        <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                            {videosData.map((video: IVideoTemplate, index: number) => (
-                                <VideoTamplate
-                                    isOwner={isOwner}
-                                    key={index}
-                                    videotitle={video.videotitle}
-                                    dislikes={video.dislikes}
-                                    likes={video.likes}
-                                    ownertoken={video.ownertoken}
-                                    publishdate={video.publishdate}
-                                    sportname={video.sportname}
-                                    videoprice={video.videoprice}
-                                    videotoken={video.videotoken}
-                                    visibility={video.visibility}
-                                />
-                            ))}
-                        </div>
+                    <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                        {videosData.map((video: IVideoTemplate, index: number) => (
+                            <VideoTamplate
+                                isOwner={isOwner}
+                                key={index}
+                                videotitle={video.videotitle}
+                                dislikes={video.dislikes}
+                                likes={video.likes}
+                                ownertoken={video.ownertoken}
+                                publishdate={video.publishdate}
+                                sportname={video.sportname}
+                                videoprice={video.videoprice}
+                                videotoken={video.videotoken}
+                                visibility={video.visibility}
+                            />
+                        ))}
                     </div>
                 )
 
             case 'About':
-                return <h1>test</h1>
-            // return <AboutChanelTab userDescription={userData.UserDescription} />
+                return (
+                    <div className="w-full h-[60%]">
+                        <AboutUserTab userDescription={props.description} userEmail={props.useremail} userPhone={props.phonenumber} />
+                    </div>
+                )
 
             default:
                 return <div>No matching component found</div>
@@ -66,16 +68,16 @@ const TrainerTemplate = (props: IUserPrivateData) => {
             const resp = await axios.get(`${process.env.SERVER_BACKEND}/videos-manager/get-account-videos/${props.userpublictoken}`)
             setVideosData(resp.data.VideosData)
             if (getCookie('userToken') !== undefined) {
-                setIsOwner(await ownerCheck())
+                setIsOwner(await ownerCheck(props.userpublictoken))
             }
         })()
     }, [])
 
     return (
-        <div className="flex flex-col w-full h-full">
+        <div className="flex flex-col w-full h-full ">
             <div className="flex flex-col  w-full h-44">
                 <div className="flex h-full w-[90%] self-center ">
-                    <div className="flex w-720 self-center h-32 ">
+                    <div className="flex w-80 self-center h-32 ">
                         <div className="z-10 relative self-center w-40 h-24 ">
                             <img
                                 className="flex rounded-full w-[full] h-full self-center "
@@ -122,7 +124,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                 <h1 className="text-white mb-1">{props.username}</h1>
                             )}
                             <hr className="self-center w-full bg-white h-[0.1rem] " />
-                            <h1 className="text-white mt-1">{props.accountfolowers} Folowers</h1>
+                            <h1 className="text-white mt-1">{props.sport} coach</h1>
                         </div>
                     </div>
                     <div className="flex flex-col ml-auto bg-[#0000005e] h-32 w-72 self-center rounded-xl">
@@ -141,7 +143,8 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                             )}
                         </div>
                         <div className="flex w-full self-center mt-4">
-                            <h1 className="self-center  ml-4 text-white">Account Views</h1>
+                            <h1 className="self-center  ml-4 text-white">Account Folowers</h1>
+                            <h1 className="text-white ml-auto mr-16">{props.accountfolowers}</h1>
                         </div>
                     </div>
                 </div>
@@ -152,7 +155,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 <ProfileCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} />
                 <ProfileCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} />
             </div>
-            <hr className="w-sfull bg-white h-[0.1rem] " />
+            <hr className="w-full bg-white h-[0.1rem] " />
             {ToggledSettingsPopUp ? (
                 <PopupCanvas
                     closePopup={() => {

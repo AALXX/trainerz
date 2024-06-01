@@ -1,7 +1,6 @@
 'use client'
 
 import { isLoggedIn } from '@/Auth-Security/Auth'
-import AccountProfileComp from '@/Components/UserProfile/AccountComp'
 import { IUserPrivateData } from '@/Components/UserProfile/IAccountProfile'
 import SportsPersonTemplate from '@/Components/UserProfile/SportsPersonTemplate'
 import TrainerTemplate from '@/Components/UserProfile/TrainerTemplate'
@@ -57,7 +56,7 @@ const Account = () => {
     }, [userToken])
 
     return (
-        <div className="flex  flex-col ">
+        <div className="flex  flex-col h-full">
             {userLoggedIn ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
@@ -79,22 +78,23 @@ const Account = () => {
                         />
                     ) : (
                         <SportsPersonTemplate
-                        // AccountType={userData.AccountType}
-                        // BirthDate={userData.BirthDate}
-                        // Description={userData.Description}
-                        // PhoneNumber={userData.PhoneNumber}
-                        // LocationCity={userData.LocationCity}
-                        // LocationCountry={userData.LocationCountry}
-                        // Sport={userData.Sport}
-                        // UserEmail={userData.UserEmail}
-                        // UserName={userData.UserName}
-                        // UserPublicToken={userData.UserPublicToken}
-                        // UserVisibility={userData.UserVisibility}
+                            accountfolowers={0}
+                            accounttype={userData.accounttype}
+                            birthDate={userData.birthDate}
+                            description={userData.description}
+                            locationlat={userData.locationlat}
+                            locationlon={userData.locationlon}
+                            sport={userData.sport}
+                            phonenumber={userData.phonenumber}
+                            useremail={userData.useremail}
+                            username={userData.username}
+                            userpublictoken={getCookie('userPublicToken') as string}
+                            uservisibility={userData.uservisibility}
                         />
                     )}
                 </>
             ) : (
-                <div className="flex w-full flex-col">
+                <div className="flex w-full flex-col h-full">
                     <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
                     <Link className="self-center" href={'/account/login-register'}>
                         <h1 className="text-white">Login!</h1>

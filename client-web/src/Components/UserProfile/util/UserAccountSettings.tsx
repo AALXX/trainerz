@@ -15,7 +15,7 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     const [description, setDescription] = useState<string>('')
     const [sport, setSport] = useState<string>('')
     const [accountType, setAccountType] = useState<string>('')
-    const [accountPrice, setAccountPrice] = useState<number | undefined>(0)
+    const [accountPrice, setAccountPrice] = useState<number>(0)
     const userToken: string = getCookie('userToken') as string
 
     const [sure, setSure] = useState(false)
@@ -27,7 +27,11 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
         setDescription(props.UserDescription)
         setSport(props.Sport)
         setAccountType(props.AccountType)
-        setAccountPrice(props.AccountPrice)
+        if (props.AccountPrice !== undefined) {
+            setAccountPrice(props.AccountPrice)
+        } else {
+            setAccountPrice(0)
+        }
     }, [])
 
     const changeUserData = () => {

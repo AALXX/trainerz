@@ -89,6 +89,7 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
         }
 
         if (await utilFunctions.checkEmailExists(req.pool!, req.body.userEmail)) {
+            console.log('CUM');
             return res.status(202).json({
                 error: true,
                 erromsg: 'ann account with this email already exists',
@@ -98,6 +99,7 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
         await query(connection, InsertUserQueryString);
         fs.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/`, async (err) => {
             if (err) {
+                console.log(err);
                 return res.status(200).json({
                     error: true,
                 });
@@ -121,16 +123,16 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
             //     name: req.body.userName,
             // });
 
-            const resp = await axios.post(`${process.env.SEARCH_SERVER}/index-user`, {
-                UserName: req.body.userName,
-                UserPrivateToken: userPrivateToken,
-                AccountType: req.body.accountType,
-                Sport: req.body.sport,
-            });
+            // const resp = await axios.post(`${process.env.SEARCH_SERVER}/index-user`, {
+            //     UserName: req.body.userName,
+            //     UserPrivateToken: userPrivateToken,
+            //     AccountType: req.body.accountType,
+            //     Sport: req.body.sport,
+            // });
 
-            if (resp.data.error == true) {
-                logging.error('REGISTER_USER_FUNC', 'failed to index user');
-            }
+            // if (resp.data.error == true) {
+            //     logging.error('REGISTER_USER_FUNC', 'failed to index user');
+            // }
 
             // Create a transporter with Gmail SMTP configuration
             const transporter = nodemailer.createTransport({
@@ -165,6 +167,7 @@ Trainerz Team`,
                 }
             });
 
+            console.log('XDDX');
             return res.status(202).json({
                 error: false,
                 userprivateToken: userPrivateToken,
@@ -341,6 +344,7 @@ const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
         const GetUserDataQueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken = '${req.body.accountPrivateToken}' AND UserPublicToken='${req.body.accountPublicToken}';`;
 
         const data = await query(connection, GetUserDataQueryString);
+        console.log(req.body.profilePublicToken);
         if (Object.keys(data).length === 0) {
             return res.status(200).json({
                 error: false,
@@ -348,9 +352,16 @@ const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
             });
         }
 
+        if (data[0].userpublictoken == req.body.profilePublicToken) {
+            return res.status(200).json({
+                error: false,
+                isOwner: true,
+            });
+        }
+
         return res.status(200).json({
             error: false,
-            isOwner: true,
+            isOwner: false,
         });
     } catch (error: any) {
         logging.error(NAMESPACE, error.message);
