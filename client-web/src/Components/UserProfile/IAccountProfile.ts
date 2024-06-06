@@ -14,7 +14,6 @@ export interface IUserPrivateData {
     accounttype: string
     userpublictoken: string
     rating?: number
-    accountprice?: number
 }
 
 export interface IUserPublicData {
@@ -28,10 +27,9 @@ export interface IUserPublicData {
     accounttype: string
     userpublictoken: string
     rating?: number
-    accountprice?: number
 }
 
-export interface IProfileCards {
+export interface ISelectableCards {
     Title: string
     TabName: string
     setComponentToShow: Dispatch<SetStateAction<string>>
@@ -44,7 +42,6 @@ export interface IAccoutSettingsPopup {
     UserDescription: string
     Sport: string
     AccountType: string
-    AccountPrice?: number
 }
 
 export interface IVideoTemplate {

@@ -32,6 +32,21 @@ const HashPassword = async (password: string) => {
     return null;
 };
 
+
+/**
+ ** creates a token
+ * @return {string}
+ */
+const CreateToken = (): string => {
+    const secretExt = new Date().getTime().toString();
+
+    const jwtSecretKey = `${process.env.ACCOUNT_SECRET}` + secretExt;
+
+    const userprivateToken = jwt.sign({}, jwtSecretKey);
+
+    return userprivateToken;
+};
+
 /**
  * Checks if a given email address exists in the users table.
  *
@@ -252,19 +267,6 @@ const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPubl
 //*      Videos related        //
 //* /////////////////////////////
 
-/**
- ** creates video token
- * @return {string}
- */
-const CreateVideoToken = (): string => {
-    const secretExt = new Date().getTime().toString();
-
-    const jwtSecretKey = `${process.env.ACCOUNT_SECRET}` + secretExt;
-
-    const userprivateToken = jwt.sign({}, jwtSecretKey);
-
-    return userprivateToken;
-};
 
 const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
@@ -401,7 +403,7 @@ const CheckIfLive = async (pool: Pool, userPrivateToken: string, LiveToken: stri
 //     const NAMESPACE = 'START_LIVE_FUNCTION';
 
 //     try {
-//         const StreamToken = CreateVideoToken();
+//         const StreamToken = CreateToken();
 //         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(pool, userPrivateToken);
 //         const connection = await connect(pool);
 
@@ -474,7 +476,7 @@ const CheckIfLive = async (pool: Pool, userPrivateToken: string, LiveToken: stri
 export default {
     HashPassword,
     checkEmailExists,
-    CreateVideoToken,
+    CreateToken,
     getUserRole,
     checkIfUserIsBlocked,
     userFollowAccountCheck,

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { IUserPrivateData, IVideoTemplate } from './IAccountProfile'
 import { getCookie } from 'cookies-next'
-import ProfileCards from './util/ProfileTabCards'
+import SelectableCards from './util/ProfileTabCards'
 import { ownerCheck } from '@/Auth-Security/Security'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
 import AccoutSettingsPopup from './util/UserAccountSettings'
@@ -10,6 +10,7 @@ import axios from 'axios'
 import VideoTamplate from './util/VideoCardTemplate'
 import ChangeAccountIconComp from './util/ChangeAccountIconComp'
 import AboutUserTab from './util/AboutUserTab'
+import Link from 'next/link'
 
 /**
  * Renders a template for a user's trainer profile.
@@ -17,7 +18,7 @@ import AboutUserTab from './util/AboutUserTab'
  * @returns A React component that displays the trainer profile template.
  */
 const TrainerTemplate = (props: IUserPrivateData) => {
-    const [componentToShow, setComponentToShow] = useState<string>('LandingPage')
+    const [componentToShow, setComponentToShow] = useState<string>('PackagesPage')
     const [isOwner, setIsOwner] = useState<boolean>(false)
     const [videosData, setVideosData] = useState<Array<IVideoTemplate>>([])
 
@@ -28,8 +29,14 @@ const TrainerTemplate = (props: IUserPrivateData) => {
 
     const renderComponent = () => {
         switch (componentToShow) {
-            case 'LandingPage':
-                return <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 "></div>
+            case 'PackagesPage':
+                return (
+                    <>
+                        <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 "> No Packages</div>
+                        <Link href="/account/package-creator">Create Package</Link>
+                    </>
+                )
+
             case 'Videos':
                 return (
                     <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
@@ -80,7 +87,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                     <div className="flex w-80 self-center h-32 ">
                         <div className="z-10 relative self-center w-40 h-24 ">
                             <img
-                                className="flex rounded-full w-[full] h-full self-center "
+                                className="flex rounded-full w-full h-full self-center m-auto"
                                 onMouseEnter={() => {
                                     setIsAccIconHovered(true)
                                 }}
@@ -150,10 +157,10 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 </div>
             </div>
             <div className="flex mt-10 items-center ">
-                <ProfileCards Title="LANDING PAGE" TabName="LandingPage" setComponentToShow={setComponentToShow} />
-                <ProfileCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} />
-                <ProfileCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} />
-                <ProfileCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} />
+                <SelectableCards Title="PACKAGES" TabName="PackagesPage" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
+                <SelectableCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
+                <SelectableCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
+                <SelectableCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
             </div>
             <hr className="w-full bg-white h-[0.1rem] " />
             {ToggledSettingsPopUp ? (
@@ -162,15 +169,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                         setToggledSettingsPopUp(!ToggledSettingsPopUp)
                     }}
                 >
-                    <AccoutSettingsPopup
-                        AccountPrice={props.accountprice}
-                        Sport={props.sport}
-                        AccountType={props.accounttype}
-                        UserName={props.username}
-                        UserEmail={props.useremail}
-                        UserVisibility="public"
-                        UserDescription={props.description}
-                    />
+                    <AccoutSettingsPopup Sport={props.sport} AccountType={props.accounttype} UserName={props.username} UserEmail={props.useremail} UserVisibility="public" UserDescription={props.description} />
                 </PopupCanvas>
             ) : null}
             {ToggledIconChangePopUp ? (

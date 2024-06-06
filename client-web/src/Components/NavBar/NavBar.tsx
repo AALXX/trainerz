@@ -68,7 +68,7 @@ const NavBar = () => {
                     postSearch()
                 }}
             >
-                <input type="text" className="h-9 self-center  w-[75%] border-2 rounded-xl bg-transparent text-white indent-3" placeholder="Search" onChange={e => setSearchInput(e.currentTarget.value)} />
+                <input type="search" className="h-9 self-center  w-[75%] border-2 rounded-xl bg-transparent text-white indent-3" placeholder="Search" onChange={e => setSearchInput(e.currentTarget.value)} />
                 {/* <div
                     className="flex bg-[#373737] ml-3 w-10  h-9 self-center cursor-pointer hover:bg-[#444444]"
                     onClick={() => {

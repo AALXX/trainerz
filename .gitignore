@@ -62,3 +62,6 @@ server/rating-server/.env
 server/search-server/.env
 client-web/next.config.mjs
 server/video-stream-server/src/main/resources/application.properties
+
+client-web/.million/store.json
+ignorelist.txt

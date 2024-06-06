@@ -1,22 +1,25 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
-interface IProfileCardsProps {
+interface ISelectableCardsProps {
     Title: string
     TabName: string
     setComponentToShow: Dispatch<SetStateAction<string>>
+    className?: string // Add className as an optional prop
 }
 
-const ProfileCards = (props: IProfileCardsProps) => {
+const SelectableCards = (props: ISelectableCardsProps) => {
+    const { Title, TabName, setComponentToShow, className } = props
+
     return (
         <div
-            className="flex flex-col bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl"
+            className={`flex flex-col ${className}`}
             onClick={() => {
-                props.setComponentToShow(props.TabName)
+                setComponentToShow(TabName)
             }}
         >
-            <h1 className="text-white self-center text-xl">{props.Title}</h1>
+            <h1 className="text-white self-center text-xl">{Title}</h1>
         </div>
     )
 }
 
-export default ProfileCards
+export default SelectableCards

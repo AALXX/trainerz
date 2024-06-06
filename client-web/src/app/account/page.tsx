@@ -29,7 +29,6 @@ const Account = () => {
         accounttype: '',
         userpublictoken: '',
         rating: 0,
-        accountprice: 0,
         accountfolowers: 0
     })
 
@@ -73,7 +72,6 @@ const Account = () => {
                             username={userData.username}
                             userpublictoken={getCookie('userPublicToken') as string}
                             uservisibility={userData.uservisibility}
-                            accountprice={userData.accountprice}
                             rating={userData.rating}
                         />
                     ) : (

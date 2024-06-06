@@ -15,7 +15,6 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     const [description, setDescription] = useState<string>('')
     const [sport, setSport] = useState<string>('')
     const [accountType, setAccountType] = useState<string>('')
-    const [accountPrice, setAccountPrice] = useState<number>(0)
     const userToken: string = getCookie('userToken') as string
 
     const [sure, setSure] = useState(false)
@@ -27,11 +26,6 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
         setDescription(props.UserDescription)
         setSport(props.Sport)
         setAccountType(props.AccountType)
-        if (props.AccountPrice !== undefined) {
-            setAccountPrice(props.AccountPrice)
-        } else {
-            setAccountPrice(0)
-        }
     }, [])
 
     const changeUserData = () => {
@@ -41,7 +35,6 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                 userEmail: email,
                 userDescription: description,
                 sport: sport,
-                price: accountPrice,
                 accountType: accountType,
                 userVisibility: Visibility,
                 userPrivateToken: userToken
@@ -118,12 +111,6 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                             value={description}
                         />
                     </div>
-                    {props.AccountPrice !== undefined && (
-                        <div className="flex flex-col w-full">
-                            <h1 className="text-white">Account Subscription Price</h1>
-                            <PriceInput value={accountPrice!} onChange={setAccountPrice} />
-                        </div>
-                    )}
                     <div className="flex flex-col w-full">
                         <h1 className="text-white">Account Visibility</h1>
                         <OptionPicker label="Account Visibility" options={['public', 'private']} value={Visibility} onChange={value => setVisibility(value)} />

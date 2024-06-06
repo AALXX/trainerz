@@ -24,7 +24,6 @@ export default function LoginRegisterScreen() {
     const [description, setDescription] = useState<string>('')
     const [accountType, setAccountType] = useState<string>('')
     const [sport, setSport] = useState<string>('')
-    const [accountPrice, setAccountPrice] = useState<number>(5)
     const [userBirthDate, setUserBirthDate] = useState<Date>(new Date())
     const [phoneNumber, setPhoneNumber] = useState<string>('')
     const [locationLat, setLocationLat] = useState<number>(0)
@@ -155,11 +154,6 @@ export default function LoginRegisterScreen() {
                                         }}
                                     />
                                 </div>
-                                <div className="flex flex-col w-[85%] self-center mt-3  h-16">
-                                    <h1 className="h1-sm text-white ">Account Subscription Price</h1>
-                                    <PriceInput value={accountPrice} onChange={setAccountPrice} />
-                                </div>
-
                                 <div className="mt-auto self-center w-full flex flex-col ">
                                     <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-4 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('secondTab')}>
                                         <h1 className="self-center text-white text-lg">Go Back</h1>
@@ -176,7 +170,6 @@ export default function LoginRegisterScreen() {
                                                 registerRepetedPassword,
                                                 description,
                                                 sport,
-                                                accountPrice,
                                                 accountType,
                                                 userBirthDate,
                                                 locationLat,
@@ -238,7 +231,6 @@ export default function LoginRegisterScreen() {
                                                 registerRepetedPassword,
                                                 description,
                                                 sport,
-                                                accountPrice,
                                                 accountType,
                                                 userBirthDate,
                                                 locationLat,

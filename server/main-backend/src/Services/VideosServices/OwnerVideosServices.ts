@@ -84,7 +84,7 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
             return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
         }
 
-        const VideoToken = UtilFunc.CreateVideoToken();
+        const VideoToken = UtilFunc.CreateToken();
 
         fs.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/${VideoToken}`, (err) => {
             if (err) {

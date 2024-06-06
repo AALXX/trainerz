@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
-import ProfileCards from './util/ProfileTabCards'
+import SelectableCards from './util/ProfileTabCards'
 import OptionPicker from '../CommonUi/OptionPicker'
 // import { IGraphType } from './utils/VideoAnalytics/VideoAnalytics'
 // const VideoAnalytics = dynamic(() => import('./utils/VideoAnalytics/VideoAnalytics'), { ssr: false })
@@ -279,9 +279,9 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                 </PopupCanvas>
             ) : null}
             <div className="flex items-center mt-12">
-                <ProfileCards Title="THUMBNALS" TabName="Thumbnails" setComponentToShow={setComponentToShow} />
-                <ProfileCards Title="ANALYTICS" TabName="Analytics" setComponentToShow={setComponentToShow} />
-                <ProfileCards Title="EDITOR" TabName="editor" setComponentToShow={setComponentToShow} />
+                <SelectableCards Title="THUMBNALS" TabName="Thumbnails" setComponentToShow={setComponentToShow} />
+                <SelectableCards Title="ANALYTICS" TabName="Analytics" setComponentToShow={setComponentToShow} />
+                <SelectableCards Title="EDITOR" TabName="editor" setComponentToShow={setComponentToShow} />
             </div>
             <hr className="w-[100%]" />
             <div className="flex w-[95%] mt-[2vh] self-center h-full">{component}</div>

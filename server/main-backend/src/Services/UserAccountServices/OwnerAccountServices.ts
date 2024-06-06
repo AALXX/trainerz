@@ -72,11 +72,10 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
 
     const userPublicToken = jwt.sign(publicData, `${process.env.ACCOUNT_REGISTER_SECRET}`);
     const InsertUserQueryString = `
-    INSERT INTO users (UserName, Description, BirthDate, LocationLat, LocationLon, Sport, PhoneNumber, UserEmail, UserPwd, UserVisibility, AccountType, AccountPrice, UserPrivateToken, UserPublicToken)
+    INSERT INTO users (UserName, Description, BirthDate, LocationLat, LocationLon, Sport, PhoneNumber, UserEmail, UserPwd, UserVisibility, AccountType, UserPrivateToken, UserPublicToken)
     VALUES('${req.body.userName}', '${req.body.description}', 
     '${req.body.userBirthDate}', '${req.body.locationLat}', 
-    '${req.body.locationLon}', '${req.body.sport}', '${req.body.phoneNumber}', '${req.body.userEmail}', '${hashedpwd}', 'public', '${req.body.accountType}',
-    '${req.body.accountPrice}',  '${userPrivateToken}', '${userPublicToken}');`;
+    '${req.body.locationLon}', '${req.body.sport}', '${req.body.phoneNumber}', '${req.body.userEmail}', '${hashedpwd}', 'public', '${req.body.accountType}', '${userPrivateToken}', '${userPublicToken}');`;
 
     try {
         const connection = await connect(req.pool!);
@@ -89,7 +88,6 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
         }
 
         if (await utilFunctions.checkEmailExists(req.pool!, req.body.userEmail)) {
-            console.log('CUM');
             return res.status(202).json({
                 error: true,
                 erromsg: 'ann account with this email already exists',
@@ -159,15 +157,12 @@ Trainerz Team`,
             // Send the email
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    console.error(error);
                     res.status(500).send('Error sending email');
                 } else {
-                    console.log('Email sent: ' + info.response);
                     res.status(200).send('Email sent successfully');
                 }
             });
 
-            console.log('XDDX');
             return res.status(202).json({
                 error: false,
                 userprivateToken: userPrivateToken,
@@ -275,7 +270,6 @@ const GetUserAccountData = async (req: CustomRequest, res: Response) => {
             u.UserName, 
             u.Description, 
             u.BirthDate, 
-            u.AccountPrice, 
             u.LocationLat, 
             u.LocationLon, 
             u.AccountFolowers, 
@@ -344,7 +338,6 @@ const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
         const GetUserDataQueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken = '${req.body.accountPrivateToken}' AND UserPublicToken='${req.body.accountPublicToken}';`;
 
         const data = await query(connection, GetUserDataQueryString);
-        console.log(req.body.profilePublicToken);
         if (Object.keys(data).length === 0) {
             return res.status(200).json({
                 error: false,
@@ -401,7 +394,6 @@ const ChangeUserData = async (req: CustomRequest, res: Response) => {
         Description='${req.body.userDescription}',
         UserEmail='${req.body.userEmail}', 
         Sport='${req.body.sport}',
-        AccountPrice='${req.body.price}',
         AccountType='${req.body.accountType}',
         userVisibility='${req.body.userVisibility}' WHERE UserPrivateToken='${req.body.userPrivateToken}';`;
         await query(connection, changeUserDataSQL);

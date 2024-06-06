@@ -16,7 +16,6 @@ CREATE TABLE users (
     AccountType VARCHAR(80) NOT NULL,
     UserPrivateToken VARCHAR(150) NOT NULL,
     UserPublicToken VARCHAR(150) NOT NULL,
-    AccountPrice INT NOT NULL DEFAULT 0,
     UserVisibility VARCHAR(255) NOT NULL DEFAULT 'public',
     JoinDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (UserPrivateToken),

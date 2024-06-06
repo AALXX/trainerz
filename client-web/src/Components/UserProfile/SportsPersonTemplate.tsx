@@ -80,7 +80,6 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
                     }}
                 >
                     <AccoutSettingsPopup
-                        AccountPrice={props.accountprice}
                         Sport={props.sport}
                         AccountType={props.accounttype}
                         UserName={props.username}

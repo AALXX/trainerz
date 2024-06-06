@@ -25,7 +25,6 @@ export default function CreatorAccountPage() {
         accounttype: '',
         userpublictoken: '',
         rating: 0,
-        accountprice: 0,
         accountfolowers: 0
     })
     const [userFound, setUserFound] = useState<boolean>(false)
@@ -43,7 +42,6 @@ export default function CreatorAccountPage() {
             } else {
                 setUserFound(true)
             }
-
         })()
     }, [])
 
@@ -65,22 +63,22 @@ export default function CreatorAccountPage() {
                             username={userData.username}
                             userpublictoken={urlParams.get('id') as string}
                             uservisibility={userData.uservisibility}
-                            accountprice={userData.accountprice}
                             rating={userData.rating}
                         />
                     ) : (
                         <SportsPersonTemplate
-                        // AccountType={userData.AccountType}
-                        // BirthDate={userData.BirthDate}
-                        // Description={userData.Description}
-                        // PhoneNumber={userData.PhoneNumber}
-                        // LocationCity={userData.LocationCity}
-                        // LocationCountry={userData.LocationCountry}
-                        // Sport={userData.Sport}
-                        // UserEmail={userData.UserEmail}
-                        // UserName={userData.UserName}
-                        // UserPublicToken={userData.UserPublicToken}
-                        // UserVisibility={userData.UserVisibility}
+                            accountfolowers={userData.accountfolowers}
+                            accounttype={userData.accounttype}
+                            birthDate={new Date()}
+                            description={userData.description}
+                            locationlat=""
+                            locationlon=""
+                            sport={userData.sport}
+                            phonenumber={userData.phonenumber}
+                            useremail={userData.useremail}
+                            username={userData.username}
+                            userpublictoken={urlParams.get('id') as string}
+                            uservisibility={userData.uservisibility}
                         />
                     )}
                 </>

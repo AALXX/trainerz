@@ -15,7 +15,6 @@ router.post(
     body('password').isLength({ min: 4 }).not().isEmpty().trim(),
     body('phoneNumber').not().isEmpty(),
     body('sport').not().isEmpty(),
-    body('accountPrice'),
     body('description'),
     body('accountType').not().isEmpty(),
     body('userBirthDate').not().isEmpty(),

@@ -4,7 +4,7 @@ import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import UtilFunc from '../../util/utilFunctions';
 
-const NAMESPACE = 'ClientVideosServiceManager';
+const NAMESPACE = 'ClientPackageServiceManager';
 
 /**
  * Validates and cleans the CustomRequest form

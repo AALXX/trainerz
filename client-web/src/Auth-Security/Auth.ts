@@ -9,7 +9,6 @@ const accRegisterFunc = async (
     repeatedPassword: string,
     description: string,
     sport: string,
-    accountPrice: number,
     accountType: string,
     userBirthDate: Date,
     locationLat: number,
@@ -26,7 +25,6 @@ const accRegisterFunc = async (
         phoneNumber,
         password,
         sport,
-        accountPrice,
         accountType,
         description,
         userBirthDate,
@@ -35,6 +33,10 @@ const accRegisterFunc = async (
     })
 
     if (res.data.error) {
+        if (res.data.erromsg) {
+            window.alert(res.data.erromsg)
+            return false
+        }
         window.alert('an error has ocurred')
         return false
     }
