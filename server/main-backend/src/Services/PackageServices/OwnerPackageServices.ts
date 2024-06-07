@@ -5,19 +5,20 @@ import { connect, CustomRequest, query } from '../../config/postgresql';
 import multer from 'multer';
 import utilFunctions from '../../util/utilFunctions';
 import fs from 'fs';
+import axios from 'axios';
 
 const NAMESPACE = 'OwnerPackageServiceManager';
 
 /**
  * Validates and cleans the CustomRequest form
  */
-// const CustomRequestValidationResult = validationResult.withDefaults({
-//     formatter: (error) => {
-//         return {
-//             errorMsg: error.msg,
-//         };
-//     },
-// });
+const CustomRequestValidationResult = validationResult.withDefaults({
+    formatter: (error) => {
+        return {
+            errorMsg: error.msg,
+        };
+    },
+});
 
 /**
  * file storage
@@ -103,16 +104,24 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
             }
 
             try {
+                // Count the number of photos uploaded
+                let photosCount = 0;
+                for (let i = 1; i <= 5; i++) {
+                    if ((req.files as { [fieldname: string]: Express.Multer.File[] })[`Photo_${i}`]?.[0]) {
+                        photosCount++;
+                    }
+                }
+
                 // Insert into Packages table
                 const insertPackagesQuery = `
-      INSERT INTO Packages (PackageToken, OwnerToken, PackageName, Rating, Tier, PhotosNumber, VideosNumber)
+      INSERT INTO Packages (PackageToken, OwnerToken, PackageName, PackageSport, Rating,  Tier, PhotosNumber, VideosNumber)
       VALUES
-        ($1, $2, $3, 0, 'basic', 0, 0),
-        ($1, $2, $3, 0, 'standard', 0, 0),
-        ($1, $2, $3, 0, 'premium', 0, 0)
+        ($1, $2, $3, $4, 0, 'basic', $5, 0),
+        ($1, $2, $3, $4, 0, 'standard', $5, 0),
+        ($1, $2, $3, $4, 0, 'premium', $5, 0)
       ON CONFLICT (PackageToken) DO NOTHING;
     `;
-                await query(connection, insertPackagesQuery, [PackageToken, userPublicToken, req.body.PackageName], true);
+                await query(connection, insertPackagesQuery, [PackageToken, userPublicToken, req.body.PackageName, req.body.Sport, photosCount], true);
 
                 // Insert into BasicTier table
                 const insertBasicTierQuery = `
@@ -188,4 +197,37 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
     });
 };
 
-export default { CreatePackage };
+const GetPackages = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('CHANGE_ACCOUNT_DATA_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return { error: true };
+        }
+
+        const changeUserDataSQL = `SELECT PackageToken, OwnerToken, PackageName, Rating, packagesport FROM  Packages WHERE OwnerToken = '${req.params.userPublicToken}';`;
+        const data = await query(connection, changeUserDataSQL);
+        return res.status(202).json({
+            error: false,
+            packagesData: data,
+        });
+    } catch (error: any) {
+        logging.error(NAMESPACE, error.message);
+
+        res.status(202).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+export default { CreatePackage, GetPackages };

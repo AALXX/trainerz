@@ -7,6 +7,7 @@ CREATE TABLE Packages (
   PackageToken TEXT NOT NULL,
   OwnerToken TEXT NOT NULL,
   PackageName TEXT NOT NULL,
+  PackageSport TEXT NOT NULL,
   Rating INT NOT NULL,
   Tier TEXT CHECK (Tier IN ('basic', 'standard', 'premium')) NOT NULL, -- Package tiers
   PhotosNumber int Default 0 NOT NULL, 

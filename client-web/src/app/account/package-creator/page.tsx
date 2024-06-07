@@ -1,5 +1,6 @@
 'use client'
 import { isLoggedIn } from '@/Auth-Security/Auth'
+import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import PopupCanvas from '@/Components/CommonUi/util/PopupCanvas'
 import CreateTierTemplate from '@/Components/Packages/CreateTierTemplate'
 import AddPhotoZone from '@/Components/Packages/util/addPhotoZone'
@@ -13,6 +14,7 @@ import React, { useEffect, useState } from 'react'
 const Page: React.FunctionComponent<any> = props => {
     const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
+
 
     const userToken: string = getCookie('userToken') as string
     const router = useRouter()
@@ -47,6 +49,8 @@ const Page: React.FunctionComponent<any> = props => {
     const [image2, setImage2] = useState<File | null>(null)
     const [image3, setImage3] = useState<File | null>(null)
     const [image4, setImage4] = useState<File | null>(null)
+
+    const [sport, setSport] = useState<string>('')
 
     useEffect(() => {
         /**
@@ -134,7 +138,11 @@ const Page: React.FunctionComponent<any> = props => {
         if (image3) formData.append('Photo_3', image3)
         if (image4) formData.append('Photo_4', image4)
 
+        if (image1 == null && image2 == null && image3 == null && image4 == null) return window.alert('please upload at least 1 image!')
+
         if (packageName == '') return window.alert('please enter package name!')
+
+        if (sport == '') return window.alert('please select sport!')
 
         formData.append('BasicPrice', basicPrice.toString())
         formData.append('basicRecurring', basicRecurring.toString())
@@ -159,6 +167,8 @@ const Page: React.FunctionComponent<any> = props => {
 
         formData.append('PackageName', packageName)
 
+        formData.append('Sport', sport)
+
         formData.append('UserPrivateToken', userToken)
 
         try {
@@ -169,7 +179,7 @@ const Page: React.FunctionComponent<any> = props => {
             })
 
             if (resp.data.error == false) {
-                router.replace('account')
+                router.replace('/account')
             }
         } catch (error) {
             console.error('Error creating package:', error)
@@ -190,13 +200,25 @@ const Page: React.FunctionComponent<any> = props => {
                             />
                         </div>
                         <hr className="w-full" />
-                        <div className="flex flex-col w-full h-full p-5">
+                        <div className="flex flex-col w-full h-[75%] p-5">
                             <h1 className="text-white mt-4">Add Photos that describe best your package</h1>
                             <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-3 3xl:grid-cols-3">
                                 <AddPhotoZone setImageFile={setImage1} />
                                 <AddPhotoZone setImageFile={setImage2} />
                                 <AddPhotoZone setImageFile={setImage3} />
                                 <AddPhotoZone setImageFile={setImage4} />
+                            </div>
+                        </div>
+                        <hr className="w-full " />
+                        <div className="flex h-[15%]  ">
+                            <div className="flex flex-col w-[35%] self-center  mt-4 h-24 m-auto">
+                                <h1 className="self-center text-white">Package sport</h1>
+                                <OptionPicker
+                                    label="Select Sport"
+                                    options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Bodybuilding', 'Other']}
+                                    value={sport}
+                                    onChange={value => setSport(value)}
+                                />
                             </div>
                         </div>
                     </div>

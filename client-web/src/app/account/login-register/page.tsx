@@ -6,7 +6,6 @@ import BirthDateSelectorComponent from '@/Components/CommonUi/BirthDatePicker'
 import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import { PhoneInput } from 'react-international-phone'
 import 'react-international-phone/style.css'
-import PriceInput from '@/Components/CommonUi/PriceInput'
 
 /**
  * Login-Register-Screen

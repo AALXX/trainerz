@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction } from 'react'
 
 export interface ITierTemplate {
     tierPrice: number
@@ -22,4 +22,22 @@ export interface ICreateTierTemplate {
     setCustomProgram: Dispatch<SetStateAction<boolean>>
     description: string
     setDescription: Dispatch<SetStateAction<string>>
+}
+
+export interface IPackageTemplate {
+    price: number
+    recurring: boolean
+    acces_videos: boolean
+    coaching_101: boolean
+    custom_program: boolean
+    description: string
+}
+
+export interface IAccountPackages {
+    packagetoken: string
+    ownertoken: string
+    packagename: string
+    packagesport: string
+    rating: number
+    isOwner: boolean
 }

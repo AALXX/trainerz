@@ -12,7 +12,7 @@ const NavBar = () => {
     }
 
     return (
-        <div className="flex bg-navbar-grey w-[100%] h-[6rem] bg-[#00000082]">
+        <div className="flex bg-navbar-grey w-[100%] h-[6rem] bg-[#00000082] flex-grow-0">
             <div className={`fixed top-0 left-0 h-full w-full bg-black transition-opacity duration-500 ease-in-out ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}></div>
             <div
                 onMouseOver={() => {
@@ -44,8 +44,8 @@ const NavBar = () => {
                     <button className="w-full h-full bg-none text-white border-2 rounded-xl">MESSAGES</button>
                 </Link>
 
-                <Link href={'/account/upload'} className="self-center w-[90%] h-[2rem] mt-[1rem]">
-                    <button className="w-full h-full bg-none text-white border-2 rounded-xl">UPLOAD</button>
+                <Link href={'/account/package-creator'} className="self-center w-[90%] h-[2rem] mt-[1rem]">
+                    <button className="w-full h-full bg-none text-white border-2 rounded-xl">Create Package</button>
                 </Link>
             </div>
 

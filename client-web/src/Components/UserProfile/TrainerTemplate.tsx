@@ -10,7 +10,8 @@ import axios from 'axios'
 import VideoTamplate from './util/VideoCardTemplate'
 import ChangeAccountIconComp from './util/ChangeAccountIconComp'
 import AboutUserTab from './util/AboutUserTab'
-import Link from 'next/link'
+import { IAccountPackages } from '../Packages/IPackages'
+import PackageCardTemplate from '@/Components/Packages/PackageCardTemplate'
 
 /**
  * Renders a template for a user's trainer profile.
@@ -27,14 +28,31 @@ const TrainerTemplate = (props: IUserPrivateData) => {
 
     const [isAccIconHovered, setIsAccIconHovered] = useState<boolean>(false)
 
+    const [userPackages, setUserPackages] = useState<Array<IAccountPackages>>([])
+
     const renderComponent = () => {
         switch (componentToShow) {
             case 'PackagesPage':
                 return (
-                    <>
-                        <div className="grid xl:grid-cols-6 lg:grid-cols-5 gap-4 "> No Packages</div>
-                        <Link href="/account/package-creator">Create Package</Link>
-                    </>
+                    <div className="flex flex-col w-full h-[37rem]  ">
+                        {Object.keys(userPackages).length > 0 ? (
+                            <div className="self-center w-[95%] h-full overflow-y-scroll   grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                                {userPackages.map((packageData: IAccountPackages, index: number) => (
+                                    <PackageCardTemplate
+                                        packagesport={packageData.packagesport}
+                                        packagetoken={packageData.packagetoken}
+                                        key={index}
+                                        rating={packageData.rating}
+                                        packagename={packageData.packagename}
+                                        isOwner={isOwner}
+                                        ownertoken={packageData.ownertoken}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <h1 className="text-white self-center mt-4 ">No Packages!</h1>
+                        )}
+                    </div>
                 )
 
             case 'Videos':
@@ -77,12 +95,17 @@ const TrainerTemplate = (props: IUserPrivateData) => {
             if (getCookie('userToken') !== undefined) {
                 setIsOwner(await ownerCheck(props.userpublictoken))
             }
+
+            const packagesresp = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-account-packages/${props.userpublictoken}`)
+            console.log(packagesresp)
+            setUserPackages(packagesresp.data.packagesData)
+            // setVideosData(resp.data.VideosData)
         })()
     }, [])
 
     return (
-        <div className="flex flex-col w-full h-full ">
-            <div className="flex flex-col  w-full h-44">
+        <div className="flex flex-col w-full h-full mt-[6rem]">
+            <div className="flex flex-col  w-full h-[6rem] flex-grow-0">
                 <div className="flex h-full w-[90%] self-center ">
                     <div className="flex w-80 self-center h-32 ">
                         <div className="z-10 relative self-center w-40 h-24 ">
@@ -156,7 +179,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                     </div>
                 </div>
             </div>
-            <div className="flex mt-10 items-center ">
+            <div className="flex mt-10 items-center flex-grow-0">
                 <SelectableCards Title="PACKAGES" TabName="PackagesPage" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
                 <SelectableCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
                 <SelectableCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
