@@ -10,6 +10,7 @@ import PackageManagerRoutes from '../routes/PackageRoutes/PackageRoutes';
 import config from '../config/config';
 import logging from '../config/logging';
 import { createPool } from '../config/postgresql';
+import Stripe from 'stripe';
 const NAMESPACE = 'BackendApp_Api';
 const router = express();
 
@@ -17,7 +18,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(express.json());
 
 const pool = createPool();
-
+const stripe = new Stripe(`${process.env.StripeKey}`, { apiVersion: '2024-04-10' });
 
 //* Rules of Api
 router.use((req: any, res: any, next: NextFunction) => {
@@ -25,6 +26,7 @@ router.use((req: any, res: any, next: NextFunction) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
     req.pool = pool;
+    req.stripe = stripe;
 
     if (req.method == 'OPTIONS') {
         res.header('Acces-Control-Allow-Methods', 'GET POST PATCH DELETE PUT');

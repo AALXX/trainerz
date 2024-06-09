@@ -54,127 +54,91 @@ const CustomRequestValidationResult = validationResult.withDefaults({
 const RegisterUser = async (req: CustomRequest, res: Response) => {
     const errors = CustomRequestValidationResult(req);
     if (!errors.isEmpty()) {
-        errors.array().map((error) => {
+        errors.array().forEach((error) => {
             logging.error('REGISTER_USER_FUNC', error.errorMsg);
         });
-
-        return res.status(200).json({ error: true, errors: errors.array() });
+        return res.status(400).json({ error: true, errors: errors.array() });
     }
 
-    const hashedpwd = await utilFunctions.HashPassword(req.body.password);
-
-    const jwtSecretKey = `${process.env.ACCOUNT_SECRET}` + hashedpwd + req.body.userEmail;
-    const privateData = {};
-
-    const publicData = {};
-
-    const userPrivateToken = jwt.sign(privateData, jwtSecretKey);
-
-    const userPublicToken = jwt.sign(publicData, `${process.env.ACCOUNT_REGISTER_SECRET}`);
-    const InsertUserQueryString = `
-    INSERT INTO users (UserName, Description, BirthDate, LocationLat, LocationLon, Sport, PhoneNumber, UserEmail, UserPwd, UserVisibility, AccountType, UserPrivateToken, UserPublicToken)
-    VALUES('${req.body.userName}', '${req.body.description}', 
-    '${req.body.userBirthDate}', '${req.body.locationLat}', 
-    '${req.body.locationLon}', '${req.body.sport}', '${req.body.phoneNumber}', '${req.body.userEmail}', '${hashedpwd}', 'public', '${req.body.accountType}', '${userPrivateToken}', '${userPublicToken}');`;
-
     try {
+        const { password, userEmail, userName, description, userBirthDate, locationLat, locationLon, sport, phoneNumber, accountType } = req.body;
+        const hashedpwd = await utilFunctions.HashPassword(password);
+
+        const jwtSecretKey = `${process.env.ACCOUNT_SECRET}${hashedpwd}${userEmail}`;
+        const userPrivateToken = jwt.sign({}, jwtSecretKey);
+        const userPublicToken = jwt.sign({}, `${process.env.ACCOUNT_REGISTER_SECRET}`);
+
         const connection = await connect(req.pool!);
 
         if (connection == null) {
-            return res.status(500).json({
-                message: 'connection issue with db',
+            logging.error('REGISTER_USER_FUNC', 'Could not connect to database');
+            return { error: true };
+        }
+
+        if (await utilFunctions.checkEmailExists(req.pool!, userEmail)) {
+            return res.status(400).json({
                 error: true,
+                errmsg: 'An account with this email already exists',
             });
         }
 
-        if (await utilFunctions.checkEmailExists(req.pool!, req.body.userEmail)) {
-            return res.status(202).json({
-                error: true,
-                erromsg: 'ann account with this email already exists',
-            });
+        const insertUserQuery = `
+            INSERT INTO users (UserName, Description, BirthDate, LocationLat, LocationLon, Sport, PhoneNumber, UserEmail, UserPwd, UserVisibility, AccountType, UserPrivateToken, UserPublicToken)
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, 'public', $10, $11, $12)
+        `;
+        await query(connection, insertUserQuery, [userName, description, userBirthDate, locationLat, locationLon, sport, phoneNumber, userEmail, hashedpwd, accountType, userPrivateToken, userPublicToken]);
+
+        await fs.promises.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/`, { recursive: true });
+
+        const customer = await req.stripe?.customers.create({
+            email: userEmail,
+            name: userName,
+            metadata: { PublicToken: userPublicToken },
+        });
+
+        if (!customer) {
+            logging.error('REGISTER_USER_FUNC', 'Stripe customer creation failed');
+            return { error: true };
         }
 
-        await query(connection, InsertUserQueryString);
-        fs.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/`, async (err) => {
-            if (err) {
-                console.log(err);
-                return res.status(200).json({
-                    error: true,
-                });
-            }
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.platform_gmail,
+                pass: process.env.platform_gmail_password,
+            },
+        });
 
-            // if (req.body.accountType === 'Trainer') {
-            //     const product = await req.stripe?.products.create({ name: req.body.userName, metadata: { PublicToken: userPublicToken } });
-            //     if (product!.id != null) {
-            //         await req.stripe?.prices.create({
-            //             product: product!.id,
-            //             unit_amount: req.body.accountPrice * 100, // Amount in cents (e.g., $15.00)
-            //             currency: 'usd',
-            //             recurring: {
-            //                 interval: 'month',
-            //             },
-            //         });
-            //     }
-            // }
-            // await req.stripe?.customers.create({
-            //     email: req.body.userEmail,
-            //     name: req.body.userName,
-            // });
+        const mailOptions = {
+            from: process.env.platform_gmail,
+            to: userEmail,
+            subject: 'Welcome to Trainerz App!',
+            text: `Hello,
 
-            // const resp = await axios.post(`${process.env.SEARCH_SERVER}/index-user`, {
-            //     UserName: req.body.userName,
-            //     UserPrivateToken: userPrivateToken,
-            //     AccountType: req.body.accountType,
-            //     Sport: req.body.sport,
-            // });
-
-            // if (resp.data.error == true) {
-            //     logging.error('REGISTER_USER_FUNC', 'failed to index user');
-            // }
-
-            // Create a transporter with Gmail SMTP configuration
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: process.env.platform_gmail,
-                    pass: process.env.platform_gmail_password,
-                },
-            });
-
-            const mailOptions = {
-                from: process.env.platform_gmail,
-                to: req.body.userEmail,
-                subject: 'Welcome to Trainerz App!',
-                text: `Hello,
-
-An account with the Username: "${req.body.userName}", has been created. Thank you for joining Trainerz app. 
+An account with the Username: "${userName}", has been created. Thank you for joining Trainerz app. 
 Note that this app is still in development and if you encounter a bug, feel free to report it to us.
 
 Thank you,
 Trainerz Team`,
-            };
+        };
 
-            // Send the email
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    res.status(500).send('Error sending email');
-                } else {
-                    res.status(200).send('Email sent successfully');
-                }
-            });
-
-            return res.status(202).json({
-                error: false,
-                userprivateToken: userPrivateToken,
-                userpublictoken: userPublicToken,
-            });
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                logging.error('REGISTER_USER_FUNC', 'Error sending email: ' + error.message);
+            } else {
+                logging.info('REGISTER_USER_FUNC', 'Email sent successfully: ' + info.response);
+            }
+        });
+        return res.status(200).json({
+            error: false,
+            userPrivateToken,
+            userPublicToken,
         });
     } catch (error: any) {
-        logging.error(NAMESPACE, error.message);
-
+        logging.error('REGISTER_USER_FUNC', error.message);
         return res.status(500).json({
-            message: error.message,
             error: true,
+            errmsg: error.message,
         });
     }
 };
@@ -210,7 +174,7 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
         if (Object.keys(data).length === 0) {
             return res.status(200).json({
                 error: false,
-                userprivateToken: null,
+                userPrivateToken: null,
             });
         }
 
@@ -223,13 +187,13 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             } else if (!isMatch) {
                 return res.status(200).json({
                     error: false,
-                    userprivateToken: null,
+                    userPrivateToken: null,
                 });
             } else {
                 return res.status(200).json({
                     error: false,
-                    userprivateToken: data[0].userprivatetoken,
-                    userpublicToken: data[0].userpublictoken,
+                    userPrivateToken: data[0].userprivatetoken,
+                    userPublicToken: data[0].userpublictoken,
                 });
             }
         });
@@ -240,6 +204,65 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             error: true,
             errmsg: error.message,
         });
+    }
+};
+
+/**
+ * Deletes The user Account and all the videos with it
+ */
+const DeleteUserAccount = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('LOGiN_USER_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.userToken);
+        if (UserPublicToken == null) {
+            return res.status(200).json({
+                error: true,
+            });
+        }
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return res.status(500).json({ error: true, message: 'Database connection failed' });
+        }
+
+        try {
+            const deleteUserAccountQuery = `
+                DELETE FROM users WHERE UserPrivateToken = $1;
+            `;
+            const deleteUserAccountQuery2 = `
+                DELETE FROM packages CASCADE WHERE OwnerToken = $1;
+            `;
+            await query(connection, deleteUserAccountQuery, [req.body.userToken], true);
+            await query(connection, deleteUserAccountQuery2, [UserPublicToken]);
+        } catch (err) {
+            await connection.query('ROLLBACK');
+            throw err;
+        }
+
+        const userFolderPath = `${process.env.ACCOUNTS_FOLDER_PATH}/${UserPublicToken}/`;
+
+        const itEtxtsist = await fs.statfsSync(userFolderPath);
+        if (itEtxtsist) {
+            try {
+                await utilFunctions.RemoveDirectory(userFolderPath);
+                console.log(`Deleted folder: ${UserPublicToken}`);
+                return res.status(202).json({ error: false });
+            } catch (err) {
+                console.error(`Error deleting directory: ${err}`);
+                return res.status(202).json({ error: true, message: 'Error deleting directory' });
+            }
+        }
+    } catch (error: any) {
+        logging.error('DELETE_USER_ACCOUNT_FUNC', error.message);
+        res.status(202).json({ error: true, errmsg: error.message });
     }
 };
 
@@ -469,4 +492,5 @@ export default {
     ChangeUserData,
     CheckAccountOwner,
     ChangeUserIcon,
+    DeleteUserAccount,
 };

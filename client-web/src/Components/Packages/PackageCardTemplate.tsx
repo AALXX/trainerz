@@ -5,7 +5,7 @@ import TruncatedText from '../CommonUi/util/TruncateText'
 
 const PackageCardTemplate = (props: IAccountPackages) => {
     return (
-        <Link href={`/package-view?t=${props.ownertoken}`} className="relative w-full h-0 pb-[60%] overflow-hidden">
+        <Link href={`/package-view?t=${props.packagetoken}`} className="relative w-full h-0 pb-[60%] overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-white cursor-pointer rounded-2xl">
                 <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/Package_${props.packagetoken}/Photo_1.jpg?cache=none`} className="w-full h-full object-cover rounded-2xl" />
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between ">

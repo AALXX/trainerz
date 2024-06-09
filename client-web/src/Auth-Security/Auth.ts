@@ -41,9 +41,9 @@ const accRegisterFunc = async (
         return false
     }
 
-    if (!res.data.error && res.data.userprivateToken != null) {
-        setCookie('userToken', res.data.userprivateToken, { maxAge: 60 * 6 * 24 })
-        setCookie('userPublicToken', res.data.userpublictoken, { maxAge: 60 * 6 * 24 })
+    if (!res.data.error && res.data.userPrivateToken != null) {
+        setCookie('userToken', res.data.userPrivateToken, { maxAge: 60 * 6 * 24 })
+        setCookie('userPublicToken', res.data.userPublicToken, { maxAge: 60 * 6 * 24 })
         return true
     }
 
@@ -56,9 +56,9 @@ const accLoginFunc = async (userEmail: string, password: string) => {
         password
     })
 
-    if (!res.data.error && res.data.userprivateToken != null) {
-        setCookie('userToken', res.data.userprivateToken, { maxAge: 60 * 6 * 24 })
-        setCookie('userPublicToken', res.data.userpublicToken, { maxAge: 60 * 6 * 24 })
+    if (!res.data.error && res.data.userPrivateToken != null) {
+        setCookie('userToken', res.data.userPrivateToken, { maxAge: 60 * 6 * 24 })
+        setCookie('userPublicToken', res.data.userPublicToken, { maxAge: 60 * 6 * 24 })
         return true
     }
 
@@ -110,7 +110,7 @@ const deleteAccount = async (sure: boolean, UserPrivateToken: string) => {
         return false
     }
 
-    const res = await axios.post(`${process.env.SERVER_BACKEND}/user-account/delete-user-account/`, { userToken: UserPrivateToken })
+    const res = await axios.post(`${process.env.SERVER_BACKEND}/user-account-manager/delete-user-account/`, { userToken: UserPrivateToken })
     if (res.data.error) {
         window.alert('error')
         return false

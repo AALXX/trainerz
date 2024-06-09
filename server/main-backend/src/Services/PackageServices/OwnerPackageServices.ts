@@ -6,6 +6,8 @@ import multer from 'multer';
 import utilFunctions from '../../util/utilFunctions';
 import fs from 'fs';
 import axios from 'axios';
+import FFmpeg from 'fluent-ffmpeg';
+import Stripe from 'stripe';
 
 const NAMESPACE = 'OwnerPackageServiceManager';
 
@@ -68,6 +70,13 @@ const PhotoUploader = multer({
     },
 ]);
 
+/**
+ * Creates a new package for a user.
+ *
+ * @param req - The custom request object containing the user's private token, package details, and uploaded photos.
+ * @param res - The response object to send the package creation status.
+ * @returns A JSON response indicating whether the package creation was successful or not.
+ */
 const CreatePackage = async (req: CustomRequest, res: Response) => {
     PhotoUploader(req, res, async (err: any) => {
         if (err) {
@@ -169,22 +178,68 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                     const photo = (req.files as { [fieldname: string]: Express.Multer.File[] })[`Photo_${i}`]?.[0];
                     if (photo !== undefined) {
                         try {
-                            await fs.promises.rename(
-                                `${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`,
-                                `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Package_${PackageToken}/Photo_${i}.jpg`,
-                            );
+                            await PhotoProceesor(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`, `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Package_${PackageToken}/Photo_${i}.jpg`);
+
+                            await fs.unlinkSync(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`);
                         } catch (err: any) {
                             logging.error('FILE_UPLOAD', err);
 
                             return res.status(200).json({
-                                error: false,
+                                error: true,
                             });
                         }
                     }
                 }
 
+                // Create Stripe product
+                const product = await req.stripe?.products.create({
+                    name: req.body.PackageName,
+                    metadata: { PackageToken: PackageToken, OwnerToken: userPublicToken },
+                });
+                if (product!.id != null) {
+                    // Create Stripe prices
+                    const prices = [
+                        {
+                            unit_amount: req.body.BasicPrice * 100,
+                            currency: 'eur',
+                            recurring: { interval: req.body.basicRecurring ? 'month' : undefined },
+                            product: product!.id,
+                        },
+                        {
+                            unit_amount: req.body.StandardPrice * 100,
+                            currency: 'eur',
+                            recurring: { interval: req.body.standardRecurring ? 'month' : undefined },
+                            product: product!.id,
+                        },
+                        {
+                            unit_amount: req.body.PremiumPrice * 100,
+                            currency: 'eur',
+                            recurring: { interval: req.body.premiumRecurring ? 'month' : undefined },
+                            product: product!.id,
+                        },
+                    ];
+
+                    for (const price of prices) {
+                        const priceParams: Stripe.PriceCreateParams = {
+                            unit_amount: price.unit_amount,
+                            currency: price.currency,
+                            product: price.product,
+                        };
+                        
+                        if (price.recurring) {
+                            priceParams.recurring = { interval: 'month' };
+                        }
+
+                        await req.stripe?.prices.create(priceParams);
+                    }
+
+                    return res.status(200).json({
+                        error: false,
+                    });
+                }
+
                 return res.status(200).json({
-                    error: false,
+                    error: true,
                 });
             } catch (err: any) {
                 await connection.query('ROLLBACK');
@@ -197,6 +252,36 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
     });
 };
 
+/**
+ * Processes a photo by resizing it to 1280x720 resolution and saving it to the specified path.
+ *
+ * @param path - The path to the photo file to be processed.
+ * @returns A Promise that resolves with an object containing an `error` property set to `false` if the processing is successful, or rejects with an error if there is an issue.
+ */
+const PhotoProceesor = async (path: string, outputPath: string) =>
+    new Promise((resolve, reject) => {
+        try {
+            FFmpeg(path)
+                .size('1280x720')
+                .on('end', () => {
+                    resolve({ error: false });
+                })
+                .on('error', (err) => {
+                    console.error('Error:', err);
+                    reject(err);
+                })
+                .save(outputPath)
+                .run();
+        } catch {}
+    });
+
+/**
+ * Retrieves a list of packages owned by a user.
+ *
+ * @param req - The custom request object containing the user's public token.
+ * @param res - The response object to send the package data.
+ * @returns A JSON response with the package data, or an error response if there is an issue.
+ */
 const GetPackages = async (req: CustomRequest, res: Response) => {
     const errors = CustomRequestValidationResult(req);
     if (!errors.isEmpty()) {
@@ -214,8 +299,8 @@ const GetPackages = async (req: CustomRequest, res: Response) => {
             return { error: true };
         }
 
-        const changeUserDataSQL = `SELECT PackageToken, OwnerToken, PackageName, Rating, packagesport FROM  Packages WHERE OwnerToken = '${req.params.userPublicToken}';`;
-        const data = await query(connection, changeUserDataSQL);
+        const QueryString = `SELECT PackageToken, OwnerToken, PackageName, Rating, packagesport FROM  Packages WHERE OwnerToken = '${req.params.userPublicToken}';`;
+        const data = await query(connection, QueryString);
         return res.status(202).json({
             error: false,
             packagesData: data,

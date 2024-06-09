@@ -48,7 +48,7 @@ router.post(
     OwnerAccountServices.ChangeUserData,
 );
 
-// router.post('/delete-user-account', body('userToken').not().isEmpty(), OwnerAccountServices.DeleteUserAccount);
+router.post('/delete-user-account', body('userToken').not().isEmpty(), OwnerAccountServices.DeleteUserAccount);
 
 router.get('/get-creator-data/:profileToken/:userPublicToken', param('profileToken').not().isEmpty(), param('userPublicToken').not().isEmpty(), ClientAccountServices.GetCreatorAccountData);
 

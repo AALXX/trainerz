@@ -3,15 +3,13 @@ import { IPackageTemplate } from './IPackages'
 
 const PackageTemplate = (props: IPackageTemplate) => {
     return (
-        <div className="flex flex-col h-[70%] p-4 ">
-            <div className="flex flex-col w-full h-24 mt-2">
-                <h1 className="text-xl text-white">Price</h1>
-                <div className="relative mt-3 w-full">
-                    <h1 className=" text-white">{props.price}</h1>
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white">€</span>
-                </div>
+        <div className="flex flex-col h-[70%] p-4 self-center w-full">
+            <div className="flex  w-full mt-8">
+                <h1 className="self-center text-lg text-white">Price</h1>
+                <h1 className="self-center text-lg text-white ml-2">{props.price}</h1>
+                <span className="self-center text-xllg ml-1 text-white">€</span>
             </div>
-            <div className="flex flex-col w-full  mt-4 ">
+            <div className="flex flex-col w-full mt-4 ">
                 <div className="relative  flex items-center">
                     <label className="mr-2 text-lg text-white">Recurring Payment (monthly)</label>
 
