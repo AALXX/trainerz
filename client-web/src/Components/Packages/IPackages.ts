@@ -33,6 +33,16 @@ export interface IPackageTemplate {
     description: string
 }
 
+export interface IPackageData {
+    price: number
+    recurring: boolean
+    acces_videos: boolean
+    coaching_101: boolean
+    custom_program: boolean
+    priceId: string
+    description: string
+}
+
 export interface IAccountPackages {
     packagetoken: string
     ownertoken: string

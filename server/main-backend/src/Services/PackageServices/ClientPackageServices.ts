@@ -47,18 +47,21 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
             p.PhotosNumber,
             p.VideosNumber,
             bt.Price AS BasicPrice,
+            bt.priceid AS BasicPriceId,
             bt.Recurring AS BasicRecurring,
             bt.acces_videos AS BasicAccesVideos,
             bt.coaching_101 AS BasicCoaching,
             bt.custom_program AS BasicCustomProgram,
             bt.Description AS BasicDescription,
             st.Price AS StandardPrice,
+            st.priceid AS StandardPriceId,
             st.Recurring AS StandardRecurring,
             st.acces_videos AS StandardAccesVideos,
             st.coaching_101 AS StandardCoaching,
             st.custom_program AS StandardCustomProgram,
             st.Description AS StandardDescription,
             pt.Price AS PremiumPrice,
+            pt.priceid AS PremiumPriceId,
             pt.Recurring AS PremiumRecurring,
             pt.acces_videos AS PremiumAccesVideos,
             pt.coaching_101 AS PremiumCoaching,
@@ -93,6 +96,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
 
             basicTier: {
                 price: data[0].basicprice,
+                priceId: data[0].basicpriceid,
                 recurring: data[0].basicrecurring,
                 acces_videos: data[0].basicaccesvideos,
                 coaching_101: data[0].basiccoaching,
@@ -102,6 +106,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
 
             standardTier: {
                 price: data[0].standardprice,
+                priceId: data[0].standardpriceid,
                 recurring: data[0].standardrecurring,
                 acces_videos: data[0].standardaccesvideos,
                 coaching_101: data[0].standardcoaching,
@@ -111,6 +116,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
 
             premiumTier: {
                 price: data[0].premiumprice,
+                priceId: data[0].premiumpriceid,
                 recurring: data[0].premiumrecurring,
                 acces_videos: data[0].premiumaccesvideos,
                 coaching_101: data[0].premiumcoaching,

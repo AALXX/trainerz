@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS BasicTier;
 
 CREATE TABLE BasicTier (
   PackageToken TEXT PRIMARY KEY REFERENCES Packages(PackageToken) ON DELETE CASCADE,
+  PriceID TEXT NOT NULL,
   Price INT NOT NULL,
   Recurring BOOLEAN NOT NULL,
   acces_videos BOOLEAN NOT NULL,

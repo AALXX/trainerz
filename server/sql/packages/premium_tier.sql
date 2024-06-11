@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS PremiumTier;
 
 CREATE TABLE PremiumTier (
   PackageToken TEXT PRIMARY KEY REFERENCES Packages(PackageToken) ON DELETE CASCADE,
+  PriceID TEXT NOT NULL,
   Price INT NOT NULL,
   Recurring BOOLEAN NOT NULL,
   acces_videos BOOLEAN NOT NULL,

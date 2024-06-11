@@ -5,6 +5,7 @@ import express, { NextFunction } from 'express';
 import UserAccountManagerRoutes from '../routes/UserAccountManager/UserAccountManagerRoutes';
 import VideosManagerRoutes from '../routes/VideosManager/VideosManagerRoutes';
 import PackageManagerRoutes from '../routes/PackageRoutes/PackageRoutes';
+import PaymentManagerRoutes from '../routes/PaymentRoutes/PaymentRoutes';
 
 //* Configs
 import config from '../config/config';
@@ -39,6 +40,7 @@ router.use((req: any, res: any, next: NextFunction) => {
 router.use('/api/user-account-manager/', UserAccountManagerRoutes);
 router.use('/api/videos-manager/', VideosManagerRoutes);
 router.use('/api/package-manager/', PackageManagerRoutes);
+router.use('/api/payment-manager/', PaymentManagerRoutes);
 
 //* Error Handleling
 router.use((req: any, res: any, next: NextFunction) => {

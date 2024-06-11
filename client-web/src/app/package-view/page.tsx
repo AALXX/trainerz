@@ -2,12 +2,14 @@
 import { isLoggedIn } from '@/Auth-Security/Auth'
 import PhotoViewer from '@/Components/CommonUi/PhotosViewer'
 import PopupCanvas from '@/Components/CommonUi/util/PopupCanvas'
-import { IPackageTemplate } from '@/Components/Packages/IPackages'
+import { IPackageData } from '@/Components/Packages/IPackages'
 import PackageCheckout from '@/Components/Packages/PackageCheckout'
 import PackageTemplate from '@/Components/Packages/PackageTemplate'
 import SelectableCards from '@/Components/UserProfile/util/ProfileTabCards'
+import getStripe from '@/lib/Stripe'
+import { Elements } from '@stripe/react-stripe-js'
 import axios from 'axios'
-import { getCookie } from 'cookies-next'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -17,33 +19,37 @@ const PackageView = () => {
     const urlParams = useSearchParams() //* t =  search query
 
     const [checkoutPoUp, setCheckoutPoUp] = useState<boolean>(false)
+    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
 
     // const router = useRouter()
 
-    const [basicTierData, setBasicTierData] = useState<IPackageTemplate>({
+    const [basicTierData, setBasicTierData] = useState<IPackageData>({
         acces_videos: false,
         coaching_101: false,
         custom_program: false,
         description: '',
         price: 0,
+        priceId: '',
         recurring: false
     })
 
-    const [standardTierData, setStandardTierData] = useState<IPackageTemplate>({
+    const [standardTierData, setStandardTierData] = useState<IPackageData>({
         acces_videos: false,
         coaching_101: false,
         custom_program: false,
         description: '',
         price: 0,
+        priceId: '',
         recurring: false
     })
 
-    const [premiumTierData, setPremiumTierData] = useState<IPackageTemplate>({
+    const [premiumTierData, setPremiumTierData] = useState<IPackageData>({
         acces_videos: false,
         coaching_101: false,
         custom_program: false,
         description: '',
         price: 0,
+        priceId: '',
         recurring: false
     })
 
@@ -52,15 +58,21 @@ const PackageView = () => {
     const [rating, setRating] = useState<number>(0)
 
     const [sport, setSport] = useState<string>('')
+    const [selectedPriceId, setSelectedPriceId] = useState<string>('')
 
     useEffect(() => {
         ;(async () => {
+            const usrLoggedIn = await isLoggedIn()
+            setUserLoggedIn(usrLoggedIn)
+
             const { data } = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-package-data/${urlParams.get('t') as string}`)
             console.log(data)
 
             setBasicTierData(data.basicTier)
             setStandardTierData(data.standardTier)
             setPremiumTierData(data.premiumTier)
+            
+            setSelectedPriceId(data.basicTier.priceId)
 
             setRating(data.rating)
             setOwnerToken(data.ownerToken)
@@ -118,8 +130,6 @@ const PackageView = () => {
         }
     }
 
-    const createPackage = async () => {}
-
     const photos = [
         `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_1.jpg?cache=none`,
         `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_2.jpg?cache=none`,
@@ -148,9 +158,27 @@ const PackageView = () => {
 
                 <div className="flex flex-col bg-[#0000005e] 3xl:w-[30rem] ml-auto rounded-2xl xl:w-[25rem] lg:w-[20rem]">
                     <div className="flex mt-12 justify-around">
-                        <SelectableCards Title="BASIC" TabName="Basic" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center ml cursor-pointer rounded-t-xl" />
-                        <SelectableCards Title="STANDARD" TabName="Standard" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl" />
-                        <SelectableCards Title="PREMIUM" TabName="Premium" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl" />
+                        <SelectableCards
+                            Title="BASIC"
+                            TabName="Basic"
+                            setComponentToShow={setComponentToShow}
+                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center ml cursor-pointer rounded-t-xl"
+                            onClick={() => setSelectedPriceId(basicTierData.priceId)}
+                        />
+                        <SelectableCards
+                            Title="STANDARD"
+                            TabName="Standard"
+                            setComponentToShow={setComponentToShow}
+                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl"
+                            onClick={() => setSelectedPriceId(standardTierData.priceId)}
+                        />
+                        <SelectableCards
+                            Title="PREMIUM"
+                            TabName="Premium"
+                            setComponentToShow={setComponentToShow}
+                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl"
+                            onClick={() => setSelectedPriceId(premiumTierData.priceId)}
+                        />
                     </div>
 
                     {checkoutPoUp ? (
@@ -159,19 +187,27 @@ const PackageView = () => {
                                 setCheckoutPoUp(!checkoutPoUp)
                             }}
                         >
-                            <PackageCheckout />
+                            <Elements stripe={getStripe()}>
+                                <PackageCheckout priceId={selectedPriceId}/>
+                            </Elements>
                         </PopupCanvas>
                     ) : null}
                     <hr className="w-full" />
                     {renderComponent()}
-                    <button
-                        className="self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl"
-                        onClick={async () => {
-                            setCheckoutPoUp(true)
-                        }}
-                    >
-                        <h1 className="self-center text-white text-lg">Checkout!</h1>
-                    </button>
+                    {userLoggedIn ? (
+                        <button
+                            className="self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl"
+                            onClick={async () => {
+                                setCheckoutPoUp(true)
+                            }}
+                        >
+                            <h1 className="self-center text-white text-lg">Checkout!</h1>
+                        </button>
+                    ) : (
+                        <Link href={'/account/login-register'} className="flex self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl">
+                            <h1 className="self-center text-white text-lg m-auto">Login to checkout!</h1>
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

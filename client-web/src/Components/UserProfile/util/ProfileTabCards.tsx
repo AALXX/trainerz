@@ -4,7 +4,8 @@ interface ISelectableCardsProps {
     Title: string
     TabName: string
     setComponentToShow: Dispatch<SetStateAction<string>>
-    className?: string // Add className as an optional prop
+    className: string,
+    onClick?: () => void
 }
 
 const SelectableCards = (props: ISelectableCardsProps) => {
@@ -14,6 +15,7 @@ const SelectableCards = (props: ISelectableCardsProps) => {
         <div
             className={`flex flex-col ${className}`}
             onClick={() => {
+                props.onClick && props.onClick();
                 setComponentToShow(TabName)
             }}
         >

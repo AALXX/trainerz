@@ -93,7 +93,6 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
             });
         }
 
-        console.log(req.body);
         const PackageToken = utilFunctions.CreateToken();
         fs.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Package_${PackageToken}/`, async (err) => {
             if (err) {
@@ -121,6 +120,8 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                     }
                 }
 
+                await query(connection, 'BEGIN;', [], true);
+
                 // Insert into Packages table
                 const insertPackagesQuery = `
       INSERT INTO Packages (PackageToken, OwnerToken, PackageName, PackageSport, Rating,  Tier, PhotosNumber, VideosNumber)
@@ -132,48 +133,6 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
     `;
                 await query(connection, insertPackagesQuery, [PackageToken, userPublicToken, req.body.PackageName, req.body.Sport, photosCount], true);
 
-                // Insert into BasicTier table
-                const insertBasicTierQuery = `
-      INSERT INTO BasicTier (PackageToken, Price, Recurring, acces_videos, coaching_101, custom_program, Description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      ON CONFLICT (PackageToken) DO NOTHING;
-    `;
-                await query(
-                    connection,
-                    insertBasicTierQuery,
-                    [PackageToken, req.body.BasicPrice, req.body.basicRecurring, req.body.basicAccesVideos, req.body.basicCoaching, req.body.basicCustomProgram, req.body.basicDescription],
-                    true,
-                );
-
-                // Insert into StandardTier table
-                const insertStandardTierQuery = `
-      INSERT INTO StandardTier (PackageToken, Price, Recurring, acces_videos, coaching_101, custom_program, Description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      ON CONFLICT (PackageToken) DO NOTHING;
-    `;
-                await query(
-                    connection,
-                    insertStandardTierQuery,
-                    [PackageToken, req.body.StandardPrice, req.body.standardRecurring, req.body.standardAccesVideos, req.body.standardCoaching, req.body.standardCustomProgram, req.body.standardDescription],
-                    true,
-                );
-
-                // Insert into PremiumTier table
-                const insertPremiumTierQuery = `
-      INSERT INTO PremiumTier (PackageToken, Price, Recurring, acces_videos, coaching_101, custom_program, Description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      ON CONFLICT (PackageToken) DO NOTHING;
-    `;
-                await query(connection, insertPremiumTierQuery, [
-                    PackageToken,
-                    req.body.PremiumPrice,
-                    req.body.premiumRecurring,
-                    req.body.premiumAccesVideos,
-                    req.body.premiumCoaching,
-                    req.body.premiumCustomProgram,
-                    req.body.premiumDescription,
-                ]);
-
                 for (let i = 1; i <= 5; i++) {
                     const photo = (req.files as { [fieldname: string]: Express.Multer.File[] })[`Photo_${i}`]?.[0];
                     if (photo !== undefined) {
@@ -183,6 +142,7 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                             await fs.unlinkSync(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`);
                         } catch (err: any) {
                             logging.error('FILE_UPLOAD', err);
+                            await connection.query('ROLLBACK');
 
                             return res.status(200).json({
                                 error: true,
@@ -200,38 +160,63 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                     // Create Stripe prices
                     const prices = [
                         {
-                            unit_amount: req.body.BasicPrice * 100,
+                            tier: 'BasicTier',
+                            unit_amount: req.body.BasicPrice,
                             currency: 'eur',
-                            recurring: { interval: req.body.basicRecurring ? 'month' : undefined },
+                            recurring: req.body.basicRecurring,
                             product: product!.id,
+                            accessVideos: req.body.basicAccesVideos,
+                            coaching: req.body.basicCoaching,
+                            customProgram: req.body.basicCustomProgram,
+                            description: req.body.basicDescription,
                         },
                         {
-                            unit_amount: req.body.StandardPrice * 100,
+                            tier: 'StandardTier',
+                            unit_amount: req.body.StandardPrice,
                             currency: 'eur',
-                            recurring: { interval: req.body.standardRecurring ? 'month' : undefined },
+                            recurring: req.body.standardRecurring,
                             product: product!.id,
+                            accessVideos: req.body.standardAccesVideos,
+                            coaching: req.body.standardCoaching,
+                            customProgram: req.body.standardCustomProgram,
+                            description: req.body.standardDescription,
                         },
                         {
-                            unit_amount: req.body.PremiumPrice * 100,
+                            tier: 'PremiumTier',
+                            unit_amount: req.body.PremiumPrice,
                             currency: 'eur',
-                            recurring: { interval: req.body.premiumRecurring ? 'month' : undefined },
+                            recurring: req.body.premiumRecurring,
                             product: product!.id,
+                            accessVideos: req.body.premiumAccesVideos,
+                            coaching: req.body.premiumCoaching,
+                            customProgram: req.body.premiumCustomProgram,
+                            description: req.body.premiumDescription ,
                         },
                     ];
 
                     for (const price of prices) {
                         const priceParams: Stripe.PriceCreateParams = {
-                            unit_amount: price.unit_amount,
+                            unit_amount: price.unit_amount * 100,
                             currency: price.currency,
                             product: price.product,
                         };
-                        
+
                         if (price.recurring) {
                             priceParams.recurring = { interval: 'month' };
                         }
 
-                        await req.stripe?.prices.create(priceParams);
+                        const priceResp = await req.stripe?.prices.create(priceParams);
+                        console.log(price)
+                        // Insert into BasicTier table
+                        const insertBasicTierQuery = `
+      INSERT INTO ${price.tier} (PackageToken, Price, PriceID, Recurring, acces_videos, coaching_101, custom_program, Description)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT (PackageToken) DO NOTHING;
+    `;  
+                        await query(connection, insertBasicTierQuery, [PackageToken, price.unit_amount, priceResp?.id, price.recurring, price.accessVideos, price.coaching, price.customProgram, price.description], true);
                     }
+
+                    await query(connection, 'COMMIT;', []);
 
                     return res.status(200).json({
                         error: false,

@@ -133,7 +133,7 @@ const getUserEmailFromPrivateToken = async (pool: Pool, userPrivateToken: string
 
         const userData = await query(connection!, QueryString);
         if (Object.keys(userData).length != 0) {
-            return userData[0].UserEmail;
+            return userData[0].useremail;
         } else {
             return null;
         }
