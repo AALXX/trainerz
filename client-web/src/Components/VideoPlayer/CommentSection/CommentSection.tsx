@@ -42,8 +42,8 @@ const CommentSection = (props: IVideoPlayerProps) => {
     }, [])
 
     return (
-        <div className="flex flex-col ml-[.5rem] mt-[3rem] h-[83.2vh] w-[22vw] bg-[#00000080] rounded-tr-xl  rounded-br-xl">
-            <div className="flex flex-col h-[88%] overflow-y-scroll">
+        <div className="ml-[.5rem] mt-[3rem] flex h-[83.2vh] w-[22vw] flex-col rounded-br-xl rounded-tr-xl bg-[#00000080]">
+            <div className="flex h-[88%] flex-col overflow-y-scroll">
                 {hasComments ? (
                     <>
                         {videoComments.map((comment: ICommentCard, index: number) => (
@@ -65,17 +65,17 @@ const CommentSection = (props: IVideoPlayerProps) => {
                 )}
             </div>
             <form
-                className="flex h-[12%] bg-[#00000080] rounded-br-xl"
+                className="flex h-[12%] rounded-br-xl bg-[#00000080]"
                 onSubmit={e => {
                     //* this is here to post comment on enter press in input box
                     e.preventDefault()
                     postComment()
                 }}
             >
-                <input type="text" className="h-9 self-center  ml-7 w-[75%] border-2 rounded-xl bg-transparent text-white indent-3" placeholder="Comment" onChange={e => setCommentInput(e.currentTarget.value)} />
+                <input type="text" className="ml-7 h-9 w-[75%] self-center rounded-xl border-2 bg-transparent indent-3 text-white" placeholder="Comment" onChange={e => setCommentInput(e.currentTarget.value)} />
 
                 <div
-                    className="flex ml-3 w-10  h-9 self-center cursor-pointer bg-transparent rounded-br-xl"
+                    className="ml-3 flex h-9 w-10 cursor-pointer self-center rounded-br-xl bg-transparent"
                     onClick={() => {
                         postComment()
                     }}

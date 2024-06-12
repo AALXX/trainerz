@@ -50,7 +50,7 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
         if (!customer) {
             return res.status(400).json({
                 error: true,
-                errmsg: "customer not found",
+                errmsg: 'customer not found',
             });
         }
 
@@ -62,9 +62,21 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
             items: [{ price: priceId }],
         });
 
-        return res.status(200).json({
-            error: false,
-            subscription,
+        if (!subscription) {
+            return res.status(400).json({
+                error: true,
+                errmsg: 'Subscription not found',
+            });
+        }
+
+        if (subscription?.status === 'active') {
+            return res.status(200).json({
+                error: false,
+            });
+        }
+
+        return res.status(500).json({
+            error: true,
         });
     } catch (error: any) {
         logging.error('CHECKOUT_PACKAGE', error.message);

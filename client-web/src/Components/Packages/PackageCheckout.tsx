@@ -2,6 +2,7 @@ import { CardElement, Elements, useElements, useStripe } from '@stripe/react-str
 import axios from 'axios'
 import { getCookie } from 'cookies-next'
 import React, { useState } from 'react'
+import OptionPicker from '../CommonUi/OptionPicker'
 
 const cardElementOptions = {
     style: {
@@ -54,18 +55,17 @@ const PackageCheckout = (props: { priceId: string }) => {
                 setError(error.message || 'An unexpected error occurred')
             } else {
                 try {
-                    console.log(paymentMethod)
                     const response = await axios.post(`${process.env.SERVER_BACKEND}/payment-manager/checkout`, {
                         paymentMethodId: paymentMethod.id,
                         UserPrivateToken: getCookie('userToken') as string,
                         priceId: props.priceId
                     })
 
-                    // if (response.data.subscription) {
-                    //     setSuccess(true)
-                    // } else {
-                    //     setError(response.data.message)
-                    // }
+                    if (!response.data.error) {
+                        setSuccess(true)
+                    } else {
+                        setError(response.data.errmsg)
+                    }
                 } catch (err) {
                     setError('Subscription failed. Please try again.')
                 }
@@ -75,29 +75,25 @@ const PackageCheckout = (props: { priceId: string }) => {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="p-4 bg-[#00000080] shadow-md rounded-xl w-[70%] h-[70%] m-auto">
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-white ">Email</label>
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="text-white p-2 block w-full shadow-sm sm:text-sm bg-[#474084] rounded-lg mt-2" required />
-                </div>
+            <form onSubmit={handleSubmit} className="m-auto flex h-[70%] w-[70%] flex-col justify-center rounded-xl bg-[#00000080] p-4 shadow-md">
                 <div className="mb-4">
                     <label className="block text-lg font-medium text-white">Cardholder Name</label>
-                    <input type="text" value={cardholderName} onChange={e => setCardholderName(e.target.value)} className="text-white mt-2 p-2 block w-full shadow-sm sm:text-sm bg-[#474084] rounded-lg" required />
+                    <input type="text" value={cardholderName} onChange={e => setCardholderName(e.target.value)} className="mt-2 block w-full rounded-lg bg-[#474084] p-2 text-white shadow-sm sm:text-sm" required />
                 </div>
                 <div className="mb-4">
                     <label className="block text-lg font-medium text-white">Country</label>
-                    <input type="text" value={country} onChange={e => setCountry(e.target.value)} className="text-white mt-2 p-2 block w-full shadow-sm sm:text-sm bg-[#474084] rounded-lg" required />
+                    <OptionPicker label="Select Country" options={['RO', 'EN']} value={country} onChange={value => setCountry(value)} />
                 </div>
                 <div className="mb-4">
                     <label className="block text-lg font-medium text-white">Card Details</label>
-                    <CardElement options={cardElementOptions} className="mt-2 p-4 border border-gray-300 rounded-md mb-4" />
+                    <CardElement options={cardElementOptions} className="mb-4 mt-2 rounded-md border border-gray-300 p-4" />
                 </div>
 
-                <button type="submit" disabled={!stripe} className="self-center w-full h-12 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl">
-                    <h1 className="text-white text-lg">Subscribe</h1>
+                <button type="submit" disabled={!stripe} className="mt-auto h-12 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]">
+                    <h1 className="text-lg text-white">Subscribe</h1>
                 </button>
-                {error && <div className="text-red-500 mt-4">{error}</div>}
-                {success && <div className="text-green-500 mt-4">Subscription Successful!</div>}
+                {error && <div className="mt-4 text-red-500">{error}</div>}
+                {success && <div className="mt-4 text-green-500">Subscription Successful!</div>}
             </form>
         </>
     )

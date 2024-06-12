@@ -28,14 +28,14 @@ const Clip = ({ url, videoRef, canvasRef }: IClipProps) => {
 
     if (url == '') {
         return (
-            <div className="flex border-2 border-white w-[25rem] h-[15rem] flex-col mt-4">
-                <h1 className="text-white text-[1.3rem] m-auto">No video Inputed</h1>
+            <div className="mt-4 flex h-[15rem] w-[25rem] flex-col border-2 border-white">
+                <h1 className="m-auto text-[1.3rem] text-white">No video Inputed</h1>
             </div>
         )
     }
 
     return (
-        <video ref={videoRef} controls className="border-white w-[25rem] h-[15rem] border-2 mt-4">
+        <video ref={videoRef} controls className="mt-4 h-[15rem] w-[25rem] border-2 border-white">
             <source src={url} />
         </video>
     )
@@ -107,7 +107,6 @@ const UploadComponent = () => {
         }
 
         const userToken: string = getCookie('userToken') as string
-
 
         const formData = new FormData()
         formData.append('VideoFile', videoFile![0])
@@ -181,7 +180,7 @@ const UploadComponent = () => {
         ThumbnaiComponent = (
             <label
                 htmlFor="thumbnailFile"
-                className="flex flex-col border-2 border-white border-solid w-[15rem] h-[9rem] mt-auto  cursor-pointer "
+                className="mt-auto flex h-[9rem] w-[15rem] cursor-pointer flex-col border-2 border-solid border-white"
                 onMouseEnter={() => {
                     setIsHovered(true)
                 }}
@@ -190,7 +189,7 @@ const UploadComponent = () => {
                 }}
             >
                 {isHovered ? (
-                    <div className="flex flex-col absolute h-[8.5rem]  w-[14.5rem]">
+                    <div className="absolute flex h-[8.5rem] w-[14.5rem] flex-col">
                         <input
                             type="file"
                             className="hidden"
@@ -199,18 +198,18 @@ const UploadComponent = () => {
                                 setThumbnalFile(e.target.files![0])
                             }}
                         />
-                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="self-center mt-11 w-[7rem] h-[2rem]" />
-                        <h1 className="text-white text-[1rem] self-center">upload thumbnail</h1>
+                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="mt-11 h-[2rem] w-[7rem] self-center" />
+                        <h1 className="self-center text-[1rem] text-white">upload thumbnail</h1>
                     </div>
                 ) : null}
-                <img src={URL.createObjectURL(thumbnalFile)} alt="AccountImageButton" className=" w-full h-full " />
+                <img src={URL.createObjectURL(thumbnalFile)} alt="AccountImageButton" className="h-full w-full" />
             </label>
         )
     } else {
         ThumbnaiComponent = (
             <label
                 htmlFor="thumbnailFile"
-                className="flex flex-col border-2 border-white border-solid w-[15rem] h-[9rem]  cursor-pointer "
+                className="flex h-[9rem] w-[15rem] cursor-pointer flex-col border-2 border-solid border-white"
                 onMouseEnter={() => {
                     setIsHovered(true)
                 }}
@@ -218,9 +217,9 @@ const UploadComponent = () => {
                     setIsHovered(false)
                 }}
             >
-                <img src={capturedFrame} alt={`Frame`} className="border-2 border-white border-solid w-[15rem] h-[9rem] mt-auto cursor-pointer" />
+                <img src={capturedFrame} alt={`Frame`} className="mt-auto h-[9rem] w-[15rem] cursor-pointer border-2 border-solid border-white" />
                 {isHovered ? (
-                    <div className="flex flex-col absolute bg-[#0000005b] h-[8.3rem]  w-[14.5rem] mt-1 ml-[0.12rem]">
+                    <div className="absolute ml-[0.12rem] mt-1 flex h-[8.3rem] w-[14.5rem] flex-col bg-[#0000005b]">
                         <input
                             type="file"
                             className="hidden"
@@ -229,8 +228,8 @@ const UploadComponent = () => {
                                 setThumbnalFile(e.target.files![0])
                             }}
                         />
-                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="self-center mt-11 w-[7rem] h-[2rem]" />
-                        <h1 className="text-white text-[1rem] self-center">upload thumbnail</h1>
+                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="mt-11 h-[2rem] w-[7rem] self-center" />
+                        <h1 className="self-center text-[1rem] text-white">upload thumbnail</h1>
                     </div>
                 ) : null}
             </label>
@@ -238,9 +237,9 @@ const UploadComponent = () => {
     }
 
     return (
-        <div className="flex flex-col h-full items-center">
-            <div className="flex flex-row items-center w-[100%] h-[24rem] ">
-                <label htmlFor="VideoFile" className="flex border-2 border-white border-solid w-[20rem] h-[10rem] ml-[3vw] cursor-pointer">
+        <div className="flex h-full flex-col items-center">
+            <div className="flex h-[24rem] w-[100%] flex-row items-center">
+                <label htmlFor="VideoFile" className="ml-[3vw] flex h-[10rem] w-[20rem] cursor-pointer border-2 border-solid border-white">
                     <input
                         type="file"
                         className="hidden"
@@ -255,15 +254,15 @@ const UploadComponent = () => {
                         }}
                         accept=".mov, .mp4, .mkv"
                     />
-                    <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="m-auto w-[7rem] h-[2rem]" />
+                    <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="m-auto h-[2rem] w-[7rem]" />
                 </label>
-                <div className="flex w-[100%]  flex-col items-center">
-                    <div className="relative h-[1.2rem] w-[60%] bg-[#292929] m-auto overflow-x-hidden rounded">
+                <div className="flex w-[100%] flex-col items-center">
+                    <div className="relative m-auto h-[1.2rem] w-[60%] overflow-x-hidden rounded bg-[#292929]">
                         <div className="absolute h-[100%] rounded bg-blue-500" style={{ width: `${progress}%` }} />
                     </div>
-                    <div className="flex flex-col items-center w-[60%]">
+                    <div className="flex w-[60%] flex-col items-center">
                         <input
-                            className="text-white mt-4 bg-[#474084] h-10 border-none rounded-xl w-full placeholder:text-white indent-3"
+                            className="mt-4 h-10 w-full rounded-xl border-none bg-[#474084] indent-3 text-white placeholder:text-white"
                             type="text"
                             placeholder="Video title"
                             onChange={e => {
@@ -272,11 +271,11 @@ const UploadComponent = () => {
                             value={videoTitle}
                         />
 
-                        <div className="flex w-full flex-col self-center  mt-4">
+                        <div className="mt-4 flex w-full flex-col self-center">
                             <h1 className="h1-sm text-white">Video Visibility</h1>
                             <OptionPicker label="Video Visibility" options={['Public', 'Private']} value={videoVisibility} onChange={value => setvideoVisibility(value)} />
                         </div>
-                        <div className="flex w-full flex-col self-center  mt-2">
+                        <div className="mt-2 flex w-full flex-col self-center">
                             <h1 className="h1-sm text-white">Video Sport</h1>
                             <OptionPicker
                                 label="Video Sport"
@@ -285,8 +284,8 @@ const UploadComponent = () => {
                                 onChange={value => setSport(value)}
                             />
                         </div>
-                        <button className="self-center w-full h-10 bg-[#474084] active:bg-[#3b366c]  mb-4 mt-2  justify-center rounded-xl" onClick={async () => await uploadFile()}>
-                            <h1 className="self-center text-white text-lg">Upload Video!</h1>
+                        <button className="mb-4 mt-2 h-10 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={async () => await uploadFile()}>
+                            <h1 className="self-center text-lg text-white">Upload Video!</h1>
                         </button>
                     </div>
                 </div>
@@ -295,14 +294,14 @@ const UploadComponent = () => {
             <hr color="#7c7c7c" className="w-[95%]" />
 
             <div className="flex w-[95%]">
-                <div className="flex flex-col ">
-                    <h1 className="text-white text-[1.3rem] mt-4">Preview:</h1>
+                <div className="flex flex-col">
+                    <h1 className="mt-4 text-[1.3rem] text-white">Preview:</h1>
                     <Clip url={ObjectUrl} videoRef={videoRef} canvasRef={canvasRef} />
                 </div>
 
                 {videoFile == null ? null : (
-                    <div className="mt-auto ml-[10rem]">
-                        <h1 className="text-white text-[1.3rem] mt-4">Thumbnail:</h1>
+                    <div className="ml-[10rem] mt-auto">
+                        <h1 className="mt-4 text-[1.3rem] text-white">Thumbnail:</h1>
                         {ThumbnaiComponent}
                     </div>
                 )}

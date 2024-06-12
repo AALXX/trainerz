@@ -20,11 +20,11 @@ const SearchResults = () => {
     return (
         <>
             {Object.keys(usersList).length === 0 ? (
-                <div className='flex flex-col h-full'>
+                <div className="flex h-full flex-col">
                     <h1>SEARCH NOT FOUND</h1>
                 </div>
             ) : (
-                <div className="flex flex-col ">
+                <div className="flex flex-col">
                     {/* {usersList.map((video: IVideoTemplateProps, index: number) => (
                           
                         ))} */}

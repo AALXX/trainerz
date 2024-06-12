@@ -23,11 +23,11 @@ const AddPhotoZone: React.FC<IAddPhotoZoneProps> = ({ setImageFile }) => {
     }
 
     return (
-        <div className="relative flex 3xl:w-[14rem] 3xl:h-[8rem] xl:w-[10rem] xl:h-[6rem] lg:w-[8rem] lg:h-[5rem] border-2 cursor-pointer">
+        <div className="relative flex cursor-pointer border-2 lg:h-[5rem] lg:w-[8rem] xl:h-[6rem] xl:w-[10rem] 3xl:h-[8rem] 3xl:w-[14rem]">
             {image ? (
                 <>
-                    <img src={image} alt="Uploaded" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">
+                    <img src={image} alt="Uploaded" className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
                         <label className="cursor-pointer text-white">
                             <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                             Change Photo
@@ -35,9 +35,9 @@ const AddPhotoZone: React.FC<IAddPhotoZoneProps> = ({ setImageFile }) => {
                     </div>
                 </>
             ) : (
-                <label className="flex items-center justify-center w-full h-full cursor-pointer">
+                <label className="flex h-full w-full cursor-pointer items-center justify-center">
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                    <img src="/assets/PackagesIcons/addPhoto_Icon.svg" alt="AccountImageButton" className="m-auto w-[7rem] h-[2rem]" />
+                    <img src="/assets/PackagesIcons/addPhoto_Icon.svg" alt="AccountImageButton" className="m-auto h-[2rem] w-[7rem]" />
                 </label>
             )}
         </div>

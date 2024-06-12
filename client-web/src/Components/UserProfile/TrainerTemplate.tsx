@@ -34,9 +34,9 @@ const TrainerTemplate = (props: IUserPrivateData) => {
         switch (componentToShow) {
             case 'PackagesPage':
                 return (
-                    <div className="flex flex-col w-full h-[37rem]  ">
+                    <div className="flex h-[37rem] w-full flex-col">
                         {Object.keys(userPackages).length > 0 ? (
-                            <div className="self-center w-[95%] h-full overflow-y-scroll   grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {userPackages.map((packageData: IAccountPackages, index: number) => (
                                     <PackageCardTemplate
                                         packagesport={packageData.packagesport}
@@ -50,14 +50,14 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                 ))}
                             </div>
                         ) : (
-                            <h1 className="text-white self-center mt-4 ">No Packages!</h1>
+                            <h1 className="mt-4 self-center text-white">No Packages!</h1>
                         )}
                     </div>
                 )
 
             case 'Videos':
                 return (
-                    <div className="grid gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                         {videosData.map((video: IVideoTemplate, index: number) => (
                             <VideoTamplate
                                 isOwner={isOwner}
@@ -78,7 +78,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
 
             case 'About':
                 return (
-                    <div className="w-full h-[60%]">
+                    <div className="h-[60%] w-full">
                         <AboutUserTab userDescription={props.description} userEmail={props.useremail} userPhone={props.phonenumber} />
                     </div>
                 )
@@ -104,13 +104,13 @@ const TrainerTemplate = (props: IUserPrivateData) => {
     }, [])
 
     return (
-        <div className="flex flex-col w-full h-full mt-[6rem]">
-            <div className="flex flex-col  w-full h-[6rem] flex-grow-0">
-                <div className="flex h-full w-[90%] self-center ">
-                    <div className="flex w-80 self-center h-32 ">
-                        <div className="z-10 relative self-center w-40 h-24 ">
+        <div className="mt-[6rem] flex h-full w-full flex-col">
+            <div className="flex h-[6rem] w-full flex-grow-0 flex-col">
+                <div className="flex h-full w-[90%] self-center">
+                    <div className="flex h-32 w-80 self-center">
+                        <div className="relative z-10 h-24 w-40 self-center">
                             <img
-                                className="flex rounded-full w-full h-full self-center m-auto"
+                                className="m-auto flex h-full w-full self-center rounded-full"
                                 onMouseEnter={() => {
                                     setIsAccIconHovered(true)
                                 }}
@@ -122,7 +122,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                             />
                             {isAccIconHovered ? (
                                 <div
-                                    className="flex absolute inset-0 rounded-full  w-full h-full m-auto bg-black bg-opacity-80 cursor-pointer"
+                                    className="absolute inset-0 m-auto flex h-full w-full cursor-pointer rounded-full bg-black bg-opacity-80"
                                     onMouseEnter={() => {
                                         setIsAccIconHovered(true)
                                     }}
@@ -133,16 +133,16 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                         setToggledIconChangePopUp(!ToggledIconChangePopUp)
                                     }}
                                 >
-                                    <img className="w-[90%] h-[90%] m-auto rounded-full" src="/assets/AccountIcons/EditProfileIcon_Icon.svg" alt="Overlay image" />
+                                    <img className="m-auto h-[90%] w-[90%] rounded-full" src="/assets/AccountIcons/EditProfileIcon_Icon.svg" alt="Overlay image" />
                                 </div>
                             ) : null}
                         </div>
-                        <div className="self-center w-full ml-2">
+                        <div className="ml-2 w-full self-center">
                             {isOwner ? (
-                                <div className="flex ">
-                                    <h1 className="text-white mb-1">{props.username}</h1>
+                                <div className="flex">
+                                    <h1 className="mb-1 text-white">{props.username}</h1>
                                     <img
-                                        className="z-10  w-5 h-5 self-center ml-auto text-white cursor-pointer"
+                                        className="z-10 ml-auto h-5 w-5 cursor-pointer self-center text-white"
                                         src={`/assets/AccountIcons/Settings_icon.svg`}
                                         alt="Picture of the author"
                                         onClick={() => {
@@ -151,41 +151,41 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                     />
                                 </div>
                             ) : (
-                                <h1 className="text-white mb-1">{props.username}</h1>
+                                <h1 className="mb-1 text-white">{props.username}</h1>
                             )}
-                            <hr className="self-center w-full bg-white h-[0.1rem] " />
-                            <h1 className="text-white mt-1">{props.sport} coach</h1>
+                            <hr className="h-[0.1rem] w-full self-center bg-white" />
+                            <h1 className="mt-1 text-white">{props.sport} coach</h1>
                         </div>
                     </div>
-                    <div className="flex flex-col ml-auto bg-[#0000005e] h-32 w-72 self-center rounded-xl">
-                        <div className="flex w-full mt-4 ">
-                            <h1 className="self-center  ml-4 text-white">Account Rating</h1>
+                    <div className="ml-auto flex h-32 w-72 flex-col self-center rounded-xl bg-[#0000005e]">
+                        <div className="mt-4 flex w-full">
+                            <h1 className="ml-4 self-center text-white">Account Rating</h1>
                             {props.rating == null ? (
                                 <>
-                                    <h1 className="self-center ml-auto mr-2 text-white">0/5</h1>
-                                    <img className="z-10  w-10 h-10 self-center mr-4 text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
+                                    <h1 className="ml-auto mr-2 self-center text-white">0/5</h1>
+                                    <img className="z-10 mr-4 h-10 w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
                                 </>
                             ) : (
                                 <>
-                                    <h1 className="self-center ml-auto mr-2 text-white">{props.rating}/5</h1>
-                                    <img className="z-10  w-10 h-10 self-center mr-4 text-white" src={`/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
+                                    <h1 className="ml-auto mr-2 self-center text-white">{props.rating}/5</h1>
+                                    <img className="z-10 mr-4 h-10 w-10 self-center text-white" src={`/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
                                 </>
                             )}
                         </div>
-                        <div className="flex w-full self-center mt-4">
-                            <h1 className="self-center  ml-4 text-white">Account Folowers</h1>
-                            <h1 className="text-white ml-auto mr-16">{props.accountfolowers}</h1>
+                        <div className="mt-4 flex w-full self-center">
+                            <h1 className="ml-4 self-center text-white">Account Folowers</h1>
+                            <h1 className="ml-auto mr-16 text-white">{props.accountfolowers}</h1>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="flex mt-10 items-center flex-grow-0">
-                <SelectableCards Title="PACKAGES" TabName="PackagesPage" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
-                <SelectableCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
-                <SelectableCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
-                <SelectableCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[10rem] h-[3rem] justify-center ml-2 cursor-pointer rounded-t-xl" />
+            <div className="mt-10 flex flex-grow-0 items-center">
+                <SelectableCards Title="PACKAGES" TabName="PackagesPage" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                <SelectableCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                <SelectableCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                <SelectableCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
             </div>
-            <hr className="w-full bg-white h-[0.1rem] " />
+            <hr className="h-[0.1rem] w-full bg-white" />
             {ToggledSettingsPopUp ? (
                 <PopupCanvas
                     closePopup={() => {

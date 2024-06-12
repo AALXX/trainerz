@@ -113,10 +113,10 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
         case 'Thumbnails':
             if (thumbnalFile !== null) {
                 component = (
-                    <div className="flex flex-col w-[15rem] h-[11rem] ">
+                    <div className="flex h-[11rem] w-[15rem] flex-col">
                         <label
                             htmlFor="thumbnailFile"
-                            className="flex flex-col border-2 border-white border-solid w-full h-[9rem] cursor-pointer "
+                            className="flex h-[9rem] w-full cursor-pointer flex-col border-2 border-solid border-white"
                             onMouseEnter={() => {
                                 setIsHovered(true)
                             }}
@@ -125,7 +125,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                             }}
                         >
                             {isHovered ? (
-                                <div className="flex flex-col absolute h-[8.5rem]  w-[14.5rem]">
+                                <div className="absolute flex h-[8.5rem] w-[14.5rem] flex-col">
                                     <input
                                         type="file"
                                         className="hidden"
@@ -134,16 +134,16 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                                             setThumbnalFile(e.target.files![0])
                                         }}
                                     />
-                                    <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="self-center mt-11 w-[7rem] h-[2rem]" />
+                                    <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="mt-11 h-[2rem] w-[7rem] self-center" />
 
-                                    <h1 className="text-white text-[1rem] self-center">upload thumbnail</h1>
+                                    <h1 className="self-center text-[1rem] text-white">upload thumbnail</h1>
                                 </div>
                             ) : null}
 
-                            <img src={URL.createObjectURL(thumbnalFile)} alt="AccountImageButton" className=" w-full h-full " />
+                            <img src={URL.createObjectURL(thumbnalFile)} alt="AccountImageButton" className="h-full w-full" />
                         </label>
                         <button
-                            className="text-white bg-[#414141] w-full mt-auto cursor-pointer"
+                            className="mt-auto w-full cursor-pointer bg-[#414141] text-white"
                             onClick={async () => {
                                 await changeVideoThumbnail()
                             }}
@@ -156,7 +156,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                 component = (
                     <label
                         htmlFor="thumbnailFile"
-                        className="flex flex-col border-2 border-white border-solid w-[15rem] h-[9rem]  cursor-pointer "
+                        className="flex h-[9rem] w-[15rem] cursor-pointer flex-col border-2 border-solid border-white"
                         onMouseEnter={() => {
                             setIsHovered(true)
                         }}
@@ -167,10 +167,10 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                         <img
                             src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`}
                             alt={`Frame`}
-                            className="border-2 border-white border-solid w-[15rem] h-[9rem] mt-auto cursor-pointer"
+                            className="mt-auto h-[9rem] w-[15rem] cursor-pointer border-2 border-solid border-white"
                         />
                         {isHovered ? (
-                            <div className="flex flex-col absolute bg-[#0000005b] h-[8.3rem]  w-[14.5rem] mt-1 ml-[0.12rem]">
+                            <div className="absolute ml-[0.12rem] mt-1 flex h-[8.3rem] w-[14.5rem] flex-col bg-[#0000005b]">
                                 <input
                                     type="file"
                                     className="hidden"
@@ -179,8 +179,8 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                                         setThumbnalFile(e.target.files![0])
                                     }}
                                 />
-                                <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="self-center mt-11 w-[7rem] h-[2rem]" />
-                                <h1 className="text-white text-[1rem] self-center">upload thumbnail</h1>
+                                <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="mt-11 h-[2rem] w-[7rem] self-center" />
+                                <h1 className="self-center text-[1rem] text-white">upload thumbnail</h1>
                             </div>
                         ) : null}
                     </label>
@@ -209,11 +209,11 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
     return (
         <>
             <div className="flex">
-                <div className="flex bg-[#ffffff] w-[22rem] h-[13rem]  mt-10 ml-10">
-                    <img src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`} className="w-full h-full" />
+                <div className="ml-10 mt-10 flex h-[13rem] w-[22rem] bg-[#ffffff]">
+                    <img src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`} className="h-full w-full" />
                 </div>
 
-                <div className="mt-10 m-auto">
+                <div className="m-auto mt-10">
                     <form
                         className="flex flex-col items-center"
                         onSubmit={async e => {
@@ -222,7 +222,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                         }}
                     >
                         <input
-                            className="text-white  bg-[#474084] h-10 border-none rounded-xl w-full placeholder:text-white indent-3"
+                            className="h-10 w-full rounded-xl border-none bg-[#474084] indent-3 text-white placeholder:text-white"
                             type="text"
                             placeholder="Video title"
                             onChange={e => {
@@ -230,7 +230,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                             }}
                             value={videoTitle}
                         />
-                        <div className="flex w-full flex-col self-center  mt-4">
+                        <div className="mt-4 flex w-full flex-col self-center">
                             <h1 className="h1-sm text-white">Video Visibility</h1>
                             <OptionPicker label="Video Visibility" options={['Public', 'Private']} value={videoVisibility} onChange={value => setVideoVisibility(value)} />
                         </div>
@@ -243,13 +243,13 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                                 onChange={value => setSport(value)}
                             />
                         </div>
-                        <button className="self-center w-full h-10 bg-[#474084] active:bg-[#3b366c]  mb-4 mt-2  justify-center rounded-xl" onClick={async () => await updateVideoData()}>
-                            <h1 className="self-center text-white text-lg">Upload Video!</h1>
+                        <button className="mb-4 mt-2 h-10 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={async () => await updateVideoData()}>
+                            <h1 className="self-center text-lg text-white">Upload Video!</h1>
                         </button>
                     </form>
 
                     <button
-                        className="text-white  bg-[#961a1a] h-10 w-[25rem] cursor-pointer rounded-xl"
+                        className="h-10 w-[25rem] cursor-pointer rounded-xl bg-[#961a1a] text-white"
                         onClick={() => {
                             setToggleDeleteVideoPopup(!ToggleDeleteVideoPopup)
                         }}
@@ -265,10 +265,10 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                     }}
                 >
                     <div className="flex flex-col">
-                        <h1 className="text-white self-center text-xl">Are you sure you want to delete the video</h1>
+                        <h1 className="self-center text-xl text-white">Are you sure you want to delete the video</h1>
 
                         <button
-                            className="text-white mt-5 bg-[#961a1a] w-[25rem] cursor-pointer"
+                            className="mt-5 w-[25rem] cursor-pointer bg-[#961a1a] text-white"
                             onClick={async () => {
                                 await deleteVideo()
                             }}
@@ -278,13 +278,13 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                     </div>
                 </PopupCanvas>
             ) : null}
-            <div className="flex items-center mt-12">
+            <div className="mt-12 flex items-center">
                 <SelectableCards Title="THUMBNALS" TabName="Thumbnails" setComponentToShow={setComponentToShow} />
                 <SelectableCards Title="ANALYTICS" TabName="Analytics" setComponentToShow={setComponentToShow} />
                 <SelectableCards Title="EDITOR" TabName="editor" setComponentToShow={setComponentToShow} />
             </div>
             <hr className="w-[100%]" />
-            <div className="flex w-[95%] mt-[2vh] self-center h-full">{component}</div>
+            <div className="mt-[2vh] flex h-full w-[95%] self-center">{component}</div>
         </>
     )
 }

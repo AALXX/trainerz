@@ -16,7 +16,7 @@ export default function WatchVideoPage() {
     const userToken: string = getCookie('userToken') as string
 
     return (
-        <div className="flex  flex-col h-full ">
+        <div className="flex h-full flex-col">
             <div className="flex h-full">
                 <Suspense fallback={<VideoPlayerFallback />}>
                     <VideoPlayer VideoToken={urlParams.get('vt')} />

@@ -9,12 +9,8 @@ interface OptionPickerProps {
 
 const OptionPicker: React.FC<OptionPickerProps> = ({ label, options, value, onChange }) => {
     return (
-        <div className="flex flex-col items-start mb-4">
-            <select
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                className="block w-full px-4 py-2 text-white bg-[#474084]   rounded-xl shadow-sm focus:outline-none mt-2"
-            >
+        <div className="mb-4 flex flex-col items-start">
+            <select value={value} onChange={e => onChange(e.target.value)} className="mt-2 block w-full rounded-xl bg-[#474084] px-4 py-2 text-white shadow-sm focus:outline-none">
                 <option value="">Select {label}</option>
                 {options.map((option, index) => (
                     <option key={index} value={option}>

@@ -45,11 +45,11 @@ export default function LoginRegisterScreen() {
         switch (componentToShow) {
             case 'firstTab':
                 return (
-                    <form className="flex flex-col h-full  w-full flex-grow-0 mt-4">
-                        <div className="flex flex-col w-[85%] self-center h-24">
+                    <form className="mt-4 flex h-full w-full flex-grow-0 flex-col">
+                        <div className="flex h-24 w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">UserName</h1>
                             <input
-                                className="text-white bg-[#474084] h-[6vh] mt-3 indent-3 rounded-xl"
+                                className="mt-3 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                 placeholder="UserName..."
                                 type="text"
                                 value={registerUserName}
@@ -58,10 +58,10 @@ export default function LoginRegisterScreen() {
                                 }}
                             />
                         </div>
-                        <div className="flex flex-col w-[85%] self-center mt-4  h-24">
+                        <div className="mt-4 flex h-24 w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">Email</h1>
                             <input
-                                className="text-white bg-[#474084] h-[6vh] mt-3 indent-3 rounded-xl"
+                                className="mt-3 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                 placeholder="Email..."
                                 value={registerEmail}
                                 autoCapitalize="none"
@@ -71,26 +71,26 @@ export default function LoginRegisterScreen() {
                                 }}
                             />
                         </div>
-                        <div className="flex w-[85%] flex-col self-center h-26 mt-4">
+                        <div className="h-26 mt-4 flex w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">What's your birth date?</h1>
                             <BirthDateSelectorComponent onDateChange={setUserBirthDate} />
                         </div>
-                        <div className="flex w-[85%] flex-col self-center h-24 mt-7">
+                        <div className="mt-7 flex h-24 w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">Register as</h1>
                             <OptionPicker label="Account Type" options={['Trainer', 'SportsPerson']} value={accountType} onChange={value => setAccountType(value)} />
                         </div>
-                        <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('secondTab')}>
-                            <h1 className="self-center text-white text-lg">Next</h1>
+                        <button className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('secondTab')}>
+                            <h1 className="self-center text-lg text-white">Next</h1>
                         </button>
                     </form>
                 )
             case 'secondTab':
                 return (
                     <form className="flex h-full w-full flex-col">
-                        <div className="flex w-[85%] self-center  mt-4 h-36 flex-col">
+                        <div className="mt-4 flex h-36 w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">Tell us about you</h1>
                             <textarea
-                                className="bg-[#474084] rounded-xl mt-2 text-white resize-none "
+                                className="mt-2 resize-none rounded-xl bg-[#474084] text-white"
                                 placeholder="Description"
                                 maxLength={100}
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -100,7 +100,7 @@ export default function LoginRegisterScreen() {
                                 value={description}
                             />
                         </div>
-                        <div className="flex flex-col w-[85%] self-center  mt-4 h-24">
+                        <div className="mt-4 flex h-24 w-[85%] flex-col self-center">
                             <h1 className="h1-sm text-white">I train / i want to learn sport</h1>
                             <OptionPicker
                                 label="Select Sport"
@@ -110,29 +110,29 @@ export default function LoginRegisterScreen() {
                             />
                         </div>
 
-                        <div className="mt-auto self-center w-full flex flex-col ">
-                            <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-4 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('firstTab')}>
-                                <h1 className="self-center text-white text-lg">Go Back</h1>
+                        <div className="mt-auto flex w-full flex-col self-center">
+                            <button className="mb-4 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('firstTab')}>
+                                <h1 className="self-center text-lg text-white">Go Back</h1>
                             </button>
-                            <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('thirdTab')}>
-                                <h1 className="self-center text-white text-lg">Next</h1>
+                            <button className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('thirdTab')}>
+                                <h1 className="self-center text-lg text-white">Next</h1>
                             </button>
                         </div>
                     </form>
                 )
             case 'thirdTab':
                 return (
-                    <form className="flex flex-col h-full w-full">
+                    <form className="flex h-full w-full flex-col">
                         {accountType === 'Trainer' ? (
-                            <div className="flex w-full self-center  mt-4 h-full flex-col ">
-                                <div className="flex flex-col w-[85%] self-center mt-5  ">
+                            <div className="mt-4 flex h-full w-full flex-col self-center">
+                                <div className="mt-5 flex w-[85%] flex-col self-center">
                                     <h1 className="h1-sm text-white">Phone Number</h1>
-                                    <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2 " />
+                                    <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2" />
                                 </div>
-                                <div className="flex flex-col w-[85%] self-center mt-1 h-24 ">
-                                    <h1 className="text-white mt-4">Password</h1>
+                                <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
+                                    <h1 className="mt-4 text-white">Password</h1>
                                     <input
-                                        className="text-white bg-[#474084] h-[6vh] mt-2 indent-3 rounded-xl"
+                                        className="mt-2 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                         placeholder="Password..."
                                         value={registerPassword}
                                         type="password"
@@ -141,10 +141,10 @@ export default function LoginRegisterScreen() {
                                         }}
                                     />
                                 </div>
-                                <div className="flex flex-col w-[85%] self-center mt-1 h-24 ">
-                                    <h1 className="text-white mt-4">Repeat Password</h1>
+                                <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
+                                    <h1 className="mt-4 text-white">Repeat Password</h1>
                                     <input
-                                        className="text-white bg-[#474084] h-[6vh] mt-2 indent-3 rounded-xl"
+                                        className="mt-2 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                         placeholder="Password..."
                                         value={registerRepetedPassword}
                                         type="password"
@@ -153,12 +153,12 @@ export default function LoginRegisterScreen() {
                                         }}
                                     />
                                 </div>
-                                <div className="mt-auto self-center w-full flex flex-col ">
-                                    <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-4 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('secondTab')}>
-                                        <h1 className="self-center text-white text-lg">Go Back</h1>
+                                <div className="mt-auto flex w-full flex-col self-center">
+                                    <button className="mb-4 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('secondTab')}>
+                                        <h1 className="self-center text-lg text-white">Go Back</h1>
                                     </button>
                                     <button
-                                        className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl"
+                                        className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                                         onClick={async e => {
                                             e.preventDefault()
                                             const succesfullRegister = await accRegisterFunc(
@@ -180,20 +180,20 @@ export default function LoginRegisterScreen() {
                                             }
                                         }}
                                     >
-                                        <h1 className="self-center text-white text-lg">SignUp!</h1>
+                                        <h1 className="self-center text-lg text-white">SignUp!</h1>
                                     </button>
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex w-full self-center  mt-4 h-full flex-col ">
-                                <div className="flex flex-col w-[85%] self-center mt-5  ">
+                            <div className="mt-4 flex h-full w-full flex-col self-center">
+                                <div className="mt-5 flex w-[85%] flex-col self-center">
                                     <h1 className="h1-sm text-white">Phone Number</h1>
-                                    <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2 " />
+                                    <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2" />
                                 </div>
-                                <div className="flex flex-col w-[85%] self-center mt-1 h-24 ">
-                                    <h1 className="text-white mt-4">Password</h1>
+                                <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
+                                    <h1 className="mt-4 text-white">Password</h1>
                                     <input
-                                        className="text-white bg-[#474084] h-[6vh] mt-2 indent-3 rounded-xl"
+                                        className="mt-2 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                         placeholder="Password..."
                                         value={registerPassword}
                                         type="password"
@@ -202,10 +202,10 @@ export default function LoginRegisterScreen() {
                                         }}
                                     />
                                 </div>
-                                <div className="flex flex-col w-[85%] self-center mt-1 h-24 ">
-                                    <h1 className="text-white mt-4">Repeat Password</h1>
+                                <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
+                                    <h1 className="mt-4 text-white">Repeat Password</h1>
                                     <input
-                                        className="text-white bg-[#474084] h-[6vh] mt-2 indent-3 rounded-xl"
+                                        className="mt-2 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                         placeholder="Password..."
                                         value={registerRepetedPassword}
                                         type="password"
@@ -214,12 +214,12 @@ export default function LoginRegisterScreen() {
                                         }}
                                     />
                                 </div>
-                                <div className="mt-auto self-center w-full flex flex-col ">
-                                    <button className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-4 mt-auto  justify-center rounded-xl" onClick={() => setComponentToShow('secondTab')}>
-                                        <h1 className="self-center text-white text-lg">Go Back</h1>
+                                <div className="mt-auto flex w-full flex-col self-center">
+                                    <button className="mb-4 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('secondTab')}>
+                                        <h1 className="self-center text-lg text-white">Go Back</h1>
                                     </button>
                                     <button
-                                        className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl"
+                                        className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                                         onClick={async e => {
                                             e.preventDefault()
                                             const succesfullRegister = await accRegisterFunc(
@@ -241,7 +241,7 @@ export default function LoginRegisterScreen() {
                                             }
                                         }}
                                     >
-                                        <h1 className="self-center text-white text-lg">SignUp!</h1>
+                                        <h1 className="self-center text-lg text-white">SignUp!</h1>
                                     </button>
                                 </div>
                             </div>
@@ -254,11 +254,11 @@ export default function LoginRegisterScreen() {
     }
 
     return (
-        <div className="flex justify-center flex-col h-full">
+        <div className="flex h-full flex-col justify-center">
             {!registerForm ? (
-                <div className="flex flex-col w-[40%] h-[80vh] self-center bg-[#0000004d] rounded-3xl">
+                <div className="flex h-[80vh] w-[40%] flex-col self-center rounded-3xl bg-[#0000004d] shadow-xl">
                     <form
-                        className="flex w-[100%] h-[100%] flex-col items-center"
+                        className="flex h-[100%] w-[100%] flex-col items-center"
                         onSubmit={async e => {
                             e.preventDefault()
                             const succesfullLogin = await accLoginFunc(loginEmail, loginPassword)
@@ -267,12 +267,12 @@ export default function LoginRegisterScreen() {
                             }
                         }}
                     >
-                        <h1 className="text-white text-[1.2rem] mt-8">Log Into Account</h1>
-                        <div className="flex items-center justify-center h-[60%] w-[100%] flex-col">
-                            <div className="flex flex-col self-center w-[85%] mt-[1.5rem]">
+                        <h1 className="mt-8 text-[1.2rem] text-white">Log Into Account</h1>
+                        <div className="flex h-[60%] w-[100%] flex-col items-center justify-center">
+                            <div className="mt-[1.5rem] flex w-[85%] flex-col self-center">
                                 <h1 className="text-white">Email</h1>
                                 <input
-                                    className=" h1-[#ffffff] mt-[1vh] bg-[#474084] h-[6vh] border-none rounded-xl w-full placeholder:text-white indent-3 text-white"
+                                    className="h1-[#ffffff] mt-[1vh] h-[6vh] w-full rounded-xl border-none bg-[#474084] indent-3 text-white placeholder:text-white"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setLoginEmail(e.target.value)
                                     }}
@@ -281,10 +281,10 @@ export default function LoginRegisterScreen() {
                                     placeholder="Email..."
                                 />
                             </div>
-                            <div className="flex flex-col self-center w-[85%] mt-[2rem]">
+                            <div className="mt-[2rem] flex w-[85%] flex-col self-center">
                                 <h1 className="text-white">Password</h1>
                                 <input
-                                    className=" h1-[#ffffff] mt-[1vh] text-white bg-[#474084] h-[6vh] rounded-xl border-none w-full placeholder:text-white indent-3"
+                                    className="h1-[#ffffff] mt-[1vh] h-[6vh] w-full rounded-xl border-none bg-[#474084] indent-3 text-white placeholder:text-white"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setLoginPassword(e.target.value)
                                     }}
@@ -295,7 +295,7 @@ export default function LoginRegisterScreen() {
                             </div>
                         </div>
                         <button
-                            className="self-center w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-2 mt-auto  justify-center rounded-xl"
+                            className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                             onClick={async e => {
                                 e.preventDefault()
                                 const succesfullLogin = await accLoginFunc(loginEmail, loginPassword)
@@ -304,10 +304,10 @@ export default function LoginRegisterScreen() {
                                 }
                             }}
                         >
-                            <h1 className="self-center text-white text-lg">Log Into Account!</h1>
+                            <h1 className="self-center text-lg text-white">Log Into Account!</h1>
                         </button>
-                        <div className="flex flex-col mt-auto w-full mb-4">
-                            <div className="bg-white w-[100%] h-[.1rem] mb-2" />
+                        <div className="mb-4 mt-auto flex w-full flex-col">
+                            <div className="mb-2 h-[.1rem] w-[100%] bg-white" />
                             <button>
                                 <h1
                                     className="text-[#9c9c9c]"
@@ -322,13 +322,13 @@ export default function LoginRegisterScreen() {
                     </form>
                 </div>
             ) : (
-                <div className="flex flex-col w-[40%] h-[80vh] self-center bg-[#0000004d] rounded-3xl">
-                    <div className="flex w-[100%] h-[100%] flex-col items-center">
-                        <h1 className="text-white text-[1.5rem] mt-[2rem]">Create Account</h1>
-                        <h1 className="text-white text-[0.7rem] mt-2">SignIn and find a new partener/Trainer</h1>
-                        <div className="flex items-center h-[70%] w-[100%] flex-col">{renderComponent()}</div>
-                        <div className="flex flex-col mt-auto w-full mb-4">
-                            <div className="bg-white w-[100%] h-[.1rem] mb-2" />
+                <div className="flex h-[80vh] w-[40%] flex-col self-center rounded-3xl bg-[#0000004d] shadow-xl">
+                    <div className="flex h-[100%] w-[100%] flex-col items-center">
+                        <h1 className="mt-[2rem] text-[1.5rem] text-white">Create Account</h1>
+                        <h1 className="mt-2 text-[0.7rem] text-white">SignIn and find a new partener/Trainer</h1>
+                        <div className="flex h-[70%] w-[100%] flex-col items-center">{renderComponent()}</div>
+                        <div className="mb-4 mt-auto flex w-full flex-col">
+                            <div className="mb-2 h-[.1rem] w-[100%] bg-white" />
                             <button>
                                 <h1
                                     className="text-[#9c9c9c]"

@@ -1,5 +1,5 @@
 import React from 'react'
 
 export const VideosList = () => {
-    return <div className="flex bg-[#2e2e2e] w-full  h-[100vh]">VideosList</div>
+    return <div className="flex h-[100vh] w-full bg-[#2e2e2e]">VideosList</div>
 }

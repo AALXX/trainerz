@@ -61,15 +61,15 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     }
 
     return (
-        <div className="flex flex-col items-center w-full px-4 py-6 space-y-6">
-            <form className="flex flex-col w-full max-w-3xl items-center space-y-6" onSubmit={changeUserData}>
-                <h1 className="text-white text-xl">SETTINGS</h1>
+        <div className="flex w-full flex-col items-center space-y-6 px-4 py-6">
+            <form className="flex w-full max-w-3xl flex-col items-center space-y-6" onSubmit={changeUserData}>
+                <h1 className="text-xl text-white">SETTINGS</h1>
                 <hr className="w-full border-gray-500" />
-                <div className="flex flex-col w-full space-y-6">
-                    <div className="flex flex-col w-full">
+                <div className="flex w-full flex-col space-y-6">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Username</h1>
                         <input
-                            className="text-white mt-2 bg-[#474084] h-12 border-none rounded-xl w-full placeholder:text-white px-3"
+                            className="mt-2 h-12 w-full rounded-xl border-none bg-[#474084] px-3 text-white placeholder:text-white"
                             onChange={e => setUserName(e.target.value)}
                             value={userName}
                             maxLength={10}
@@ -77,21 +77,21 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                             placeholder="User Name..."
                         />
                     </div>
-                    <div className="flex flex-col w-full">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Email</h1>
                         <input
-                            className="text-white mt-2 bg-[#474084] h-12 border-none rounded-xl w-full placeholder:text-white px-3"
+                            className="mt-2 h-12 w-full rounded-xl border-none bg-[#474084] px-3 text-white placeholder:text-white"
                             type="email"
                             placeholder="Email..."
                             onChange={e => setEmail(e.target.value)}
                             value={email}
                         />
                     </div>
-                    <div className="flex flex-col w-full">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Account Type</h1>
                         <OptionPicker label="Account Type" options={['Trainer', 'SportsPerson']} value={accountType} onChange={value => setAccountType(value)} />
                     </div>
-                    <div className="flex flex-col w-full">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Sport</h1>
                         <OptionPicker
                             label="Sport"
@@ -100,10 +100,10 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                             onChange={value => setSport(value)}
                         />
                     </div>
-                    <div className="flex flex-col w-full">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Account Description</h1>
                         <textarea
-                            className="bg-[#474084] rounded-xl mt-2 text-white resize-none p-3"
+                            className="mt-2 resize-none rounded-xl bg-[#474084] p-3 text-white"
                             placeholder="Description"
                             maxLength={100}
                             onChange={e => setDescription(e.target.value)}
@@ -111,27 +111,27 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                             value={description}
                         />
                     </div>
-                    <div className="flex flex-col w-full">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-white">Account Visibility</h1>
                         <OptionPicker label="Account Visibility" options={['public', 'private']} value={Visibility} onChange={value => setVisibility(value)} />
                     </div>
-                    <button className="w-full h-10 bg-[#474084] active:bg-[#3b366c] mb-4 rounded-xl text-white text-lg" type="submit">
+                    <button className="mb-4 h-10 w-full rounded-xl bg-[#474084] text-lg text-white active:bg-[#3b366c]" type="submit">
                         Update!
                     </button>
                 </div>
             </form>
             <hr className="w-full max-w-3xl border-gray-500" />
             <div className="w-full max-w-3xl space-y-6">
-                <button className="w-full h-10 bg-[#474084] active:bg-[#3b366c] rounded-xl text-white text-lg" onClick={changePassword}>
+                <button className="h-10 w-full rounded-xl bg-[#474084] text-lg text-white active:bg-[#3b366c]" onClick={changePassword}>
                     Change Password!
                 </button>
                 <hr className="border-gray-500" />
-                <button className="w-full h-10 bg-[#474084]  active:bg-[#3b366c] rounded-xl text-white" onClick={accLogout}>
+                <button className="h-10 w-full rounded-xl bg-[#474084] text-white active:bg-[#3b366c]" onClick={accLogout}>
                     Log Out
                 </button>
                 <div className="flex items-center space-x-4">
                     <button
-                        className="w-full h-10 bg-[#474084]  active:bg-[#3b366c]  rounded-xl text-[#ad2c2c]"
+                        className="h-10 w-full rounded-xl bg-[#474084] text-[#ad2c2c] active:bg-[#3b366c]"
                         onClick={async () => {
                             const succesfullDeleted = await deleteAccount(sure, userToken)
                             if (succesfullDeleted) {

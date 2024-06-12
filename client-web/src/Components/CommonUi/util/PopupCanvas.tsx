@@ -7,9 +7,9 @@ interface IPopupCanvasProps {
 
 const PopupCanvas = (props: IPopupCanvasProps) => {
     return (
-        <div className="fixed w-[100%] h-[100%] top-0 left-0 right-0 bottom-0 m-auto bg-[#0000005b] z-10">
-            <div className="flex flex-col absolute left-[25%] right-[25%] top-[25%] bottom-[25%] w-[50vw] h-[88vh] m-auto bg-gradient-to-tr from-[#1E3B80] to-[#784EB9] rounded-2xl z-10 overflow-y-scroll items-center ">
-                <button className="text-[#ffffff] bg-transparent outline-none cursor-pointer ml-auto mt-[1vh] mr-[1vw]" onClick={props.closePopup}>
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-10 m-auto h-[100%] w-[100%] bg-[#0000005b]">
+            <div className="absolute bottom-[25%] left-[25%] right-[25%] top-[25%] z-10 m-auto flex h-[88vh] w-[50vw] flex-col items-center overflow-y-scroll rounded-2xl bg-gradient-to-tr from-[#1E3B80] to-[#784EB9]">
+                <button className="ml-auto mr-[1vw] mt-[1vh] cursor-pointer bg-transparent text-[#ffffff] outline-none" onClick={props.closePopup}>
                     &#9587;
                 </button>
                 <>{props.children}</>

@@ -23,7 +23,7 @@ const EditVideo = () => {
                 <EditVideoComponent videoToken={urlParams.get('vt') as string} />
             ) : (
                 <>
-                    <h1 className="text-white self-center mt-[2rem]">Not logged In:</h1>
+                    <h1 className="mt-[2rem] self-center text-white">Not logged In:</h1>
                     <Link className="self-center" href={'/account/login-register'}>
                         <h1 className="text-white">Login</h1>
                     </Link>

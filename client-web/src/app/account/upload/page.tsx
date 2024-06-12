@@ -22,7 +22,7 @@ const UploadPage = () => {
                 <UploadComopnent />
             ) : (
                 <div className="flex w-full flex-col">
-                    <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
+                    <h1 className="mt-[2rem] self-center text-white">Not logged In</h1>
                     <Link className="self-center" href={'/account/login-register'}>
                         <h1 className="text-white">Login!</h1>
                     </Link>

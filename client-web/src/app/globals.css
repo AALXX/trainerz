@@ -19,11 +19,22 @@
 body {
     padding: 0;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        Segoe UI,
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        Fira Sans,
+        Droid Sans,
+        Helvetica Neue,
+        sans-serif;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(45deg, #1E3B80, #784EB9); /* Diagonal gradient */
+    background: linear-gradient(45deg, #1e3b80, #784eb9); /* Diagonal gradient */
 
     /* overflow: hidden; */
 }

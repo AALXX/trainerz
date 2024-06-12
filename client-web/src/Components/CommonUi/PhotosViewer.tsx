@@ -17,20 +17,20 @@ const PhotoSlider: React.FC<PhotoSliderProps> = ({ images }) => {
     }
 
     return (
-        <div className="relative w-full max-w-2xl mx-auto self-center">
-            <div className="overflow-hidden rounded-lg ">
+        <div className="relative mx-auto w-full max-w-2xl self-center">
+            <div className="overflow-hidden rounded-lg">
                 <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
                     {images.map((image, index) => (
                         <div key={index} className="w-full flex-shrink-0">
-                            <img src={image} alt={`Slide ${index}`} className="w-full object-cover h-[25rem]" />
+                            <img src={image} alt={`Slide ${index}`} className="h-[25rem] w-full object-cover" />
                         </div>
                     ))}
                 </div>
             </div>
-            <button onClick={prevSlide} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+            <button onClick={prevSlide} className="absolute left-0 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-800 p-2 text-white">
                 &lt;
             </button>
-            <button onClick={nextSlide} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+            <button onClick={nextSlide} className="absolute right-0 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-800 p-2 text-white">
                 &gt;
             </button>
         </div>

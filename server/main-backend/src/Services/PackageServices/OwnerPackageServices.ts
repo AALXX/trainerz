@@ -139,7 +139,7 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                         try {
                             await PhotoProceesor(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`, `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Package_${PackageToken}/Photo_${i}.jpg`);
 
-                            await fs.unlinkSync(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`);
+                            // await fs.unlinkSync(`${process.env.ACCOUNTS_FOLDER_PATH}/PhotosTmp/${photo.originalname}`);
                         } catch (err: any) {
                             logging.error('FILE_UPLOAD', err);
                             await connection.query('ROLLBACK');
@@ -156,6 +156,7 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                     name: req.body.PackageName,
                     metadata: { PackageToken: PackageToken, OwnerToken: userPublicToken },
                 });
+
                 if (product!.id != null) {
                     // Create Stripe prices
                     const prices = [
@@ -216,8 +217,9 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                         await query(connection, insertBasicTierQuery, [PackageToken, price.unit_amount, priceResp?.id, price.recurring, price.accessVideos, price.coaching, price.customProgram, price.description], true);
                     }
 
-                    await query(connection, 'COMMIT;', []);
+                    await query(connection, 'COMMIT;');
 
+                    
                     return res.status(200).json({
                         error: false,
                     });

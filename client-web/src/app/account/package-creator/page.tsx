@@ -15,7 +15,6 @@ const Page: React.FunctionComponent<any> = props => {
     const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
 
-
     const userToken: string = getCookie('userToken') as string
     const router = useRouter()
 
@@ -187,21 +186,21 @@ const Page: React.FunctionComponent<any> = props => {
     }
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex h-full flex-col">
             {userLoggedIn ? (
-                <div className="flex m-auto 3xl:w-[80rem] 3xl:h-[50rem] xl:w-[65rem] xl:h-[35rem] lg:w-[50rem] lg:h-[30rem]">
-                    <div className="flex bg-[#0000005e] flex-col 3xl:w-[49rem] rounded-2xl xl:w-[39rem] lg:w-[29rem]">
-                        <div className="flex w-full h-28">
+                <div className="m-auto flex lg:h-[30rem] lg:w-[50rem] xl:h-[35rem] xl:w-[65rem] 3xl:h-[50rem] 3xl:w-[80rem]">
+                    <div className="flex flex-col rounded-2xl bg-[#0000005e] lg:w-[29rem] xl:w-[39rem] 3xl:w-[49rem]">
+                        <div className="flex h-28 w-full">
                             <input
-                                className="w-60 rounded-xl placeholder:text-white bg-[#474084] text-white indent-3 h-8 m-auto"
+                                className="m-auto h-8 w-60 rounded-xl bg-[#474084] indent-3 text-white placeholder:text-white"
                                 placeholder="Enter Package Name"
                                 value={packageName}
                                 onChange={e => setPackageName(e.target.value)}
                             />
                         </div>
                         <hr className="w-full" />
-                        <div className="flex flex-col w-full h-[75%] p-5">
-                            <h1 className="text-white mt-4">Add Photos that describe best your package</h1>
+                        <div className="flex h-[75%] w-full flex-col p-5">
+                            <h1 className="mt-4 text-white">Add Photos that describe best your package</h1>
                             <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-3 3xl:grid-cols-3">
                                 <AddPhotoZone setImageFile={setImage1} />
                                 <AddPhotoZone setImageFile={setImage2} />
@@ -209,9 +208,9 @@ const Page: React.FunctionComponent<any> = props => {
                                 <AddPhotoZone setImageFile={setImage4} />
                             </div>
                         </div>
-                        <hr className="w-full " />
-                        <div className="flex h-[15%]  ">
-                            <div className="flex flex-col w-[35%] self-center  mt-4 h-24 m-auto">
+                        <hr className="w-full" />
+                        <div className="flex h-[15%]">
+                            <div className="m-auto mt-4 flex h-24 w-[35%] flex-col self-center">
                                 <h1 className="self-center text-white">Package sport</h1>
                                 <OptionPicker
                                     label="Select Sport"
@@ -223,28 +222,28 @@ const Page: React.FunctionComponent<any> = props => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col bg-[#0000005e] 3xl:w-[30rem] ml-auto rounded-2xl xl:w-[25rem] lg:w-[20rem]">
-                        <div className="flex mt-12 justify-around">
-                            <SelectableCards Title="BASIC" TabName="Basic" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center ml cursor-pointer rounded-t-xl" />
-                            <SelectableCards Title="STANDARD" TabName="Standard" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl" />
-                            <SelectableCards Title="PREMIUM" TabName="Premium" setComponentToShow={setComponentToShow} className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl" />
+                    <div className="ml-auto flex flex-col rounded-2xl bg-[#0000005e] lg:w-[20rem] xl:w-[25rem] 3xl:w-[30rem]">
+                        <div className="mt-12 flex justify-around">
+                            <SelectableCards Title="BASIC" TabName="Basic" setComponentToShow={setComponentToShow} className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                            <SelectableCards Title="STANDARD" TabName="Standard" setComponentToShow={setComponentToShow} className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                            <SelectableCards Title="PREMIUM" TabName="Premium" setComponentToShow={setComponentToShow} className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
                         </div>
 
                         <hr className="w-full" />
                         {renderComponent()}
                         <button
-                            className="self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl"
+                            className="mb-8 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                             onClick={async () => {
                                 await createPackage()
                             }}
                         >
-                            <h1 className="self-center text-white text-lg">Create!</h1>
+                            <h1 className="self-center text-lg text-white">Create!</h1>
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className="flex w-full flex-col h-full">
-                    <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
+                <div className="flex h-full w-full flex-col">
+                    <h1 className="mt-[2rem] self-center text-white">Not logged In</h1>
                     <Link className="self-center" href={'/account/login-register'}>
                         <h1 className="text-white">Login!</h1>
                     </Link>

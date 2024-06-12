@@ -71,7 +71,7 @@ const PackageView = () => {
             setBasicTierData(data.basicTier)
             setStandardTierData(data.standardTier)
             setPremiumTierData(data.premiumTier)
-            
+
             setSelectedPriceId(data.basicTier.priceId)
 
             setRating(data.rating)
@@ -137,46 +137,46 @@ const PackageView = () => {
     ]
 
     return (
-        <div className="flex flex-col h-full self-center">
-            <div className="flex m-auto 3xl:w-[80rem] 3xl:h-[50rem] xl:w-[65rem] xl:h-[35rem] lg:w-[50rem] lg:h-[30rem]">
-                <div className="flex bg-[#0000005e] flex-col 3xl:w-[49rem] rounded-2xl xl:w-[39rem] lg:w-[29rem]">
-                    <div className="flex w-full flex-grow-0 h-28">
-                        <h1 className="m-auto text-white text-lg">{packageName}</h1>
+        <div className="flex h-full flex-col self-center">
+            <div className="m-auto flex lg:h-[30rem] lg:w-[50rem] xl:h-[35rem] xl:w-[65rem] 3xl:h-[50rem] 3xl:w-[80rem]">
+                <div className="flex flex-col rounded-2xl bg-[#0000005e] lg:w-[29rem] xl:w-[39rem] 3xl:w-[49rem]">
+                    <div className="flex h-28 w-full flex-grow-0">
+                        <h1 className="m-auto text-lg text-white">{packageName}</h1>
                     </div>
                     <hr className="w-full" />
-                    <div className="flex flex-col w-full h-[75%] flex-grow-0 p-5">
+                    <div className="flex h-[75%] w-full flex-grow-0 flex-col p-5">
                         <PhotoViewer images={photos} />
                     </div>
-                    <div className="flex flex-col h-[30%]">
+                    <div className="flex h-[30%] flex-col">
                         <div className="flex">
-                            <h1 className="text-white text-lg ml-4">Sport: {sport}</h1>
-                            <h1 className="text-white text-lg ml-auto mr-4">Rating: {rating}/5</h1>
+                            <h1 className="ml-4 text-lg text-white">Sport: {sport}</h1>
+                            <h1 className="ml-auto mr-4 text-lg text-white">Rating: {rating}/5</h1>
                         </div>
-                        <hr className="w-full " />
+                        <hr className="w-full" />
                     </div>
                 </div>
 
-                <div className="flex flex-col bg-[#0000005e] 3xl:w-[30rem] ml-auto rounded-2xl xl:w-[25rem] lg:w-[20rem]">
-                    <div className="flex mt-12 justify-around">
+                <div className="ml-auto flex flex-col rounded-2xl bg-[#0000005e] lg:w-[20rem] xl:w-[25rem] 3xl:w-[30rem]">
+                    <div className="mt-12 flex justify-around">
                         <SelectableCards
                             Title="BASIC"
                             TabName="Basic"
                             setComponentToShow={setComponentToShow}
-                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center ml cursor-pointer rounded-t-xl"
+                            className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(basicTierData.priceId)}
                         />
                         <SelectableCards
                             Title="STANDARD"
                             TabName="Standard"
                             setComponentToShow={setComponentToShow}
-                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl"
+                            className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(standardTierData.priceId)}
                         />
                         <SelectableCards
                             Title="PREMIUM"
                             TabName="Premium"
                             setComponentToShow={setComponentToShow}
-                            className="bg-[#0000003d] w-[9rem] h-[3rem] justify-center cursor-pointer rounded-t-xl"
+                            className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(premiumTierData.priceId)}
                         />
                     </div>
@@ -188,7 +188,7 @@ const PackageView = () => {
                             }}
                         >
                             <Elements stripe={getStripe()}>
-                                <PackageCheckout priceId={selectedPriceId}/>
+                                <PackageCheckout priceId={selectedPriceId} />
                             </Elements>
                         </PopupCanvas>
                     ) : null}
@@ -196,16 +196,16 @@ const PackageView = () => {
                     {renderComponent()}
                     {userLoggedIn ? (
                         <button
-                            className="self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl"
+                            className="mb-8 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                             onClick={async () => {
                                 setCheckoutPoUp(true)
                             }}
                         >
-                            <h1 className="self-center text-white text-lg">Checkout!</h1>
+                            <h1 className="self-center text-lg text-white">Checkout!</h1>
                         </button>
                     ) : (
-                        <Link href={'/account/login-register'} className="flex self-center w-[85%] h-12 mb-8 bg-[#474084] active:bg-[#3b366c] mt-auto justify-center rounded-xl">
-                            <h1 className="self-center text-white text-lg m-auto">Login to checkout!</h1>
+                        <Link href={'/account/login-register'} className="mb-8 mt-auto flex h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]">
+                            <h1 className="m-auto self-center text-lg text-white">Login to checkout!</h1>
                         </Link>
                     )}
                 </div>

@@ -55,7 +55,7 @@ const Account = () => {
     }, [userToken])
 
     return (
-        <div className="flex  flex-col h-full">
+        <div className="flex h-full flex-col">
             {userLoggedIn ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
@@ -92,8 +92,8 @@ const Account = () => {
                     )}
                 </>
             ) : (
-                <div className="flex w-full flex-col h-full">
-                    <h1 className="text-white self-center mt-[2rem]">Not logged In</h1>
+                <div className="flex h-full w-full flex-col">
+                    <h1 className="mt-[2rem] self-center text-white">Not logged In</h1>
                     <Link className="self-center" href={'/account/login-register'}>
                         <h1 className="text-white">Login!</h1>
                     </Link>

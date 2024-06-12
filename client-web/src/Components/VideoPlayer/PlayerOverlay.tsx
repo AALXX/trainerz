@@ -25,7 +25,7 @@ interface IOverlayProps {
 const PlayerOverlay = (props: IOverlayProps) => {
     return (
         <div
-            className="flex  absolute w-[66.8vw] h-[71.4vh] "
+            className="absolute flex h-[71.4vh] w-[66.8vw]"
             onMouseEnter={() => {
                 props.setShowOverlay(true)
             }}
@@ -33,14 +33,13 @@ const PlayerOverlay = (props: IOverlayProps) => {
                 props.setShowOverlay(false)
             }}
         >
-            <div className="flex flex-col  w-full h-[8%] bg-[#00000041] z-10 self-end">
-                
-                <input type="range" className="w-full h-[.5rem]  appearance-none " min="0" max="100" step="0.01" value={props.Progress} onChange={props.handleProgressChange} />
+            <div className="z-10 flex h-[8%] w-full flex-col self-end bg-[#00000041]">
+                <input type="range" className="h-[.5rem] w-full appearance-none" min="0" max="100" step="0.01" value={props.Progress} onChange={props.handleProgressChange} />
                 <div className="flex h-full">
                     {props.Playing ? (
                         <img
                             src="/assets/PlayerIcons/Puase_icon.svg"
-                            className=" cursor-pointer w-[2rem]  ml-[1rem]"
+                            className="ml-[1rem] w-[2rem] cursor-pointer"
                             alt="playing Image"
                             onClick={() => {
                                 props.setPlaying(props.playOrPauseVideo(props.VideoRef))
@@ -49,7 +48,7 @@ const PlayerOverlay = (props: IOverlayProps) => {
                     ) : (
                         <img
                             src="/assets/PlayerIcons/Play_icon.svg"
-                            className="cursor-pointer w-[2rem] ml-[1rem]"
+                            className="ml-[1rem] w-[2rem] cursor-pointer"
                             alt="playing Image"
                             onClick={() => {
                                 props.playOrPauseVideo(props.VideoRef)
@@ -58,18 +57,18 @@ const PlayerOverlay = (props: IOverlayProps) => {
                     )}
                     <img
                         src="/assets/PlayerIcons/Next_icon.svg"
-                        className="cursor-pointer w-[2rem]  ml-[1rem]"
+                        className="ml-[1rem] w-[2rem] cursor-pointer"
                         alt="playing Image"
                         onClick={() => {
                             // PlayOrPauseVideo()
                         }}
                     />
 
-                    <div className="flex ml-8">
+                    <div className="ml-8 flex">
                         {props.Volume == 0 ? (
                             <img
                                 src="/assets/PlayerIcons/VolumeOff_icon.svg"
-                                className="cursor-pointer w-[1.6rem] mr-[1rem]"
+                                className="mr-[1rem] w-[1.6rem] cursor-pointer"
                                 alt="not muted image"
                                 onClick={() => {
                                     props.setVolume(0.5)
@@ -80,7 +79,7 @@ const PlayerOverlay = (props: IOverlayProps) => {
                         ) : (
                             <img
                                 src="/assets/PlayerIcons/MaxVolume_icon.svg"
-                                className="cursor-pointer w-[1.6rem] mr-[1rem]"
+                                className="mr-[1rem] w-[1.6rem] cursor-pointer"
                                 alt="muted imgage"
                                 onClick={() => {
                                     props.setVolume(0)
@@ -92,7 +91,7 @@ const PlayerOverlay = (props: IOverlayProps) => {
 
                         <input
                             type="range"
-                            className="h-[.5rem] focus:outline-none appearance-none w-[100%] bg-[#707070] self-center"
+                            className="h-[.5rem] w-[100%] appearance-none self-center bg-[#707070] focus:outline-none"
                             min="0"
                             max="1"
                             step="0.01"
@@ -103,7 +102,7 @@ const PlayerOverlay = (props: IOverlayProps) => {
                         />
                     </div>
 
-                    <h1 className="text-white self-center ml-11">
+                    <h1 className="ml-11 self-center text-white">
                         <span>
                             {props.CurrentMinutes}:{props.CurrentSeconds < 10 ? '0' + props.CurrentSeconds : props.CurrentSeconds}
                         </span>{' '}
@@ -115,7 +114,7 @@ const PlayerOverlay = (props: IOverlayProps) => {
 
                     <img
                         src="/assets/PlayerIcons/Fullscreen_icon.svg"
-                        className="cursor-pointer w-[1.6rem] mr-[1rem] ml-auto"
+                        className="ml-auto mr-[1rem] w-[1.6rem] cursor-pointer"
                         alt=" fullsScreen image"
                         onClick={() => {
                             props.VideoRef?.current?.requestFullscreen()

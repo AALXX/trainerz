@@ -23,9 +23,9 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
     }, [])
 
     return (
-        <div className="flex flex-col w-full  ">
-            <div className="flex flex-col  w-full h-64">
-                <div className="flex relative flex-col self-center mt-6 w-32 h-32">
+        <div className="flex w-full flex-col">
+            <div className="flex h-64 w-full flex-col">
+                <div className="relative mt-6 flex h-32 w-32 flex-col self-center">
                     <img
                         onMouseEnter={() => {
                             setIsAccIconHovered(true)
@@ -33,13 +33,13 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
                         onMouseLeave={() => {
                             setIsAccIconHovered(false)
                         }}
-                        className="rounded-full m-auto w-32 h-32"
+                        className="m-auto h-32 w-32 rounded-full"
                         src={`${process.env.FILE_SERVER}/${props.userpublictoken}/Main_icon.png?cache=none`}
                         alt="Picture of the author"
                     />
                     {isAccIconHovered ? (
                         <div
-                            className="flex absolute inset-0 rounded-full w-32 h-32 m-auto bg-black bg-opacity-80 cursor-pointer"
+                            className="absolute inset-0 m-auto flex h-32 w-32 cursor-pointer rounded-full bg-black bg-opacity-80"
                             onMouseEnter={() => {
                                 setIsAccIconHovered(true)
                             }}
@@ -50,16 +50,16 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
                                 setToggledIconChangePopUp(!ToggledIconChangePopUp)
                             }}
                         >
-                            <img className="w-[90%] h-[90%] m-auto rounded-full" src="/assets/AccountIcons/EditProfileIcon_Icon.svg" alt="Overlay image" />
+                            <img className="m-auto h-[90%] w-[90%] rounded-full" src="/assets/AccountIcons/EditProfileIcon_Icon.svg" alt="Overlay image" />
                         </div>
                     ) : null}
                 </div>
 
-                <div className="flex flex-col w-[15vw]  h-[7vh] self-center justify-center items-center ">
+                <div className="flex h-[7vh] w-[15vw] flex-col items-center justify-center self-center">
                     <div className="flex w-full justify-center">
-                        <h1 className="text-white self-center text-xl">{props.username}</h1>
+                        <h1 className="self-center text-xl text-white">{props.username}</h1>
                         <img
-                            className="self-center ml-4 mt-1 cursor-pointer"
+                            className="ml-4 mt-1 cursor-pointer self-center"
                             src="/assets/AccountIcons/Settings_icon.svg"
                             width={20}
                             height={20}
@@ -79,14 +79,7 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
                         setToggledSettingsPopUp(!ToggledSettingsPopUp)
                     }}
                 >
-                    <AccoutSettingsPopup
-                        Sport={props.sport}
-                        AccountType={props.accounttype}
-                        UserName={props.username}
-                        UserEmail={props.useremail}
-                        UserVisibility="public"
-                        UserDescription={props.description}
-                    />
+                    <AccoutSettingsPopup Sport={props.sport} AccountType={props.accounttype} UserName={props.username} UserEmail={props.useremail} UserVisibility="public" UserDescription={props.description} />
                 </PopupCanvas>
             ) : null}
 
@@ -100,7 +93,7 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
                 </PopupCanvas>
             ) : null}
 
-            <hr className="w-full bg-white h-[0.1rem] " />
+            <hr className="h-[0.1rem] w-full bg-white" />
         </div>
     )
 }

@@ -46,7 +46,7 @@ export default function CreatorAccountPage() {
     }, [])
 
     return (
-        <div className="flex flex-col h-full ">
+        <div className="flex h-full flex-col">
             {userFound ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
@@ -83,8 +83,8 @@ export default function CreatorAccountPage() {
                     )}
                 </>
             ) : (
-                <div className="flex flex-col ">
-                    <h1 className="text-white self-center mt-[2rem]">User Not Found</h1>
+                <div className="flex flex-col">
+                    <h1 className="mt-[2rem] self-center text-white">User Not Found</h1>
                 </div>
             )}
         </div>

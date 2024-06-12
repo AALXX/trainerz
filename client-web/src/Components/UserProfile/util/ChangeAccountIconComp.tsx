@@ -22,13 +22,13 @@ const Icon = ({ url }: IconProps) => {
 
     if (url == '') {
         return (
-            <div className="flex border-2 border-white h-[10rem] w-[10rem] flex-col rounded-full m-auto">
-                <h1 className="text-white text-sm m-auto">No image Inputed</h1>
+            <div className="m-auto flex h-[10rem] w-[10rem] flex-col rounded-full border-2 border-white">
+                <h1 className="m-auto text-sm text-white">No image Inputed</h1>
             </div>
         )
     }
 
-    return <img src={url} alt="" className="rounded-full h-[10rem] w-[10rem] m-auto" />
+    return <img src={url} alt="" className="m-auto h-[10rem] w-[10rem] rounded-full" />
 }
 
 const ChangeAccountIconComp = () => {
@@ -63,12 +63,12 @@ const ChangeAccountIconComp = () => {
     }
 
     return (
-        <div className="flex flex-col w-full h-full">
-            <div className="flex flex-col w-full items-center">
-                <h1 className="text-[#ffffff] text-xl">Change Icon</h1>
-                <hr color="#656565" className="w-[85%] mt-[1rem]" />
-                <div className="flex w-[85%] mt-14">
-                    <label htmlFor="iconFile" className="flex border-2  border-white border-solid w-[20rem] h-[12rem]  cursor-pointer">
+        <div className="flex h-full w-full flex-col">
+            <div className="flex w-full flex-col items-center">
+                <h1 className="text-xl text-[#ffffff]">Change Icon</h1>
+                <hr color="#656565" className="mt-[1rem] w-[85%]" />
+                <div className="mt-14 flex w-[85%]">
+                    <label htmlFor="iconFile" className="flex h-[12rem] w-[20rem] cursor-pointer border-2 border-solid border-white">
                         <input
                             type="file"
                             className="hidden"
@@ -79,18 +79,18 @@ const ChangeAccountIconComp = () => {
                             }}
                             accept=".jpg, .png"
                         />
-                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="m-auto w-[7rem] h-[2rem]" />
+                        <img src="/assets/UploadPageIcons/VideoUploadIcon.svg" alt="AccountImageButton" className="m-auto h-[2rem] w-[7rem]" />
                     </label>
 
-                    <div className="flex flex-col  ml-auto">
+                    <div className="ml-auto flex flex-col">
                         <Icon url={ObjectUrl} />
                     </div>
                 </div>
             </div>
-            <hr color="#656565" className="w-[85%] mt-auto self-center" />
-            <div className="flex w-[85%] self-center mt-8">
-                <button className="w-[85%] h-12 bg-[#474084] active:bg-[#3b366c] mb-4 m-auto justify-center rounded-xl" onClick={() => changeIconSubmit()}>
-                    <h1 className="self-center text-white text-lg">Change Photo</h1>
+            <hr color="#656565" className="mt-auto w-[85%] self-center" />
+            <div className="mt-8 flex w-[85%] self-center">
+                <button className="m-auto mb-4 h-12 w-[85%] justify-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => changeIconSubmit()}>
+                    <h1 className="self-center text-lg text-white">Change Photo</h1>
                 </button>
             </div>
         </div>

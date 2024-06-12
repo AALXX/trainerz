@@ -17,12 +17,12 @@ const BirthDateSelectorComponent: React.FC<BirthDateSelectorProps> = ({ onDateCh
     }
 
     return (
-        <div className="flex flex-col w-full mt-2 ">
+        <div className="mt-2 flex w-full flex-col">
             <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}
                 dateFormat="MM/dd/yyyy"
-                className=" p-2 border-2 bg-[#474084] text-white border-none w-full rounded-xl shadow-sm  mr-auto   "
+                className="mr-auto w-full rounded-xl border-2 border-none bg-[#474084] p-2 text-white shadow-sm"
                 showMonthDropdown
                 showYearDropdown
                 dropdownMode="select"

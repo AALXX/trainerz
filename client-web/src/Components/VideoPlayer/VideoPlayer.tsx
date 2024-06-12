@@ -145,10 +145,10 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
 
     return (
         // * PLayer Outer Border
-        <div className="flex flex-col mt-[3rem] ml-[6rem]">
+        <div className="ml-[6rem] mt-[3rem] flex flex-col">
             {/*  VideoPlayer Border */}
 
-            <div className="w-[66.8vw] h-[71.8vh] rounded-tl-xl">
+            <div className="h-[71.8vh] w-[66.8vw] rounded-tl-xl">
                 {/* TODO  make video controll bar */}
                 {showOverlay ? (
                     <PlayerOverlay
@@ -173,7 +173,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         setPlaying(playOrPauseVideo(VideoRef))
                     }}
                     ref={VideoRef}
-                    className="w-full h-full bg-black rounded-tl-xl"
+                    className="h-full w-full rounded-tl-xl bg-black"
                     onMouseEnter={() => {
                         setShowOverlay(true)
                     }}
@@ -186,22 +186,22 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                 </video>
             </div>
 
-            <div className="flex mt-[.5vh] h-[11vh] w-[66.8vw] bg-[#00000080] rounded-bl-xl">
+            <div className="mt-[.5vh] flex h-[11vh] w-[66.8vw] rounded-bl-xl bg-[#00000080]">
                 <Link className="ml-4 self-center" href={`/user?id=${VideoData.OwnerToken}`}>
-                    <img className="z-10 rounded-full w-14 h-14" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
+                    <img className="z-10 h-14 w-14 rounded-full" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
                 </Link>
-                <div className="flex flex-col ml-4 self-center">
-                    <h1 className="text-white mt-2 text-lg">{VideoData.VideoTitle}</h1>
+                <div className="ml-4 flex flex-col self-center">
+                    <h1 className="mt-2 text-lg text-white">{VideoData.VideoTitle}</h1>
                     <hr className="w-full" />
-                    <div className="flex  ">
+                    <div className="flex">
                         <div className="flex flex-col">
-                            <h1 className="text-white text-base">{VideoData.AccountName}</h1>
-                            <h1 className="text-white text-xs">{VideoData.AccountFolowers} followers</h1>
+                            <h1 className="text-base text-white">{VideoData.AccountName}</h1>
+                            <h1 className="text-xs text-white">{VideoData.AccountFolowers} followers</h1>
                         </div>
                         {userFollwsAccount ? (
                             <>
                                 <button
-                                    className="text-white text-bg mt-2 ml-20 bg-[#727272] h-[2.5rem] w-[4.5rem]"
+                                    className="text-bg ml-20 mt-2 h-[2.5rem] w-[4.5rem] bg-[#727272] text-white"
                                     onClick={async () => {
                                         setUserFollwsAccount(await followAccount(getCookie('userToken'), VideoData.OwnerToken, userFollwsAccount))
                                     }}
@@ -212,7 +212,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         ) : (
                             <>
                                 <button
-                                    className="text-white text-bg mt-2 ml-20 bg-[#494949] h-[2.5rem] w-[4.5rem]"
+                                    className="text-bg ml-20 mt-2 h-[2.5rem] w-[4.5rem] bg-[#494949] text-white"
                                     onClick={async () => {
                                         setUserFollwsAccount(await followAccount(getCookie('userToken'), VideoData.OwnerToken, userFollwsAccount))
                                     }}
@@ -223,12 +223,12 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         )}
                     </div>
                 </div>
-                <div className="flex ml-auto mr-[2vw]">
+                <div className="ml-auto mr-[2vw] flex">
                     {userLikedVideo ? (
                         <>
                             <img
                                 src="/assets/PlayerIcons/Liked_icon.svg"
-                                className="cursor-pointer w-[1.6rem] mr-[.5rem]"
+                                className="mr-[.5rem] w-[1.6rem] cursor-pointer"
                                 alt="not muted image"
                                 onClick={async () => {
                                     setUserDisLikedVideo(false)
@@ -242,7 +242,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         <>
                             <img
                                 src="/assets/PlayerIcons/Like_icon.svg"
-                                className="cursor-pointer w-[1.6rem] ml-auto mr-[.5rem]"
+                                className="ml-auto mr-[.5rem] w-[1.6rem] cursor-pointer"
                                 alt="not muted image"
                                 onClick={async () => {
                                     setUserDisLikedVideo(false)
@@ -257,13 +257,13 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         </>
                     )}
 
-                    <h1 className="text-white self-center mr-[1.5rem]">{videoLikes}</h1>
+                    <h1 className="mr-[1.5rem] self-center text-white">{videoLikes}</h1>
 
                     {userDisLikedVideo ? (
                         <>
                             <img
                                 src="/assets/PlayerIcons/Disliked_icon.svg"
-                                className="cursor-pointer w-[1.6rem] ml-auto mr-[.5rem]"
+                                className="ml-auto mr-[.5rem] w-[1.6rem] cursor-pointer"
                                 alt="not muted image"
                                 onClick={async () => {
                                     setUserLikedVideo(false)
@@ -277,7 +277,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                         <>
                             <img
                                 src="/assets/PlayerIcons/Dislike_icon.svg"
-                                className="cursor-pointer w-[1.6rem] ml-auto mr-[.5rem]"
+                                className="ml-auto mr-[.5rem] w-[1.6rem] cursor-pointer"
                                 alt="not muted image"
                                 onClick={async () => {
                                     setUserLikedVideo(false)
@@ -290,7 +290,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                             />
                         </>
                     )}
-                    <h1 className="text-white self-center mr-[4rem]">{videoDisLikes}</h1>
+                    <h1 className="mr-[4rem] self-center text-white">{videoDisLikes}</h1>
                 </div>
             </div>
         </div>
