@@ -191,7 +191,7 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                             accessVideos: req.body.premiumAccesVideos,
                             coaching: req.body.premiumCoaching,
                             customProgram: req.body.premiumCustomProgram,
-                            description: req.body.premiumDescription ,
+                            description: req.body.premiumDescription,
                         },
                     ];
 
@@ -207,19 +207,18 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                         }
 
                         const priceResp = await req.stripe?.prices.create(priceParams);
-                        console.log(price)
+                        console.log(price);
                         // Insert into BasicTier table
                         const insertBasicTierQuery = `
       INSERT INTO ${price.tier} (PackageToken, Price, PriceID, Recurring, acces_videos, coaching_101, custom_program, Description)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       ON CONFLICT (PackageToken) DO NOTHING;
-    `;  
+    `;
                         await query(connection, insertBasicTierQuery, [PackageToken, price.unit_amount, priceResp?.id, price.recurring, price.accessVideos, price.coaching, price.customProgram, price.description], true);
                     }
 
                     await query(connection, 'COMMIT;');
 
-                    
                     return res.status(200).json({
                         error: false,
                     });
@@ -283,7 +282,10 @@ const GetPackages = async (req: CustomRequest, res: Response) => {
         const connection = await connect(req.pool!);
 
         if (connection == null) {
-            return { error: true };
+            return res.status(500).json({
+                error: true,
+                errmsg: "couldn't connect to database",
+            });
         }
 
         const QueryString = `SELECT PackageToken, OwnerToken, PackageName, Rating, packagesport FROM  Packages WHERE OwnerToken = '${req.params.userPublicToken}';`;
@@ -295,11 +297,128 @@ const GetPackages = async (req: CustomRequest, res: Response) => {
     } catch (error: any) {
         logging.error(NAMESPACE, error.message);
 
-        res.status(202).json({
+        res.status(500).json({
             error: true,
             errmsg: error.message,
         });
     }
 };
 
-export default { CreatePackage, GetPackages };
+const UpdatePackage = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('UPDATE_PACKAGE_DATA_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+    try {
+        const connection = await connect(req.pool!);
+        if (connection == null) {
+            return res.status(500).json({
+                error: true,
+                errmsg: "couldn't connect to database",
+            });
+        }
+
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.userPrivateToken);
+        if (UserPublicToken == null) {
+            return res.status(400).json({
+                error: true,
+                errmsg: 'User Not Found',
+            });
+        }
+
+        const PackageOwnerQueryString = `SELECT PackageToken FROM Packages WHERE OwnerToken = $1 AND PackageToken = $2;`;
+
+        const data = await query(connection, PackageOwnerQueryString, [UserPublicToken, req.body.packageToken], true);
+        if (data.length == 0) {
+            return res.status(400).json({
+                error: true,
+                errmsg: 'Package Not Found',
+            });
+        }
+
+        const QueryString = `UPDATE Packages SET PackageSport = $1, PackageName = $2 WHERE PackageToken = $3;`;
+        await query(connection, QueryString, [req.body.sport, req.body.packageName, req.body.packageToken], true);
+
+        const QueryStringBasicTier = `UPDATE BasicTier
+        SET
+            Recurring = $1,
+            acces_videos = $2,
+            coaching_101 = $3,
+            custom_program = $4,
+            Description = $5
+        WHERE PackageToken = $6;
+        `;
+
+        await query(
+            connection,
+            QueryStringBasicTier,
+            [
+                req.body.basicTier.recurring,
+                req.body.basicTier.acces_videos,
+                req.body.basicTier.custom_program,
+                req.body.basicTier.coaching_101,
+                req.body.basicTier.description,
+                req.body.packageToken,
+            ],
+            true,
+        );
+
+        const QueryStringStandardTier = `UPDATE StandardTier
+        SET
+            Recurring = $1,
+            acces_videos = $2,
+            coaching_101 = $3,
+            custom_program = $4,
+            Description = $5
+        WHERE PackageToken = $6;
+        `;
+        await query(
+            connection,
+            QueryStringStandardTier,
+            [
+                req.body.standardTier.recurring,
+                req.body.standardTier.acces_videos,
+                req.body.standardTier.custom_program,
+                req.body.standardTier.coaching_101,
+                req.body.standardTier.description,
+                req.body.packageToken,
+            ],
+            true,
+        );
+
+        const QueryStringPremiumTier = `UPDATE PremiumTier
+        SET
+            Recurring = $1,
+            acces_videos = $2,
+            coaching_101 = $3,
+            custom_program = $4,
+            Description = $5
+        WHERE PackageToken = $6;
+        `;
+        await query(connection, QueryStringPremiumTier, [
+            req.body.premiumTier.recurring,
+            req.body.premiumTier.acces_videos,
+            req.body.premiumTier.custom_program,
+            req.body.premiumTier.coaching_101,
+            req.body.premiumTier.description,
+            req.body.packageToken,
+        ]);
+
+        return res.status(202).json({
+            error: false,
+        });
+    } catch (error: any) {
+        logging.error(NAMESPACE, error.message);
+
+        return res.status(500).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+export default { CreatePackage, GetPackages, UpdatePackage };

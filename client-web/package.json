@@ -10,7 +10,6 @@
     },
     "type": "module",
     "dependencies": {
-        "@million/lint": "^1.0.0-rc.26",
         "@stripe/react-stripe-js": "^2.7.1",
         "@stripe/stripe-js": "^3.5.0",
         "@types/react-datepicker": "^6.2.0",

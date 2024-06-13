@@ -34,7 +34,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
         switch (componentToShow) {
             case 'PackagesPage':
                 return (
-                    <div className="flex h-[37rem] w-full flex-col">
+                    <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
                         {Object.keys(userPackages).length > 0 ? (
                             <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {userPackages.map((packageData: IAccountPackages, index: number) => (
@@ -180,10 +180,34 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 </div>
             </div>
             <div className="mt-10 flex flex-grow-0 items-center">
-                <SelectableCards Title="PACKAGES" TabName="PackagesPage" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
-                <SelectableCards Title="POSTS" TabName="Videos" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
-                <SelectableCards Title="VIDEOS" TabName="Videos" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
-                <SelectableCards Title="ABOUT ME" TabName="About" setComponentToShow={setComponentToShow} className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                <SelectableCards
+                    Title="PACKAGES"
+                    TabName="PackagesPage"
+                    setComponentToShow={setComponentToShow}
+                    className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
+                <SelectableCards
+                    Title="POSTS"
+                    TabName="Posts"
+                    setComponentToShow={setComponentToShow}
+                    className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
+                <SelectableCards
+                    Title="VIDEOS"
+                    TabName="Videos"
+                    setComponentToShow={setComponentToShow}
+                    className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
+                <SelectableCards
+                    Title="ABOUT ME"
+                    TabName="About"
+                    setComponentToShow={setComponentToShow}
+                    className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
             </div>
             <hr className="h-[0.1rem] w-full bg-white" />
             {ToggledSettingsPopUp ? (

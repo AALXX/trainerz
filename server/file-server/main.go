@@ -10,8 +10,9 @@ import (
 	"strings"
 	"sync"
 
-    "github.com/joho/godotenv"
 	"github.com/fsnotify/fsnotify"
+	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 var (
@@ -21,9 +22,6 @@ var (
 
 func safeFileServer(dir string, db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// Ensure the requested path is safe.
-		// requestedPath := filepath.Join(dir, filepath.Clean(privateToken + r.URL.Query().Get("vt") + r.URL.Query().Get("f")))
 		requestedPath := filepath.Join(dir, filepath.Clean(r.URL.Path))
 
 		if !strings.HasPrefix(requestedPath, dir) {
@@ -31,21 +29,17 @@ func safeFileServer(dir string, db *sql.DB) http.Handler {
 			return
 		}
 
-		// Check if the requested file exists.
 		fileInfo, err := os.Stat(requestedPath)
 		if os.IsNotExist(err) {
 			http.ServeFile(w, r, "./AccountIcon.svg")
-
 			return
 		}
 
-		// Ensure the requested path is a file (not a directory).
 		if fileInfo.IsDir() {
 			http.Error(w, "Not a File", http.StatusForbidden)
 			return
 		}
 
-		// Serve the file using the built-in FileServer.
 		http.ServeFile(w, r, requestedPath)
 	})
 }
@@ -76,7 +70,6 @@ func watchFiles(dir string) {
 	}
 	defer watcher.Close()
 
-	// Watch for changes in the directory.
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -95,8 +88,7 @@ func watchFiles(dir string) {
 			}
 			if event.Op&fsnotify.Write == fsnotify.Write {
 				log.Println("File modified:", event.Name)
-				resetCache() // Reset the cache when a file is modified.
-
+				resetCache()
 			}
 		case err, ok := <-watcher.Errors:
 			if !ok {
@@ -108,41 +100,31 @@ func watchFiles(dir string) {
 }
 
 func main() {
-	// Load the environment variables from the .env file
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatalf("Error loading .env file: %v", err)
-    }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
-	// Initialize the database connection
+	serverHost := os.Getenv("SERVER_HOST")
+	if serverHost == "" {
+		log.Fatalf("SERVER_HOST environment variable not set")
+	}
+
 	db, err := config.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	// Define the directory from which to serve files.
-	dir := "../accounts" // Change this to your desired directory.
+	dir := "../accounts"
 
-	// Create a file server handler.
 	fileServer := safeFileServer(dir, db)
+	
+	mux := http.NewServeMux()
+	mux.Handle("/", fileServer)
 
-	// Start a goroutine to watch for changes in the served directory.
-	// go watchFiles(dir)
-
-
-	// Create a router and register the file server.
-	// mux := http.NewServeMux()
-	// mux.Handle("/", restrictIP(fileServer, "192.168.72.81")) // Replace with your allowed IP address.
-	http.Handle("/", fileServer)
-
-	// Define the server address and port.
-	addr := "192.168.72.81:5600"
-
-	log.Printf("Server started on %s\n", addr)
-	// Start the HTTP server.
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	log.Println("Serving files from:", serverHost)
+	if err := http.ListenAndServe(serverHost, mux); err != nil {
 		panic(err)
 	}
-
 }

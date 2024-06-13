@@ -24,6 +24,21 @@ export interface ICreateTierTemplate {
     setDescription: Dispatch<SetStateAction<string>>
 }
 
+export interface IEditTierTemplate {
+    price: number
+
+    recurring: boolean
+    setRecurring: Dispatch<SetStateAction<boolean>>
+    acces_videos: boolean
+    setAccesVideos: Dispatch<SetStateAction<boolean>>
+    coaching_101: boolean
+    setCoaching101: Dispatch<SetStateAction<boolean>>
+    custom_program: boolean
+    setCustomProgram: Dispatch<SetStateAction<boolean>>
+    description: string
+    setDescription: Dispatch<SetStateAction<string>>
+}
+
 export interface IPackageTemplate {
     price: number
     recurring: boolean
@@ -50,4 +65,9 @@ export interface IAccountPackages {
     packagesport: string
     rating: number
     isOwner: boolean
+}
+
+
+export interface IEditPackages {
+    packageToken: string
 }

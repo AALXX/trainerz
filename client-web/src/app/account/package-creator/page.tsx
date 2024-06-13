@@ -202,10 +202,10 @@ const Page: React.FunctionComponent<any> = props => {
                         <div className="flex h-[75%] w-full flex-col p-5">
                             <h1 className="mt-4 text-white">Add Photos that describe best your package</h1>
                             <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-3 3xl:grid-cols-3">
-                                <AddPhotoZone setImageFile={setImage1} />
-                                <AddPhotoZone setImageFile={setImage2} />
-                                <AddPhotoZone setImageFile={setImage3} />
-                                <AddPhotoZone setImageFile={setImage4} />
+                                <AddPhotoZone setImageFile={setImage1}  />
+                                <AddPhotoZone setImageFile={setImage2}  />
+                                <AddPhotoZone setImageFile={setImage3}  />
+                                <AddPhotoZone setImageFile={setImage4}  />
                             </div>
                         </div>
                         <hr className="w-full" />
@@ -224,9 +224,27 @@ const Page: React.FunctionComponent<any> = props => {
 
                     <div className="ml-auto flex flex-col rounded-2xl bg-[#0000005e] lg:w-[20rem] xl:w-[25rem] 3xl:w-[30rem]">
                         <div className="mt-12 flex justify-around">
-                            <SelectableCards Title="BASIC" TabName="Basic" setComponentToShow={setComponentToShow} className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
-                            <SelectableCards Title="STANDARD" TabName="Standard" setComponentToShow={setComponentToShow} className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
-                            <SelectableCards Title="PREMIUM" TabName="Premium" setComponentToShow={setComponentToShow} className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]" />
+                            <SelectableCards
+                                Title="BASIC"
+                                TabName="Basic"
+                                setComponentToShow={setComponentToShow}
+                                activeTab={componentToShow}
+                                className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            />
+                            <SelectableCards
+                                Title="STANDARD"
+                                TabName="Standard"
+                                setComponentToShow={setComponentToShow}
+                                activeTab={componentToShow}
+                                className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            />
+                            <SelectableCards
+                                Title="PREMIUM"
+                                TabName="Premium"
+                                setComponentToShow={setComponentToShow}
+                                activeTab={componentToShow}
+                                className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            />
                         </div>
 
                         <hr className="w-full" />

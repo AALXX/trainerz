@@ -279,9 +279,27 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                 </PopupCanvas>
             ) : null}
             <div className="mt-12 flex items-center">
-                <SelectableCards Title="THUMBNALS" TabName="Thumbnails" setComponentToShow={setComponentToShow} />
-                <SelectableCards Title="ANALYTICS" TabName="Analytics" setComponentToShow={setComponentToShow} />
-                <SelectableCards Title="EDITOR" TabName="editor" setComponentToShow={setComponentToShow} />
+                <SelectableCards
+                    Title="THUMBNALS"
+                    TabName="Thumbnails"
+                    activeTab={componentToShow}
+                    setComponentToShow={setComponentToShow}
+                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                />
+                <SelectableCards
+                    Title="ANALYTICS"
+                    TabName="Analytics"
+                    setComponentToShow={setComponentToShow}
+                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
+                <SelectableCards
+                    Title="EDITOR"
+                    TabName="editor"
+                    setComponentToShow={setComponentToShow}
+                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    activeTab={componentToShow}
+                />
             </div>
             <hr className="w-[100%]" />
             <div className="mt-[2vh] flex h-full w-[95%] self-center">{component}</div>

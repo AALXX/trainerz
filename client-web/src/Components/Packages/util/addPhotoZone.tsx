@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 interface IAddPhotoZoneProps {
     setImageFile: (file: File | null) => void
+    imageUrl?: string
 }
 
-const AddPhotoZone: React.FC<IAddPhotoZoneProps> = ({ setImageFile }) => {
+const AddPhotoZone: React.FC<IAddPhotoZoneProps> = ({ imageUrl, setImageFile }) => {
     const [image, setImage] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (imageUrl) {
+            setImage(imageUrl)
+        }
+    }, [imageUrl])
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]

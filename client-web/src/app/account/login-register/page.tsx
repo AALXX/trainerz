@@ -45,9 +45,9 @@ export default function LoginRegisterScreen() {
         switch (componentToShow) {
             case 'firstTab':
                 return (
-                    <form className="mt-4 flex h-full w-full flex-grow-0 flex-col">
+                    <form className="m-auto flex h-[32rem] w-full flex-grow-0 flex-col">
                         <div className="flex h-24 w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">UserName</h1>
+                            <h1 className="text-white">UserName</h1>
                             <input
                                 className="mt-3 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                 placeholder="UserName..."
@@ -59,7 +59,7 @@ export default function LoginRegisterScreen() {
                             />
                         </div>
                         <div className="mt-4 flex h-24 w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">Email</h1>
+                            <h1 className="text-white">Email</h1>
                             <input
                                 className="mt-3 h-[6vh] rounded-xl bg-[#474084] indent-3 text-white"
                                 placeholder="Email..."
@@ -72,11 +72,11 @@ export default function LoginRegisterScreen() {
                             />
                         </div>
                         <div className="h-26 mt-4 flex w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">What's your birth date?</h1>
+                            <h1 className="text-white">What's your birth date?</h1>
                             <BirthDateSelectorComponent onDateChange={setUserBirthDate} />
                         </div>
-                        <div className="mt-7 flex h-24 w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">Register as</h1>
+                        <div className="h-26 mt-7 flex w-[85%] flex-col self-center">
+                            <h1 className="text-white">Register as</h1>
                             <OptionPicker label="Account Type" options={['Trainer', 'SportsPerson']} value={accountType} onChange={value => setAccountType(value)} />
                         </div>
                         <button className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('secondTab')}>
@@ -86,9 +86,9 @@ export default function LoginRegisterScreen() {
                 )
             case 'secondTab':
                 return (
-                    <form className="flex h-full w-full flex-col">
+                    <form className="m-auto flex h-[32rem] w-full flex-col">
                         <div className="mt-4 flex h-36 w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">Tell us about you</h1>
+                            <h1 className="text-white">Tell us about you</h1>
                             <textarea
                                 className="mt-2 resize-none rounded-xl bg-[#474084] text-white"
                                 placeholder="Description"
@@ -101,7 +101,7 @@ export default function LoginRegisterScreen() {
                             />
                         </div>
                         <div className="mt-4 flex h-24 w-[85%] flex-col self-center">
-                            <h1 className="h1-sm text-white">I train / i want to learn sport</h1>
+                            <h1 className="text-white">I train / i want to learn sport</h1>
                             <OptionPicker
                                 label="Select Sport"
                                 options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Bodybuilding', 'Other']}
@@ -114,7 +114,7 @@ export default function LoginRegisterScreen() {
                             <button className="mb-4 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('firstTab')}>
                                 <h1 className="self-center text-lg text-white">Go Back</h1>
                             </button>
-                            <button className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={() => setComponentToShow('thirdTab')}>
+                            <button className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#443e75]" onClick={() => setComponentToShow('thirdTab')}>
                                 <h1 className="self-center text-lg text-white">Next</h1>
                             </button>
                         </div>
@@ -122,11 +122,11 @@ export default function LoginRegisterScreen() {
                 )
             case 'thirdTab':
                 return (
-                    <form className="flex h-full w-full flex-col">
+                    <form className="m-auto flex h-[32rem] w-full flex-col">
                         {accountType === 'Trainer' ? (
                             <div className="mt-4 flex h-full w-full flex-col self-center">
                                 <div className="mt-5 flex w-[85%] flex-col self-center">
-                                    <h1 className="h1-sm text-white">Phone Number</h1>
+                                    <h1 className="text-white">Phone Number</h1>
                                     <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2" />
                                 </div>
                                 <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
@@ -187,7 +187,7 @@ export default function LoginRegisterScreen() {
                         ) : (
                             <div className="mt-4 flex h-full w-full flex-col self-center">
                                 <div className="mt-5 flex w-[85%] flex-col self-center">
-                                    <h1 className="h1-sm text-white">Phone Number</h1>
+                                    <h1 className="text-white">Phone Number</h1>
                                     <PhoneInput defaultCountry="ro" value={phoneNumber} onChange={phone => setPhoneNumber(phone)} className="mt-2" />
                                 </div>
                                 <div className="mt-1 flex h-24 w-[85%] flex-col self-center">
@@ -326,7 +326,7 @@ export default function LoginRegisterScreen() {
                     <div className="flex h-[100%] w-[100%] flex-col items-center">
                         <h1 className="mt-[2rem] text-[1.5rem] text-white">Create Account</h1>
                         <h1 className="mt-2 text-[0.7rem] text-white">SignIn and find a new partener/Trainer</h1>
-                        <div className="flex h-[70%] w-[100%] flex-col items-center">{renderComponent()}</div>
+                        <div className="flex h-full w-[100%] flex-col items-center">{renderComponent()}</div>
                         <div className="mb-4 mt-auto flex w-full flex-col">
                             <div className="mb-2 h-[.1rem] w-[100%] bg-white" />
                             <button>

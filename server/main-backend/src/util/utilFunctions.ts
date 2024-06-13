@@ -32,7 +32,6 @@ const HashPassword = async (password: string) => {
     return null;
 };
 
-
 /**
  ** creates a token
  * @return {string}
@@ -267,7 +266,6 @@ const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPubl
 //*      Videos related        //
 //* /////////////////////////////
 
-
 const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
     const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken='${userToken}' AND videoToken='${VideoToken}';`;
@@ -286,30 +284,6 @@ const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoT
         const checkfollowdata = await query(connection, CheckIfUserFollwsAccountQuerryString);
         if (Object.keys(checkfollowdata).length != 0) {
             return { userLiked: true, like_or_dislike: checkfollowdata[0].like_dislike };
-        }
-        return { userLiked: false, like_or_dislike: 0 };
-    } catch (error: any) {
-        logging.error(NAMESPACE, error.message, error);
-        return { userLiked: false, like_or_dislike: 0 };
-    }
-};
-
-const getUserLikedOrDislikedStream = async (pool: Pool, userToken: string, StreamToken: string): Promise<{ userLiked: boolean; like_or_dislike: number }> => {
-    const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
-    const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_stream_class WHERE userToken='${userToken}' AND StreamToken='${StreamToken}';`;
-
-    try {
-        if (userToken === 'undefined') {
-            return { userLiked: false, like_or_dislike: 0 };
-        }
-        const connection = await connect(pool);
-
-        if (connection == null) {
-            return { userLiked: false, like_or_dislike: 0 };
-        }
-        const checklikeResponse = await query(connection, CheckIfUserFollwsAccountQuerryString);
-        if (Object.keys(checklikeResponse).length != 0) {
-            return { userLiked: true, like_or_dislike: checklikeResponse[0].like_dislike };
         }
         return { userLiked: false, like_or_dislike: 0 };
     } catch (error: any) {
@@ -366,113 +340,6 @@ const RemoveDirectory = (folderPath: string): Promise<void> => {
     });
 };
 
-//* /////////////////////////////
-//*        Live related        //
-//* /////////////////////////////
-
-const CheckIfLive = async (pool: Pool, userPrivateToken: string, LiveToken: string): Promise<{ isLive: boolean; error: boolean }> => {
-    const NAMESPACE = 'CHECK_IF_IS_LIVE_FUNCTION';
-
-    try {
-        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(pool, userPrivateToken);
-        const connection = await connect(pool);
-
-        if (connection == null) {
-            return { isLive: false, error: false };
-        }
-
-        if (UserPublicToken == null) {
-            return { isLive: false, error: true };
-        }
-        const StatALiveQueryString = `SELECT id, Active FROM streams WHERE UserPublicToken=${UserPublicToken}' AND StreamToken='${LiveToken}';`;
-
-        const results = await query(connection, StatALiveQueryString);
-        const data = JSON.parse(JSON.stringify(results));
-        if (Object.keys(data).length == 0) {
-            return { isLive: false, error: false };
-        }
-
-        return { isLive: data[0].Active === 0 ? false : true, error: false };
-    } catch (error: any) {
-        logging.error(NAMESPACE, error.message);
-        return { isLive: false, error: true };
-    }
-};
-
-// const StartLive = async (pool: mysql.Pool, LiveTitle: string, userPrivateToken: string): Promise<{ error: boolean; LiveToken: string }> => {
-//     const NAMESPACE = 'START_LIVE_FUNCTION';
-
-//     try {
-//         const StreamToken = CreateToken();
-//         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(pool, userPrivateToken);
-//         const connection = await connect(pool);
-
-//         if (connection == null) {
-//             return null;
-//         }
-//         if (UserPublicToken == null) {
-//             return { error: true, LiveToken: '' };
-//         }
-//         const currentTimestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''); // Get current timestamp in MySQL format
-//         const StatALiveQueryString = `INSERT INTO streams(StreamTitle,  UserPublicToken, StartedAt, StreamToken, Active)
-//         SELECT "${LiveTitle}", "${UserPublicToken}", "${currentTimestamp}",  "${StreamToken}", "1"
-//         FROM users AS u
-//         WHERE u.UserPublicToken = "${UserPublicToken}";`;
-
-//         const results = await query(connection, StatALiveQueryString);
-
-//         const resp = await axios.post('http://localhost:7556/start-snapshot', { StreamToken: StreamToken });
-//         console.log(resp);
-
-//         const data = JSON.parse(JSON.stringify(results));
-//         if (data.affectedRows == 0) {
-//             return { error: true, LiveToken: '' };
-//         }
-
-//         return { error: false, LiveToken: StreamToken };
-//     } catch (error: any) {
-//         logging.error(NAMESPACE, error.message);
-//         return { error: true, LiveToken: '' };
-//     }
-// };
-
-// /**
-//  * End a live
-//  * @param {string} userPrivateToken
-//  * @return {}
-//  */
-// const EndLive = async (pool: mysql.Pool, userPrivateToken: string, streamToken: string): Promise<boolean> => {
-//     const NAMESPACE = 'END_LIVE_FUNCTION';
-
-//     try {
-//         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(pool, userPrivateToken);
-//         const connection = await connect(pool);
-
-//         if (connection == null) {
-//             return null;
-//         }
-//         if (UserPublicToken == null) {
-//             return true;
-//         }
-
-//         const currentTimestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''); // Get current timestamp in MySQL format
-
-//         const StatALiveQueryString = `UPDATE streams SET FinishedAt='${currentTimestamp}', Active='0' WHERE UserPublicToken = "${UserPublicToken}";`;
-
-//         const results = await query(connection, StatALiveQueryString);
-
-//         const data = JSON.parse(JSON.stringify(results));
-//         if (data.affectedRows == 0) {
-//             return true;
-//         }
-
-//         return false;
-//     } catch (error: any) {
-//         logging.error(NAMESPACE, error.message);
-//         return true;
-//     }
-// };
-
 export default {
     HashPassword,
     checkEmailExists,
@@ -483,10 +350,6 @@ export default {
     getUserEmailFromPrivateToken,
     getUserLikedOrDislikedVideo,
     getUserPublicTokenFromPrivateToken,
-    getUserLikedOrDislikedStream,
     getUserPrivateTokenFromPublicToken,
     RemoveDirectory,
-    CheckIfLive,
-    // StartLive,
-    // EndLive,
 };

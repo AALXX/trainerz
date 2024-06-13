@@ -21,6 +21,8 @@ const PackageView = () => {
     const [checkoutPoUp, setCheckoutPoUp] = useState<boolean>(false)
     const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
 
+    const [photos, setPhotos] = useState<string[]>([])
+
     // const router = useRouter()
 
     const [basicTierData, setBasicTierData] = useState<IPackageData>({
@@ -66,8 +68,9 @@ const PackageView = () => {
             setUserLoggedIn(usrLoggedIn)
 
             const { data } = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-package-data/${urlParams.get('t') as string}`)
-            console.log(data)
+            const newPhotos = Array.from({ length: data.photosNumber }, (_, i) => `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_${i + 1}.jpg?cache=none`)
 
+            setPhotos(newPhotos)
             setBasicTierData(data.basicTier)
             setStandardTierData(data.standardTier)
             setPremiumTierData(data.premiumTier)
@@ -130,11 +133,11 @@ const PackageView = () => {
         }
     }
 
-    const photos = [
-        `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_1.jpg?cache=none`,
-        `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_2.jpg?cache=none`,
-        `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_3.jpg?cache=none`
-    ]
+    // const photos = [
+    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_1.jpg?cache=none`,
+    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_2.jpg?cache=none`,
+    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_3.jpg?cache=none`
+    // ]
 
     return (
         <div className="flex h-full flex-col self-center">
@@ -164,6 +167,7 @@ const PackageView = () => {
                             setComponentToShow={setComponentToShow}
                             className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(basicTierData.priceId)}
+                            activeTab={componentToShow}
                         />
                         <SelectableCards
                             Title="STANDARD"
@@ -171,6 +175,7 @@ const PackageView = () => {
                             setComponentToShow={setComponentToShow}
                             className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(standardTierData.priceId)}
+                            activeTab={componentToShow}
                         />
                         <SelectableCards
                             Title="PREMIUM"
@@ -178,6 +183,7 @@ const PackageView = () => {
                             setComponentToShow={setComponentToShow}
                             className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(premiumTierData.priceId)}
+                            activeTab={componentToShow}
                         />
                     </div>
 
