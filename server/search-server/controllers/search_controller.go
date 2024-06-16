@@ -16,7 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
+func SearchIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 	search_query := c.Param("search_query")
 
 	// Split the search query into terms
@@ -25,9 +25,7 @@ func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
 	// Create a Boolean query with OR clauses for each term
 	boolQuery := bleve.NewBooleanQuery()
 	for _, term := range terms {
-
 		fuzzyQuery := bleve.NewFuzzyQuery(term)
-		fuzzyQuery.SetField("UserName") // Replace with the field you want to search
 		boolQuery.AddShould(fuzzyQuery)
 		fuzzyQuery.SetFuzziness(2)
 	}
@@ -44,47 +42,50 @@ func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
 	// Map search results into an array
 	var mappedResults []models.SearchResult
 	for _, hit := range searchResults.Hits {
-		log.Println("result")
 		var result models.SearchResult
 
-		// Define the fields to convert
-		fieldsToConvert := []struct {
-			FieldName string
-			Target    interface{} // Use interface{} to handle various types
-		}{
-			{"UserName", &result.UserName},
-			{"UserPublicToken", &result.UserPublicToken},
-			{"Rating", &result.Rating}, // Directly assign integer value
-			{"AccountType", &result.AccountType}, // Directly assign integer value
-			{"Sport", &result.Sport},
+		// Check if the document type is user or package
+		docType := hit.Fields["Type"].(string)
+		if docType == "user" {
+			// Map user fields
+			result.Type = "user"
+			result.UserName = hit.Fields["UserName"].(string)
+			result.UserPublicToken = hit.Fields["UserPublicToken"].(string)
+			result.Rating = 0
+			result.AccountType = hit.Fields["AccountType"].(string)
+			result.Sport = hit.Fields["Sport"].(string)
+			result.AccountDescription = hit.Fields["Description"].(string)
+			result.Rating = getIntField(hit.Fields, "Rating")
+
+		} else if docType == "package" {
+			// Map package fields
+			result.Type = "package"
+			result.PackageToken = hit.Fields["PackageToken"].(string)
+			result.OwnerToken = hit.Fields["OwnerToken"].(string)
+			result.PackageName = hit.Fields["PackageName"].(string)
+			result.PackageSport = hit.Fields["PackageSport"].(string)
+			result.Rating = getIntField(hit.Fields, "Rating")
+
 		}
 
-		for _, fieldInfo := range fieldsToConvert {
-			field, found := hit.Fields[fieldInfo.FieldName]
-			if !found {
-				log.Printf("Warning: Field '%s' not found for document ID %s\n", fieldInfo.FieldName, hit.ID)
-				continue // Skip this result and move to the next one
-			}
-
-			switch v := field.(type) {
-			case int:
-				*fieldInfo.Target.(*int) = v // Type assertion and assign to integer pointer
-			case float64:
-				*fieldInfo.Target.(*int) = int(v) // Convert float64 to int and assign to integer pointer
-			case string:
-				*fieldInfo.Target.(*string) = string(v) // Convert float64 to int and assign to integer pointer
-			default:
-				log.Printf("Warning: Field '%s' is not a valid type for document ID %s\n", fieldInfo.FieldName, hit.ID)
-				continue // Skip this result and move to the next one
-			}
-		}
-
-		// Assuming SearchResult struct includes the fields you want to convert
 		mappedResults = append(mappedResults, result)
 	}
 
-	// Return the user data in the response
-	c.JSON(http.StatusCreated, gin.H{"usersResults": mappedResults})
+	// Return the search results in the response
+	c.JSON(http.StatusOK, gin.H{"results": mappedResults})
+}
+
+// Helper function to safely get int fields from a document
+func getIntField(fields map[string]interface{}, fieldName string) int {
+	if field, found := fields[fieldName]; found {
+		switch v := field.(type) {
+		case int:
+			return v
+		case float64:
+			return int(v)
+		}
+	}
+	return 0
 }
 
 func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
@@ -105,7 +106,6 @@ func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 		Sport:           user.Sport,
 		AccountType:     user.AccountType,
 	}
-
 
 	if err := index.Index(UserPublicToken, newUser); err != nil {
 		log.Fatal(err)

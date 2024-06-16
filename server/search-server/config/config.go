@@ -20,7 +20,6 @@ func InitDB() (*sql.DB, error) {
 	dbPass := os.Getenv("POSTGRESQL_PASS")
 	dbName := os.Getenv("POSTGRESQL_DB")
 
-
 	// Construct the data source name
 	dataSourceName := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost,
@@ -48,9 +47,9 @@ func InitDB() (*sql.DB, error) {
 func InitializeIndex() (bleve.Index, error) {
 	// Create or open a Bleve index
 	mapping := bleve.NewIndexMapping()
-	index, err := bleve.Open("users_index")
+	index, err := bleve.Open("index")
 	if err != nil {
-		index, err = bleve.New("users_index", mapping)
+		index, err = bleve.New("index", mapping)
 		if err != nil {
 			return nil, err
 		}
@@ -58,22 +57,20 @@ func InitializeIndex() (bleve.Index, error) {
 	return index, nil
 }
 
-func RetrieveDataFromMySQL(db *sql.DB) ([]models.User, error) {
-	rows, err := db.Query("SELECT u.UserName, u.Sport, u.UserPublicToken, u.AccountType, COALESCE(r.Rating, 0) AS Rating FROM users u LEFT JOIN ratings r ON u.UserPublicToken = r.UserToken;")
+func RetrieveUsersFromDB(db *sql.DB) ([]models.User, error) {
+	rows, err := db.Query("SELECT u.UserName, u.Sport, u.UserPublicToken, u.AccountType, u.Description, COALESCE(r.Rating, 0) AS Rating FROM users u LEFT JOIN ratings r ON u.UserPublicToken = r.UserToken;")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var users []models.User
-
 	for rows.Next() {
 		var user models.User
-
-		if err := rows.Scan(&user.UserName, &user.Sport, &user.UserPublicToken, &user.AccountType, &user.Rating); err != nil {
+		if err := rows.Scan(&user.UserName, &user.Sport, &user.UserPublicToken, &user.AccountType, &user.Description, &user.Rating); err != nil {
 			return nil, err
 		}
-
+		user.Type = "user"
 		users = append(users, user)
 	}
 
@@ -84,36 +81,62 @@ func RetrieveDataFromMySQL(db *sql.DB) ([]models.User, error) {
 	return users, nil
 }
 
-func IndexData(index bleve.Index, users []models.User) error {
-	// Index data from the MySQL database
-	for i := 0; i < len(users); i++ {
+func RetrievePackagesFromDB(db *sql.DB) ([]models.Package, error) {
+	rows, err := db.Query("SELECT PackageToken, OwnerToken, PackageName, PackageSport, Rating FROM Packages;")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-		// Create a Bleve document as a map
+	var packages []models.Package
+	for rows.Next() {
+		var pkg models.Package
+		if err := rows.Scan(&pkg.PackageToken, &pkg.OwnerToken, &pkg.PackageName, &pkg.PackageSport, &pkg.Rating); err != nil {
+			return nil, err
+		}
+		pkg.Type = "package"
+		packages = append(packages, pkg)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return packages, nil
+}
+
+func IndexData(index bleve.Index, users []models.User, packages []models.Package) error {
+	for _, user := range users {
 		bleveDoc := map[string]interface{}{
-			"UserName":        users[i].UserName,
-			"UserPublicToken": users[i].UserPublicToken,
-			"AccountType":          users[i].AccountType,
-			"Rating":          users[i].Rating,
-			"Sport":           users[i].Sport,
+			"UserName":        user.UserName,
+			"UserPublicToken": user.UserPublicToken,
+			"AccountType":     user.AccountType,
+			"Rating":          user.Rating,
+			"Sport":           user.Sport,
+			"Description":     user.Description,
+			"Type":            user.Type,
 		}
 
-		// Index the document
-		if err := index.Index(users[i].UserPublicToken, bleveDoc); err != nil {
+		if err := index.Index(user.UserPublicToken, bleveDoc); err != nil {
+			return err
+		}
+	}
+
+	for _, pkg := range packages {
+		bleveDoc := map[string]interface{}{
+			"PackageToken": pkg.PackageToken,
+			"OwnerToken":   pkg.OwnerToken,
+			"PackageName":  pkg.PackageName,
+			"PackageSport": pkg.PackageSport,
+			"Rating":       pkg.Rating,
+			"Type":         pkg.Type,
+		}
+
+		if err := index.Index(pkg.PackageToken, bleveDoc); err != nil {
 			return err
 		}
 	}
 	return nil
-}
-
-// Function to open or create an index
-func openOrCreateIndex(indexName string) (bleve.Index, error) {
-	indexMapping := bleve.NewIndexMapping()
-	index, err := bleve.Open(indexName)
-	if err == bleve.ErrorIndexPathDoesNotExist {
-		// Create a new index if it doesn't exist
-		index, err = bleve.New(indexName, indexMapping)
-	}
-	return index, err
 }
 
 func GetPublicTokenByPrivateToken(PrivateToken string, db *sql.DB) string {
@@ -158,4 +181,3 @@ func GetAccountRating(PublicToken string, db *sql.DB) int {
 
 	return Rating
 }
-
