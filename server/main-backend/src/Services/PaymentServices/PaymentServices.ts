@@ -36,6 +36,7 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
         const { UserPrivateToken, priceId, paymentMethodId } = req.body;
 
         const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, UserPrivateToken);
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, UserPrivateToken);
         if (!UserEmail) {
             return res.status(404).json({ error: true, errmsg: 'Email not found' });
         }
@@ -70,6 +71,37 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
         }
 
         if (subscription?.status === 'active') {
+            const GetTierQueryString = `
+            
+            SELECT 'BasicTier' AS Tier, PackageToken, PriceID, Price, Recurring, acces_videos, coaching_101, custom_program, Description FROM BasicTier 
+            WHERE PriceID = $1 
+            
+            UNION 
+            
+            SELECT 'PremiumTier' AS Tier, PackageToken, PriceID, Price, Recurring, acces_videos, coaching_101, custom_program, Description
+            FROM PremiumTier
+            WHERE PriceID = $1
+
+            UNION
+
+            SELECT 'StandardTier' AS Tier, PackageToken, PriceID, Price, Recurring, acces_videos, coaching_101, custom_program, Description
+            FROM StandardTier
+            WHERE PriceID = $1;`;
+            const connection = await connect(req.pool!);
+
+            if (connection == null) {
+                return res.status(500).json({
+                    error: true,
+                    errmsg: "couldn't connect to database",
+                });
+            }
+
+            const tierData = await query(connection, GetTierQueryString, [priceId], true);
+
+            const InsertQuery = `INSERT INTO Subscriptions (PackageToken, UserpublicToken, Tier) VALUES ($1, $2, $3);`;
+
+            const resp = await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier]);
+
             return res.status(200).json({
                 error: false,
             });
