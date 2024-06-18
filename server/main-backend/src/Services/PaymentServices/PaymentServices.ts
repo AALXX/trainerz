@@ -100,7 +100,7 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
             const InsertQuery = `INSERT INTO Subscriptions (PackageToken, UserpublicToken, Tier) VALUES ($1, $2, $3);`;
 
-            const resp = await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier]);
+            await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier]);
 
             return res.status(200).json({
                 error: false,

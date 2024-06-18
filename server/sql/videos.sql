@@ -7,7 +7,6 @@ CREATE TABLE videos (
   Likes INT NOT NULL DEFAULT 0,
   Dislikes INT NOT NULL DEFAULT 0,
   PublishDate DATE NOT NULL,
-  VideoPrice INT DEFAULT 0,
   VideoToken VARCHAR(150) NOT NULL,
   OwnerToken VARCHAR(150) NOT NULL,
   Packagetoken VARCHAR(150) NOT NULL,

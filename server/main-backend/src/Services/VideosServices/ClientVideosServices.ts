@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import UtilFunc from '../../util/utilFunctions';
+import utilFunctions from '../../util/utilFunctions';
 
 const NAMESPACE = 'ClientVideosServiceManager';
 
@@ -40,7 +41,7 @@ const GetVideoDataByToken = async (req: CustomRequest, res: Response) => {
             return false;
         }
 
-    const queryString = `
+        const queryString = `
       SELECT 
         v.VideoTitle, 
         v.VideoDescription, 
@@ -104,17 +105,18 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
-    const getuserlikedordisliked = await UtilFunc.getUserLikedOrDislikedVideo(req.pool!, req.body.UserPublicToken, req.body.videoToken);
-
     try {
+        const getuserlikedordisliked = await UtilFunc.getUserLikedOrDislikedVideo(req.pool!, req.body.UserPublicToken, req.body.videoToken);
         if (getuserlikedordisliked.userLiked) {
             if (req.body.likeOrDislike === 0) {
                 const connection = await connect(req.pool!);
 
                 if (connection == null) {
-                    return false;
+                    return res.status(500).json({
+                        error: true,
+                        message: 'could not connect to database',
+                    });
                 }
-
                 const deleteSql = `
                     DELETE FROM user_liked_or_disliked_video_class
                     WHERE userToken = $1 AND videoToken = $2;
@@ -133,7 +135,10 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
                 const connection = await connect(req.pool!);
 
                 if (connection == null) {
-                    return false;
+                    return res.status(500).json({
+                        error: true,
+                        message: 'could not connect to database',
+                    });
                 }
                 const updateUserPreferenceSql = `
                     UPDATE user_liked_or_disliked_video_class
@@ -155,7 +160,10 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
             const connection = await connect(req.pool!);
 
             if (connection == null) {
-                return false;
+                return res.status(500).json({
+                    error: true,
+                    message: 'could not connect to database',
+                });
             }
             const insertUserPreferenceSql = `
                 INSERT INTO user_liked_or_disliked_video_class (userToken, videoToken, like_dislike)
@@ -175,7 +183,7 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
             await query(connection, updateVideoLikesSql, [req.body.likeOrDislike, req.body.videoToken]);
         }
 
-        res.status(202).json({
+        return res.status(202).json({
             error: false,
         });
     } catch (error: any) {
@@ -188,4 +196,74 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export default { GetVideoDataByToken, LikeDislikeVideoFunc };
+const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('LIKE_OR_DISLIKE_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
+        if (UserPublicToken == null) {
+            return res.status(200).json({
+                error: true,
+            });
+        }
+
+        const connection = await connect(req.pool!);
+        if (connection == null) {
+            return res.status(500).json({
+                error: true,
+                message: 'could not connect to database',
+            });
+        }
+
+        const QueryString = `SELECT s.UserpublicToken, s.Tier, s.PackageToken
+FROM subscriptions s
+JOIN videos v ON s.PackageToken = v.PackageToken
+WHERE v.VideoToken = $1 AND s.userpublictoken = $2;`;
+        const resp = await query(connection, QueryString, [req.params.VideoToken, UserPublicToken], true);
+
+        if (resp.length == 0) {
+            return res.status(202).json({
+                error: false,
+                subscribed: false,
+            });
+        }
+        
+        const GetVideoAccesQuery = `SELECT acces_videos FROM ${resp[0].tier} WHERE PackageToken = $1; `;
+
+        const videoAccessData = await query(connection, GetVideoAccesQuery, [resp[0].packagetoken]);
+        if (videoAccessData.length == 0) {
+            return res.status(202).json({
+                error: false,
+                subscribed: false,
+            });
+        }
+
+        if (videoAccessData[0].acces_videos === true) {
+            return res.status(202).json({
+                error: false,
+                subscribed: true,
+            });
+        } else {
+            return res.status(202).json({
+                error: false,
+                subscribed: false,
+            });
+        }
+    } catch (error: any) {
+        logging.error(NAMESPACE, error.message, error);
+
+        res.status(500).json({
+            error: true,
+            message: error.message,
+        });
+    }
+};
+
+export default { GetVideoDataByToken, LikeDislikeVideoFunc, SubscribtionCheck };

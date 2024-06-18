@@ -10,6 +10,8 @@ router.post('/like-dislike-video/', body('UserPublicToken').not().isEmpty().trim
 router.get('/get-video-data/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty(), param('UserPrivateToken').not().isEmpty(), ClientVideoServices.GetVideoDataByToken);
 // router.get('/search-video/:search_query', param('search_query').not().isEmpty(), ClientVideosServices.SearchVideo);
 
+router.get('/subscription-check/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty().trim(), param('UserPrivateToken').not().isEmpty().trim(), ClientVideoServices.SubscribtionCheck);
+
 // *Video Owner related
 router.get('/get-account-videos/:UserPublicToken', param('UserPublicToken').not().isEmpty().trim(), OwnerVideoServices.GetAccountVideos);
 router.get('/get-creator-video-data/:UserPrivateToken/:VideoToken', param('VideoToken').not().isEmpty(), OwnerVideoServices.GetCreatorVideoData);
