@@ -12,8 +12,8 @@ export const VideoTemplate = (props: IVideoTemplate) => {
 
     return (
         <Link href={`/watch?vt=${props.videotoken}`} className="relative h-0 w-full overflow-hidden pb-[60%]">
-            <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full object-cover" />
+            <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full rounded-2xl object-cover" />
                 {isHovered && (
                     <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-between">
                         <div className="flex justify-end p-2">
@@ -23,11 +23,11 @@ export const VideoTemplate = (props: IVideoTemplate) => {
                                 </Link>
                             ) : null}
                         </div>
-                        <div className="flex h-14 items-center justify-between bg-black bg-opacity-60 p-2">
+                        <div className="flex h-14 items-center justify-between bg-black bg-opacity-60 p-2 rounded-b-2xl">
                             <div>
                                 <TruncatedText className="text-white" characters={20} text={props.videotitle} />
                                 <hr />
-                                <TruncatedText className="text-sm text-white" characters={20} text={props.sportname} />
+                                <TruncatedText className="text-sm text-white" characters={20} text={props.packagesport} />
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="flex items-center">

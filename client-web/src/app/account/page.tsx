@@ -1,9 +1,9 @@
 'use client'
 
-import { isLoggedIn } from '@/Auth-Security/Auth'
 import { IUserPrivateData } from '@/Components/UserProfile/IAccountProfile'
 import SportsPersonTemplate from '@/Components/UserProfile/SportsPersonTemplate'
 import TrainerTemplate from '@/Components/UserProfile/TrainerTemplate'
+import { useAccountStatus } from '@/hooks/useAccount'
 import axios from 'axios'
 import { CookieValueTypes, getCookie } from 'cookies-next'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Account = () => {
-    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
+    const { isLoggedIn, checkStatus } = useAccountStatus()
 
     const userToken: string = getCookie('userToken') as string
     const router = useRouter()
@@ -46,8 +46,7 @@ const Account = () => {
          * Get user profile Data
          */
         ;(async () => {
-            const usrLoggedIn = await isLoggedIn()
-            setUserLoggedIn(usrLoggedIn)
+            await checkStatus()
 
             const profileData = await getProfileData(userToken)
             setUserData(profileData.userData)
@@ -56,7 +55,7 @@ const Account = () => {
 
     return (
         <div className="flex h-full flex-col">
-            {userLoggedIn ? (
+            {isLoggedIn ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
                         <TrainerTemplate

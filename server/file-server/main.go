@@ -12,7 +12,6 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/joho/godotenv"
-	// "github.com/rs/cors"
 )
 
 var (

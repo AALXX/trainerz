@@ -10,8 +10,8 @@ CREATE TABLE videos (
   VideoPrice INT DEFAULT 0,
   VideoToken VARCHAR(150) NOT NULL,
   OwnerToken VARCHAR(150) NOT NULL,
+  Packagetoken VARCHAR(150) NOT NULL,
   Visibility VARCHAR(10) DEFAULT 'public',
   ShowComments BOOLEAN NOT NULL DEFAULT TRUE,
   Views INT NOT NULL DEFAULT 0,
-  BasePrice INT NOT NULL DEFAULT 0
 );

@@ -47,12 +47,11 @@ export interface IAccoutSettingsPopup {
 export interface IVideoTemplate {
     videotoken: string
     ownertoken: string
+    packagesport: string
     videotitle: string
     publishdate: Date
-    videoprice: Date
     likes: number
     dislikes: number
-    sportname: string
     visibility: string
     isOwner: boolean
 }

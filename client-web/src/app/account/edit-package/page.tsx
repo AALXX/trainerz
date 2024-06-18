@@ -1,6 +1,6 @@
 'use client'
-import { isLoggedIn } from '@/Auth-Security/Auth'
 import EditPackage from '@/Components/Packages/EditPackage'
+import { useAccountStatus } from '@/hooks/useAccount'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -8,18 +8,17 @@ import React, { useEffect, useState } from 'react'
 const EditPackagePage = () => {
     const urlParams = useSearchParams() //* t =  search query
 
-    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
+    const { isLoggedIn, checkStatus } = useAccountStatus()
 
     useEffect(() => {
         ;(async () => {
-            const usrLoggedIn = await isLoggedIn()
-            setUserLoggedIn(usrLoggedIn)
+            await checkStatus()
         })()
     }, [])
 
     return (
-        <div className="flex flex-col h-full">
-            {userLoggedIn ? (
+        <div className="flex h-full flex-col">
+            {isLoggedIn ? (
                 <EditPackage packageToken={urlParams.get('t') as string} />
             ) : (
                 <>

@@ -45,7 +45,11 @@ const NavBar = () => {
                 </Link>
 
                 <Link href={'/account/package-creator'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
-                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">Create Package</button>
+                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">CREATE PACKAGE</button>
+                </Link>
+
+                <Link href={'/account/upload'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
+                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">UPLOAD VIDEO</button>
                 </Link>
             </div>
 

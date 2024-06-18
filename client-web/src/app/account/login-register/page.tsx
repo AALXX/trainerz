@@ -1,11 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { accLoginFunc, accRegisterFunc } from '@/Auth-Security/Auth'
 import BirthDateSelectorComponent from '@/Components/CommonUi/BirthDatePicker'
 import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import { PhoneInput } from 'react-international-phone'
 import 'react-international-phone/style.css'
+import { useAccountLogin, useAccountRegister } from '@/hooks/useAccount'
 
 /**
  * Login-Register-Screen
@@ -14,6 +14,9 @@ import 'react-international-phone/style.css'
 export default function LoginRegisterScreen() {
     const [registerForm, setRegisterForm] = useState(false)
     const router = useRouter()
+
+    const { register, isLoading: isRegistering, error: registerError } = useAccountRegister()
+    const { login, isLoading: isLoggingIn, error: loginError } = useAccountLogin()
 
     // *-----------------------Register_Props-----------------------//
     const [registerUserName, setRegisterUserName] = useState<string>('')
@@ -161,7 +164,7 @@ export default function LoginRegisterScreen() {
                                         className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                                         onClick={async e => {
                                             e.preventDefault()
-                                            const succesfullRegister = await accRegisterFunc(
+                                            const succesfullRegister = await register(
                                                 registerUserName,
                                                 registerEmail,
                                                 phoneNumber,
@@ -222,7 +225,7 @@ export default function LoginRegisterScreen() {
                                         className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                                         onClick={async e => {
                                             e.preventDefault()
-                                            const succesfullRegister = await accRegisterFunc(
+                                            const succesfullRegister = await register(
                                                 registerUserName,
                                                 registerEmail,
                                                 phoneNumber,
@@ -261,7 +264,7 @@ export default function LoginRegisterScreen() {
                         className="flex h-[100%] w-[100%] flex-col items-center"
                         onSubmit={async e => {
                             e.preventDefault()
-                            const succesfullLogin = await accLoginFunc(loginEmail, loginPassword)
+                            const succesfullLogin = await login(loginEmail, loginPassword)
                             if (succesfullLogin) {
                                 router.push('/account')
                             }
@@ -298,7 +301,7 @@ export default function LoginRegisterScreen() {
                             className="mb-2 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                             onClick={async e => {
                                 e.preventDefault()
-                                const succesfullLogin = await accLoginFunc(loginEmail, loginPassword)
+                                const succesfullLogin = await login(loginEmail, loginPassword)
                                 if (succesfullLogin) {
                                     router.replace('/account')
                                 }

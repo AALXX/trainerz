@@ -112,7 +112,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
                 coaching_101: data[0].standardcoaching,
                 custom_program: data[0].standardcustomprogram,
                 description: data[0].standarddescription,
-            },
+            }, 
 
             premiumTier: {
                 price: data[0].premiumprice,

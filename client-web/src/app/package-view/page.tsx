@@ -1,11 +1,11 @@
 'use client'
-import { isLoggedIn } from '@/Auth-Security/Auth'
 import PhotoViewer from '@/Components/CommonUi/PhotosViewer'
 import PopupCanvas from '@/Components/CommonUi/util/PopupCanvas'
 import { IPackageData } from '@/Components/Packages/IPackages'
 import PackageCheckout from '@/Components/Packages/PackageCheckout'
 import PackageTemplate from '@/Components/Packages/PackageTemplate'
 import SelectableCards from '@/Components/UserProfile/util/ProfileTabCards'
+import { useAccountStatus } from '@/hooks/useAccount'
 import getStripe from '@/lib/Stripe'
 import { Elements } from '@stripe/react-stripe-js'
 import axios from 'axios'
@@ -15,11 +15,11 @@ import React, { useEffect, useState } from 'react'
 
 const PackageView = () => {
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
+    const { isLoggedIn, checkStatus } = useAccountStatus()
 
     const urlParams = useSearchParams() //* t =  search query
 
     const [checkoutPoUp, setCheckoutPoUp] = useState<boolean>(false)
-    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
 
     const [photos, setPhotos] = useState<string[]>([])
 
@@ -64,8 +64,7 @@ const PackageView = () => {
 
     useEffect(() => {
         ;(async () => {
-            const usrLoggedIn = await isLoggedIn()
-            setUserLoggedIn(usrLoggedIn)
+            await checkStatus()
 
             const { data } = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-package-data/${urlParams.get('t') as string}`)
             const newPhotos = Array.from({ length: data.photosNumber }, (_, i) => `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_${i + 1}.jpg?cache=none`)
@@ -200,7 +199,7 @@ const PackageView = () => {
                     ) : null}
                     <hr className="w-full" />
                     {renderComponent()}
-                    {userLoggedIn ? (
+                    {isLoggedIn ? (
                         <button
                             className="mb-8 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                             onClick={async () => {

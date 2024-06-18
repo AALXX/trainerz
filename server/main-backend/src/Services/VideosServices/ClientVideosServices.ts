@@ -40,15 +40,30 @@ const GetVideoDataByToken = async (req: CustomRequest, res: Response) => {
             return false;
         }
 
-        const queryString = `
-            SELECT v.VideoTitle, v.VideoDescription, v.Likes, v.Dislikes, v.PublishDate, v.OwnerToken,
-                   u.UserName AS AccountName, u.AccountFolowers
-            FROM videos v
-            INNER JOIN users u ON v.OwnerToken = u.UserPublicToken
-            WHERE v.VideoToken='${req.params.VideoToken}';
-        `;
+    const queryString = `
+      SELECT 
+        v.VideoTitle, 
+        v.VideoDescription, 
+        v.Likes, 
+        v.Dislikes, 
+        v.PublishDate, 
+        v.OwnerToken,
+        u.UserName AS AccountName, 
+        p.PackageName, 
+        p.Rating
+      FROM 
+        videos v
+      INNER JOIN 
+        users u 
+        ON v.OwnerToken = u.UserPublicToken
+      LEFT JOIN 
+        packages p 
+        ON v.PackageToken = p.PackageToken
+      WHERE 
+        v.VideoToken = $1;
+    `;
 
-        const result = await query(connection, queryString);
+        const result = await query(connection, queryString, [req.params.VideoToken]);
 
         if (result.length === 0) {
             return res.status(202).json({ error: false });
@@ -56,14 +71,11 @@ const GetVideoDataByToken = async (req: CustomRequest, res: Response) => {
 
         const Videodata = JSON.parse(JSON.stringify(result));
 
-        const UserPublicToken = await UtilFunc.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
-        const itFollows = await UtilFunc.userFollowAccountCheck(req.pool!, UserPublicToken as string, Videodata[0].OwnerToken);
         const getuserlikedordislike = await UtilFunc.getUserLikedOrDislikedVideo(req.pool!, req.params.UserPrivateToken, req.params.VideoToken);
 
         res.status(202).json({
             error: false,
             ...Videodata[0], // Spread the video data
-            UserFollwsAccount: itFollows,
             UserLikedOrDislikedVideo: getuserlikedordislike,
         });
     } catch (error: any) {

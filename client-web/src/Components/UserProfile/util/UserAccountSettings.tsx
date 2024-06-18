@@ -3,10 +3,10 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import React from 'react'
 import { getCookie } from 'cookies-next'
-import { accLogout, deleteAccount } from '@/Auth-Security/Auth'
 import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import PriceInput from '@/Components/CommonUi/PriceInput'
 import { IAccoutSettingsPopup } from '../IAccountProfile'
+import { useAccountDelete, useAccountLogout } from '@/hooks/useAccount'
 
 const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     const [userName, setUserName] = useState<string>('')
@@ -18,6 +18,9 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     const userToken: string = getCookie('userToken') as string
 
     const [sure, setSure] = useState(false)
+
+    const { logout } = useAccountLogout()
+    const { deleteAccount, isLoading: isDeleting, error: deleteError } = useAccountDelete()
 
     useEffect(() => {
         setUserName(props.UserName)
@@ -126,7 +129,7 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                     Change Password!
                 </button>
                 <hr className="border-gray-500" />
-                <button className="h-10 w-full rounded-xl bg-[#474084] text-white active:bg-[#3b366c]" onClick={accLogout}>
+                <button className="h-10 w-full rounded-xl bg-[#474084] text-white active:bg-[#3b366c]" onClick={logout}>
                     Log Out
                 </button>
                 <div className="flex items-center space-x-4">
@@ -135,7 +138,7 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                         onClick={async () => {
                             const succesfullDeleted = await deleteAccount(sure, userToken)
                             if (succesfullDeleted) {
-                                accLogout()
+                                logout()
                             }
                         }}
                     >

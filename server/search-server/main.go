@@ -47,25 +47,21 @@ func main() {
 	// Create a Gin router
 	router := gin.Default()
 
+
 	// Initialize the Bleve index
 	index, err := config.InitializeIndex()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Retrieve data from PostgreSQL (replace this with your database query)
-	users, err := config.RetrieveUsersFromDB(db)
+	// Retrieve data from MySQL (replace this with your database query)
+	users, err := config.RetrieveDataFromMySQL(db)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	packages, err := config.RetrievePackagesFromDB(db)
-	if err != nil {
-		log.Fatal("Failed to retrieve packages:", err)
-	}
-
 	// Index the retrieved data into the Bleve index
-	err = config.IndexData(index, users, packages)
+	err = config.IndexData(index, users)
 	if err != nil {
 		log.Fatal(err)
 	}

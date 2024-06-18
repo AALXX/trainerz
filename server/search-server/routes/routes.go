@@ -13,7 +13,7 @@ func InitRoutes(router *gin.Engine, db *sql.DB, index bleve.Index) {
 	userGroup := router.Group("/api")
 	{
 		userGroup.GET("/search/:search_query", func(c *gin.Context) {
-			controllers.SearchIndex(c, db, index)
+			controllers.GetSerchedVideos(c, db, index)
 		})
 
 		userGroup.POST("/index-user", func(c *gin.Context) {

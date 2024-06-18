@@ -192,19 +192,10 @@ const EditPackage = (props: IEditPackages) => {
         })
 
         if (resp.data.error) {
-            window.alert(resp.data.errorMsg)
+            window.alert(resp.data.error)
         }
 
         window.location.reload()
-    }
-
-    const deletePackage = async () => {
-        const resp = await axios.post(`${process.env.SERVER_BACKEND}/package-manager/delete-package`, {
-            packageToken: props.packageToken
-        })
-        if (resp.data.error) {
-            window.alert(resp.data.errorMsg)
-        }
     }
 
     return (
@@ -271,20 +262,12 @@ const EditPackage = (props: IEditPackages) => {
                     <hr className="w-full" />
                     {renderComponent()}
                     <button
-                        className="mb-4 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
+                        className="mb-8 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]"
                         onClick={async () => {
                             await updatePackage()
                         }}
                     >
                         <h1 className="self-center text-lg text-white">Update!</h1>
-                    </button>
-                    <button
-                        className="mb-8 mt-auto h-12 w-[85%] justify-center self-center rounded-xl bg-[#b8181294] active:bg-[#66272594]"
-                        onClick={async () => {
-                            await deletePackage()
-                        }}
-                    >
-                        <h1 className="self-center text-lg text-white">Delete!</h1>
                     </button>
                 </div>
             </div>

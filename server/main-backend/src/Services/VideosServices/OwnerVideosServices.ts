@@ -118,21 +118,12 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
                         16,
                     );
 
-                    const success = await SendVideoDataToDb(req, userPublicToken, VideoToken, req.body.VideoTitle, req.body.VideoVisibility, req.body.Price);
+                    const success = await SendVideoDataToDb(req, userPublicToken, VideoToken, req.body.VideoTitle, req.body.PackageToken);
                     if (!success) {
                         return res.status(500).json({ error: true, errormsg: 'Database error' });
                     }
 
-                    try {
-                        const categorySuccess = await SendVideoCategoryToDb(req, VideoToken, req.body.VideoSport);
-                        if (!categorySuccess) {
-                            return res.status(500).json({ error: true, errormsg: 'Database error' });
-                        }
-
-                        return res.status(200).json({ error: false });
-                    } catch (error) {
-                        return res.status(500).json({ error: true, errormsg: 'Database error' });
-                    }
+                    return res.status(200).json({ error: false });
                 });
             });
         });
@@ -149,7 +140,7 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
  * @param {number} price - The price of the video.
  * @return {boolean}  `true` if the video data was successfully sent to the database, `false` otherwise.
  */
-const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, videoToken: string, VideoTitle: string, VideoVisibility: string, price: number) => {
+const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, videoToken: string, VideoTitle: string, PackageToken: number) => {
     const today = new Date().toISOString().slice(0, 10);
 
     try {
@@ -159,37 +150,9 @@ const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, vi
             return false;
         }
 
-        const SendVidsDatasSqlQuery = `INSERT INTO videos (VideoTitle, VideoDescription, PublishDate, VideoToken, OwnerToken, Visibility, BasePrice)
-        VALUES('${VideoTitle}', '', '${today}', '${videoToken}', '${userPublicToken}', '${VideoVisibility}', ${price})`;
-        await query(connection, SendVidsDatasSqlQuery);
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
-
-/**
- * Sends the category ID for a video to the database.
- * @param {CustomRequest} req - The custom request object.
- * @param {string} videoToken - The token of the video.
- * @param {string} SportName - The ID of the category.
- * @return {Promise<boolean>} - Returns true if the video category was successfully sent to the database, false otherwise.
- */
-const SendVideoCategoryToDb = async (req: CustomRequest, videoToken: string, SportName: string) => {
-    try {
-        const connection = await connect(req.pool!);
-
-        if (connection == null) {
-            return false;
-        }
-
-        const sendVideoCategoryToDbSQl = `INSERT INTO videos_category_alloc (videoToken, SportName) VALUES ('${videoToken}','${SportName}')`;
-        const accData = await query(connection, sendVideoCategoryToDbSQl);
-
-        if (Object.keys(accData).length === 0) {
-            return false;
-        }
-
+        const SendVidsDatasSqlQuery = `INSERT INTO videos (VideoTitle, VideoDescription, PublishDate, VideoToken, OwnerToken, Visibility, Packagetoken)
+        VALUES($1, '', $2, $3, $4, 'public', $5)`;
+        await query(connection, SendVidsDatasSqlQuery, [VideoTitle, today, videoToken, userPublicToken, PackageToken]);
         return true;
     } catch (error) {
         return false;
@@ -278,11 +241,11 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
-    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoPrice, v.VideoToken, v.Visibility, v.Views, u.UserName as OwnerName, a.SportName
+    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoToken, v.Visibility, v.Views, u.UserName as OwnerName, p.PackageSport
     FROM videos AS v
     JOIN users AS u ON v.OwnerToken = u.UserPublicToken
-    LEFT JOIN videos_category_alloc AS a ON v.VideoToken = a.VideoToken
-    WHERE v.OwnerToken = '${req.params.UserPublicToken}';`;
+    LEFT JOIN packages AS p ON v.PackageToken = p.PackageToken
+    WHERE v.OwnerToken = $1;`;
 
     try {
         const connection = await connect(req.pool!);
@@ -291,7 +254,7 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
             return false;
         }
 
-        const VideosData = await query(connection, GetVideoDataQueryString);
+        const VideosData = await query(connection, GetVideoDataQueryString, [req.params.UserPublicToken]);
         return res.status(202).json({
             error: false,
             VideosData: VideosData,

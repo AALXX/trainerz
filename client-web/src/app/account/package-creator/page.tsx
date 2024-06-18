@@ -1,10 +1,10 @@
 'use client'
-import { isLoggedIn } from '@/Auth-Security/Auth'
 import OptionPicker from '@/Components/CommonUi/OptionPicker'
 import PopupCanvas from '@/Components/CommonUi/util/PopupCanvas'
 import CreateTierTemplate from '@/Components/Packages/CreateTierTemplate'
 import AddPhotoZone from '@/Components/Packages/util/addPhotoZone'
 import SelectableCards from '@/Components/UserProfile/util/ProfileTabCards'
+import { useAccountStatus } from '@/hooks/useAccount'
 import axios from 'axios'
 import { getCookie } from 'cookies-next'
 import Link from 'next/link'
@@ -12,8 +12,9 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Page: React.FunctionComponent<any> = props => {
-    const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
+
+    const { isLoggedIn, checkStatus } = useAccountStatus()
 
     const userToken: string = getCookie('userToken') as string
     const router = useRouter()
@@ -56,8 +57,7 @@ const Page: React.FunctionComponent<any> = props => {
          * Get user profile Data
          */
         ;(async () => {
-            const usrLoggedIn = await isLoggedIn()
-            setUserLoggedIn(usrLoggedIn)
+            await checkStatus()
         })()
     }, [userToken])
 
@@ -187,7 +187,7 @@ const Page: React.FunctionComponent<any> = props => {
 
     return (
         <div className="flex h-full flex-col">
-            {userLoggedIn ? (
+            {isLoggedIn ? (
                 <div className="m-auto flex lg:h-[30rem] lg:w-[50rem] xl:h-[35rem] xl:w-[65rem] 3xl:h-[50rem] 3xl:w-[80rem]">
                     <div className="flex flex-col rounded-2xl bg-[#0000005e] lg:w-[29rem] xl:w-[39rem] 3xl:w-[49rem]">
                         <div className="flex h-28 w-full">
@@ -202,10 +202,10 @@ const Page: React.FunctionComponent<any> = props => {
                         <div className="flex h-[75%] w-full flex-col p-5">
                             <h1 className="mt-4 text-white">Add Photos that describe best your package</h1>
                             <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-3 3xl:grid-cols-3">
-                                <AddPhotoZone setImageFile={setImage1}  />
-                                <AddPhotoZone setImageFile={setImage2}  />
-                                <AddPhotoZone setImageFile={setImage3}  />
-                                <AddPhotoZone setImageFile={setImage4}  />
+                                <AddPhotoZone setImageFile={setImage1} />
+                                <AddPhotoZone setImageFile={setImage2} />
+                                <AddPhotoZone setImageFile={setImage3} />
+                                <AddPhotoZone setImageFile={setImage4} />
                             </div>
                         </div>
                         <hr className="w-full" />
