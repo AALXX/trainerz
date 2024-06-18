@@ -1,14 +1,11 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { getVideoData, IVideoData, playOrPauseVideo, followAccount, likeVideo, dislikeVideo } from '@/Components/VideoPlayer/UtilFunc'
+import { getVideoData, IVideoData, playOrPauseVideo, likeVideo, dislikeVideo } from '@/Components/VideoPlayer/UtilFunc'
 import { getCookie } from 'cookies-next'
 import PlayerOverlay from './PlayerOverlay'
 import axios from 'axios'
-
-interface IVideoPlayerProps {
-    VideoToken: string | null
-}
+import { IVideoPlayerProps } from './CommentSection/IcommentSection'
 
 /**
  * Main Video PLayer
@@ -36,14 +33,11 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
         VideoDescription: '',
         VideoTitle: '',
         AccountName: '',
-        AccountFolowers: '',
-        UserFollwsAccount: false,
         VideoLikes: 0,
         VideoDislikes: 0,
         UserLikedOrDislikedVideo: 0
     })
 
-    const [userFollwsAccount, setUserFollwsAccount] = useState<boolean>(false)
     const [userLikedVideo, setUserLikedVideo] = useState<boolean>(false)
     const [userDisLikedVideo, setUserDisLikedVideo] = useState<boolean>(false)
     const [videoLikes, setVideoLikes] = useState<number>(0)
@@ -57,7 +51,12 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
         ;(async () => {
             const videoData = await getVideoData(props.VideoToken, getCookie('userToken') as string)
             setVideoData(videoData)
-            setUserFollwsAccount(videoData.UserFollwsAccount)
+
+            if (props.setPackageName && props.setPackageRating) {
+                props.setPackageName(videoData.PackageName)
+                props.setPackageRating(videoData.PackageRating)
+            }
+
             if (videoData.UserLikedOrDislikedVideo.like_or_dislike === 1) {
                 setUserLikedVideo(true)
             } else if (videoData.UserLikedOrDislikedVideo.like_or_dislike === 2) {
@@ -196,31 +195,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
                     <div className="flex">
                         <div className="flex flex-col">
                             <h1 className="text-base text-white">{VideoData.AccountName}</h1>
-                            <h1 className="text-xs text-white">{VideoData.AccountFolowers} followers</h1>
                         </div>
-                        {userFollwsAccount ? (
-                            <>
-                                <button
-                                    className="text-bg ml-20 mt-2 h-[2.5rem] w-[4.5rem] bg-[#727272] text-white"
-                                    onClick={async () => {
-                                        setUserFollwsAccount(await followAccount(getCookie('userToken'), VideoData.OwnerToken, userFollwsAccount))
-                                    }}
-                                >
-                                    UnFollow
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <button
-                                    className="text-bg ml-20 mt-2 h-[2.5rem] w-[4.5rem] bg-[#494949] text-white"
-                                    onClick={async () => {
-                                        setUserFollwsAccount(await followAccount(getCookie('userToken'), VideoData.OwnerToken, userFollwsAccount))
-                                    }}
-                                >
-                                    Follow
-                                </button>
-                            </>
-                        )}
                     </div>
                 </div>
                 <div className="ml-auto mr-[2vw] flex">

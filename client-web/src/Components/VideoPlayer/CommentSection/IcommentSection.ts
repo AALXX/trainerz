@@ -1,7 +1,16 @@
+import { Dispatch, SetStateAction } from "react"
+
 export interface IVideoPlayerProps {
     VideoToken: string | null
-    UserPrivateToken: string | null
+    setPackageName?: Dispatch<SetStateAction<string>>
+    setPackageRating?: Dispatch<SetStateAction<number>>
 }
+
+export interface ICommentSection extends IVideoPlayerProps {
+    PacakageName: string
+    PackageRating: number
+}
+
 
 export interface ICommentCard {
     id: number

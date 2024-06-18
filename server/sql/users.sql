@@ -5,8 +5,6 @@ CREATE TABLE users (
     UserName VARCHAR(30) NOT NULL,
     Description VARCHAR(150) NOT NULL,
     BirthDate VARCHAR(60) NOT NULL,
-    AccountFolowers INT NOT NULL DEFAULT 0,
-    AccountFolowing INT NOT NULL DEFAULT 0,
     LocationLat FLOAT NOT NULL,
     LocationLon FLOAT NOT NULL,
     Sport VARCHAR(30) NOT NULL,

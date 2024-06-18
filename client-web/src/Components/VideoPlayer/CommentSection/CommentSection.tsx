@@ -5,16 +5,17 @@ import Image from 'next/image'
 import Comment from './Comment'
 import { useEffect } from 'react'
 import axios from 'axios'
-import { ICommentCard, IVideoPlayerProps } from './IcommentSection'
+import { ICommentCard, ICommentSection } from './IcommentSection'
 import { getCookie } from 'cookies-next'
 
-const CommentSection = (props: IVideoPlayerProps) => {
+const CommentSection = (props: ICommentSection) => {
     const [commentInput, setCommentInput] = useState<string>('')
     const [videoComments, setVideoComments] = useState<Array<ICommentCard>>([])
     const [hasComments, setHasComments] = useState<boolean>(false)
+    const [hover, setHover] = useState<boolean>(false)
 
     const postComment = async () => {
-        const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/post-comment`, { UserPrivateToken: props.UserPrivateToken, VideoToken: props.VideoToken, Comment: commentInput })
+        const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/post-comment`, { UserPrivateToken: getCookie('userToken'), VideoToken: props.VideoToken, Comment: commentInput })
 
         if (hasComments == false) {
             setHasComments(true)
@@ -42,7 +43,19 @@ const CommentSection = (props: IVideoPlayerProps) => {
     }, [])
 
     return (
-        <div className="ml-[.5rem] mt-[3rem] flex h-[83.2vh] w-[22vw] flex-col rounded-br-xl rounded-tr-xl bg-[#00000080]">
+        <div className="rounded-br-xlrounded-tr-xl ml-[.5rem] mt-[3rem] flex h-[83.2vh] w-[22vw] flex-col overflow-y-hidden rounded-br-2xl rounded-tr-2xl bg-[#00000080]">
+            <div
+                className={`flex h-24 flex-col rounded-tr-2xl bg-[#00000080] transition-all duration-300 ease-in-out ${hover ? 'translate-y-0' : '-translate-y-14'} p-2`}
+                onMouseOver={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+            >
+                <div className="flex w-full">
+                    <h1 className="self-center text-xl text-white">package: {props.PacakageName}</h1>
+                    <h1 className="ml-auto self-center text-xl text-white">{props.PackageRating}/5</h1>
+                    <img src="/assets/AccountIcons/Star_Icon.svg" className="h-8 w-8 self-center" alt="Star Icon" />
+                </div>
+                <h1 className="mt-auto self-center text-sm text-white">See Details About The Package</h1>
+            </div>
             <div className="flex h-[88%] flex-col overflow-y-scroll">
                 {hasComments ? (
                     <>

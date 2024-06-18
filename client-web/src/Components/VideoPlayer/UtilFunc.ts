@@ -9,8 +9,6 @@ interface IVideoData {
     PublishDate: string
     OwnerToken: string
     AccountName: string
-    AccountFolowers: string
-    UserFollwsAccount: boolean
     VideoLikes: number
     VideoDislikes: number
     UserLikedOrDislikedVideo: number
@@ -18,7 +16,6 @@ interface IVideoData {
 
 const getVideoData = async (VideoToken: string | null, userToken: string) => {
     const videoData = await axios.get(`${process.env.SERVER_BACKEND}/videos-manager/get-video-data/${VideoToken}/${userToken}`)
-    console.log(videoData)
     return {
         error: false,
         VideoTitle: videoData.data.videotitle,
@@ -26,8 +23,8 @@ const getVideoData = async (VideoToken: string | null, userToken: string) => {
         PublishDate: videoData.data.publishdate,
         OwnerToken: videoData.data.ownertoken,
         AccountName: videoData.data.accountname,
-        AccountFolowers: videoData.data.accountfolowers,
-        UserFollwsAccount: videoData.data.UserFollwsAccount,
+        PackageName: videoData.data.packagename,
+        PackageRating: videoData.data.rating,
         VideoLikes: videoData.data.likes,
         VideoDislikes: videoData.data.dislikes,
         UserLikedOrDislikedVideo: videoData.data.UserLikedOrDislikedVideo
@@ -53,14 +50,6 @@ const changeVolume = (videoRef: RefObject<HTMLVideoElement>, e: any) => {
 
     localStorage.setItem('Volume', e.target.value)
     return e.target.value
-}
-
-const followAccount = async (usrToken: CookieValueTypes, ownerToken: string, userFollwsAccount: boolean) => {
-    if (usrToken === ownerToken || usrToken == undefined || ownerToken == undefined) {
-        return false
-    }
-    await axios.post(`${process.env.SERVER_BACKEND}/user-account/follow`, { userPrivateToken: usrToken, accountToken: ownerToken })
-    return !userFollwsAccount
 }
 
 const likeVideo = async (usrToken: CookieValueTypes, videoToken: string | null, userLikedVideo: boolean, userDisLikedVideo: boolean) => {
@@ -92,4 +81,4 @@ const dislikeVideo = async (usrToken: CookieValueTypes, videoToken: string | nul
 }
 
 export type { IVideoData }
-export { getVideoData, playOrPauseVideo, changeVolume, followAccount, likeVideo, dislikeVideo }
+export { getVideoData, playOrPauseVideo, changeVolume, likeVideo, dislikeVideo }
