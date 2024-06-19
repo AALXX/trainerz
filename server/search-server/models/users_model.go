@@ -12,18 +12,10 @@ type UserReq struct {
 type User struct {
 	UserName        string `json:"UserName"`
 	UserPublicToken string `json:"UserPublicToken"`
+	Description     string `json:"Description"`
 	Rating          int    `json:"Rating"`
 	Sport           string `json:"Sport"`
 	AccountType     string `json:"AccountType"`
-}
+	Type            string //user
 
-// SearchResult represents the result of a search query.
-// It contains information about a user, including their username, rating, sport, and score.
-type SearchResult struct {
-	UserName        string
-	UserPublicToken string
-	Rating          int
-	Sport           string
-	AccountType     string
-	Score           float64
 }

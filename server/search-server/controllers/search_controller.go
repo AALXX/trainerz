@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"net/http"
-	"search-server/config"
+	"search-server/lib"
 	"search-server/models"
 
 	"github.com/blevesearch/bleve"
@@ -16,7 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
+func SearchIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 	search_query := c.Param("search_query")
 
 	// Split the search query into terms
@@ -25,9 +25,7 @@ func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
 	// Create a Boolean query with OR clauses for each term
 	boolQuery := bleve.NewBooleanQuery()
 	for _, term := range terms {
-
 		fuzzyQuery := bleve.NewFuzzyQuery(term)
-		fuzzyQuery.SetField("UserName") // Replace with the field you want to search
 		boolQuery.AddShould(fuzzyQuery)
 		fuzzyQuery.SetFuzziness(2)
 	}
@@ -47,44 +45,65 @@ func GetSerchedVideos(c *gin.Context, db *sql.DB, index bleve.Index) {
 		log.Println("result")
 		var result models.SearchResult
 
-		// Define the fields to convert
-		fieldsToConvert := []struct {
-			FieldName string
-			Target    interface{} // Use interface{} to handle various types
-		}{
-			{"UserName", &result.UserName},
-			{"UserPublicToken", &result.UserPublicToken},
-			{"Rating", &result.Rating}, // Directly assign integer value
-			{"AccountType", &result.AccountType}, // Directly assign integer value
-			{"Sport", &result.Sport},
+		// Check if the document type is user or package
+		docType, found := hit.Fields["Type"]
+		if !found {
+			log.Printf("Warning: Field 'Type' not found for document ID %s\n", hit.ID)
+			continue
 		}
 
-		for _, fieldInfo := range fieldsToConvert {
-			field, found := hit.Fields[fieldInfo.FieldName]
-			if !found {
-				log.Printf("Warning: Field '%s' not found for document ID %s\n", fieldInfo.FieldName, hit.ID)
-				continue // Skip this result and move to the next one
+		if docTypeStr, ok := docType.(string); ok {
+			if docTypeStr == "user" {
+				// Map user fields
+				result.Type = "user"
+				result.UserName = getStringField(hit.Fields, "UserName")
+				result.UserPublicToken = getStringField(hit.Fields, "UserPublicToken")
+				result.Rating = getIntField(hit.Fields, "Rating")
+				result.AccountType = getStringField(hit.Fields, "AccountType")
+				result.Sport = getStringField(hit.Fields, "Sport")
+				result.AccountDescription = getStringField(hit.Fields, "Description")
+			} else if docTypeStr == "package" {
+				// Map package fields
+				result.Type = "package"
+				result.PackageToken = getStringField(hit.Fields, "PackageToken")
+				result.OwnerToken = getStringField(hit.Fields, "OwnerToken")
+				result.PackageName = getStringField(hit.Fields, "PackageName")
+				result.Sport = getStringField(hit.Fields, "PackageSport")
+				result.Rating = getIntField(hit.Fields, "Rating")
 			}
-
-			switch v := field.(type) {
-			case int:
-				*fieldInfo.Target.(*int) = v // Type assertion and assign to integer pointer
-			case float64:
-				*fieldInfo.Target.(*int) = int(v) // Convert float64 to int and assign to integer pointer
-			case string:
-				*fieldInfo.Target.(*string) = string(v) // Convert float64 to int and assign to integer pointer
-			default:
-				log.Printf("Warning: Field '%s' is not a valid type for document ID %s\n", fieldInfo.FieldName, hit.ID)
-				continue // Skip this result and move to the next one
-			}
+		} else {
+			log.Printf("Warning: 'Type' field is not a valid string for document ID %s\n", hit.ID)
+			continue
 		}
 
-		// Assuming SearchResult struct includes the fields you want to convert
 		mappedResults = append(mappedResults, result)
 	}
 
-	// Return the user data in the response
-	c.JSON(http.StatusCreated, gin.H{"usersResults": mappedResults})
+	// Return the search results in the response
+	c.JSON(http.StatusOK, gin.H{"results": mappedResults})
+}
+
+// Helper function to safely get string fields from a document
+func getStringField(fields map[string]interface{}, fieldName string) string {
+	if field, found := fields[fieldName]; found {
+		if str, ok := field.(string); ok {
+			return str
+		}
+	}
+	return ""
+}
+
+// Helper function to safely get int fields from a document
+func getIntField(fields map[string]interface{}, fieldName string) int {
+	if field, found := fields[fieldName]; found {
+		switch v := field.(type) {
+		case int:
+			return v
+		case float64:
+			return int(v)
+		}
+	}
+	return 0
 }
 
 func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
@@ -95,8 +114,8 @@ func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 		return
 	}
 
-	var UserPublicToken = config.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
-	var rating = config.GetAccountRating(UserPublicToken, db)
+	var UserPublicToken = lib.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
+	var rating = lib.GetAccountRating(UserPublicToken, db)
 
 	newUser := models.User{
 		UserName:        user.UserName,
@@ -105,7 +124,6 @@ func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 		Sport:           user.Sport,
 		AccountType:     user.AccountType,
 	}
-
 
 	if err := index.Index(UserPublicToken, newUser); err != nil {
 		log.Fatal(err)
@@ -124,9 +142,9 @@ func UpdateIndexedUser(c *gin.Context, db *sql.DB, index bleve.Index) {
 		return
 	}
 
-	var UserPublicToken = config.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
+	var UserPublicToken = lib.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
 
-	var rating = config.GetAccountRating(UserPublicToken, db)
+	var rating = lib.GetAccountRating(UserPublicToken, db)
 
 	newUser := models.User{
 		UserName:        user.UserName,
@@ -160,7 +178,7 @@ func DeleteIndexedUser(c *gin.Context, db *sql.DB, index bleve.Index) {
 		return
 	}
 
-	var UserPublicToken = config.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
+	var UserPublicToken = lib.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
 
 	// First, remove the old document from the index.
 	if err := index.Delete(UserPublicToken); err != nil {

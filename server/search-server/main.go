@@ -2,6 +2,7 @@ package main
 
 import (
 	"search-server/config"
+	"search-server/lib"
 	"search-server/routes"
 
 	"github.com/gin-contrib/cors"
@@ -47,23 +48,27 @@ func main() {
 	// Create a Gin router
 	router := gin.Default()
 
-
 	// Initialize the Bleve index
-	index, err := config.InitializeIndex()
+	index, err := lib.InitializeIndex()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Retrieve data from MySQL (replace this with your database query)
-	users, err := config.RetrieveDataFromMySQL(db)
+	// Retrieve data from database
+	users, err := lib.RetrieveUsersFromDB(db)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to retrieve users:", err)
 	}
 
-	// Index the retrieved data into the Bleve index
-	err = config.IndexData(index, users)
+	packages, err := lib.RetrievePackagesFromDB(db)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to retrieve packages:", err)
+	}
+
+	// Index data
+	err = lib.IndexData(index, users, packages)
+	if err != nil {
+		log.Fatal("Failed to index data:", err)
 	}
 
 	// Enable CORS middleware
