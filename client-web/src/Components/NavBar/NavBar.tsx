@@ -51,6 +51,10 @@ const NavBar = () => {
                 <Link href={'/account/upload'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
                     <button className="h-full w-full rounded-xl border-2 bg-none text-white">UPLOAD VIDEO</button>
                 </Link>
+
+                <Link href={'/account/my-subscriptions'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
+                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">MY SUBSCRIPTION</button>
+                </Link>
             </div>
 
             <h1

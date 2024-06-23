@@ -21,4 +21,6 @@ router.post(
 
 router.get('/get-package-data/:packageToken', param('packageToken').not().isEmpty(), ClientPackageServices.GetPackageData);
 
+router.get('/get-subscribed-packages/:userPrivateToken', param('userPrivateToken').not().isEmpty(), ClientPackageServices.GetSubscribedPackages);
+
 export = router;

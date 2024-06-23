@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,17 +24,23 @@ import reactor.core.publisher.Mono;
 @Service
 public class VideoServices implements IVideoServices {
 
-    private static final String VideoPathFormat = "file:../accounts/%s/%s/Source.mp4";
+    private static final Path BASE_PATH = Paths.get("..", "accounts");
 
     // * it loads video from file system
     @Autowired
     public ResourceLoader VideoLoader;
 
-    public Mono<Resource> GetVideo(String OwnerToken, String VideoToken) {
+    public Mono<Resource> GetVideo(String ownerToken, String videoToken) {
 
-        return Mono.fromSupplier(
-                () -> VideoLoader.getResource(String.format(VideoPathFormat, OwnerToken, VideoToken)));
-        // return null;
+        return Mono.defer(() -> {
+            Path videoPath = BASE_PATH.resolve(Paths.get(ownerToken, videoToken, "Source.mp4"));
+            Resource resource = VideoLoader.getResource("file:" + videoPath.toString());
+            if (resource.exists()) {
+                return Mono.just(resource);
+            } else {
+                return Mono.error(new IOException("Video not found"));
+            }
+        });
     }
 
 

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { getCookie } from 'cookies-next'
 import React, { useState } from 'react'
 import OptionPicker from '../CommonUi/OptionPicker'
+import { useRouter } from 'next/navigation'
 
 const cardElementOptions = {
     style: {
@@ -29,12 +30,15 @@ const PackageCheckout = (props: { priceId: string }) => {
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
     const elements = useElements()
+    const router = useRouter()
+    const [loading, setLoading] = useState<boolean>(false) // Loading state
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
         if (!stripe || !elements) {
             return
         }
+        setLoading(true)
 
         const cardElement = elements.getElement(CardElement)
 
@@ -53,6 +57,7 @@ const PackageCheckout = (props: { priceId: string }) => {
 
             if (error) {
                 setError(error.message || 'An unexpected error occurred')
+                setLoading(false)
             } else {
                 try {
                     const response = await axios.post(`${process.env.SERVER_BACKEND}/payment-manager/checkout`, {
@@ -63,11 +68,17 @@ const PackageCheckout = (props: { priceId: string }) => {
 
                     if (!response.data.error) {
                         setSuccess(true)
+                        setLoading(false) // Reset loading state on success
+                        if (response.data.newChat) {
+                            // router.replace(`/chat/${response.data.newChat}`)
+                        }
                     } else {
                         setError(response.data.errmsg)
+                        setLoading(false) // Reset loading state on error
                     }
                 } catch (err) {
                     setError('Subscription failed. Please try again.')
+                    setLoading(false) // Reset loading state on error
                 }
             }
         }
@@ -89,8 +100,16 @@ const PackageCheckout = (props: { priceId: string }) => {
                     <CardElement options={cardElementOptions} className="mb-4 mt-2 rounded-md border border-gray-300 p-4" />
                 </div>
 
-                <button type="submit" disabled={!stripe} className="mt-auto h-12 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]">
-                    <h1 className="text-lg text-white">Subscribe</h1>
+                <button
+                    className={`mb-8 mt-auto h-12 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c] ${loading ? 'opacity-50' : ''}`}
+                    type="submit"
+                    disabled={loading || !stripe} // Disable button when loading  
+                >
+                    {loading ? (
+                        <div className="m-auto h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-solid border-gray-200 border-t-blue-500"></div>
+                    ) : (
+                        <h1 className="self-center text-lg text-white">Subscribe</h1>
+                    )}
                 </button>
                 {error && <div className="mt-4 text-red-500">{error}</div>}
                 {success && <div className="mt-4 text-green-500">Subscription Successful!</div>}

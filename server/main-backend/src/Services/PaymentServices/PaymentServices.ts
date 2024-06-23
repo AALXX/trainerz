@@ -26,12 +26,14 @@ const CustomRequestValidationResult = validationResult.withDefaults({
  * @returns A JSON response with the package data, or an error response if there is an issue.
  */
 const CheckoutPackage = async (req: CustomRequest, res: Response) => {
-    const errors = validationResult(req);
+    const errors = CustomRequestValidationResult(req);
     if (!errors.isEmpty()) {
-        errors.array().forEach((error) => logging.error('CHECKOUT_PACKAGE', error.msg));
-        return res.status(400).json({ error: true, errors: errors.array() });
-    }
+        errors.array().map((error) => {
+            logging.error('CHECKOUT_PACKAGE_FUNC', error.errorMsg);
+        });
 
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
     try {
         const { UserPrivateToken, priceId, paymentMethodId } = req.body;
 
@@ -98,11 +100,19 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
             const tierData = await query(connection, GetTierQueryString, [priceId], true);
 
-            const InsertQuery = `INSERT INTO Subscriptions (PackageToken, UserpublicToken, Tier) VALUES ($1, $2, $3);`;
+            const InsertQuery = `INSERT INTO Subscriptions (PackageToken, UserpublicToken, Tier, SubsciptionId) VALUES ($1, $2, $3, $4);`;
 
-            await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier]);
+            await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier, subscription.id]);
+
+            if (tierData[0].acces_videos) {
+                return res.status(200).json({
+                    newChat: true,
+                    error: false,
+                });
+            }
 
             return res.status(200).json({
+                newChat: false,
                 error: false,
             });
         }
@@ -119,4 +129,68 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export default { CheckoutPackage };
+/**
+ * Cancels a user's subscription.
+ *
+ * @param req - The custom request object containing the necessary data to cancel the subscription.
+ * @param res - The response object to send the result of the cancellation operation.
+ * @returns A JSON response indicating the success or failure of the cancellation operation.
+ */
+const CacnelSubscription = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('CANCEL_SUB_FUNC', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        if (UserEmail == null) {
+            return res.status(404).json({ error: true, errmsg: 'Email not found' });
+        }
+
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        if (UserPublicToken == null) {
+            return res.status(404).json({ error: true, errmsg: 'Email not found' });
+        }
+
+        const QueryString = `SELECT SubsciptionId FROM subscriptions WHERE UserpublicToken=$1 AND PackageToken = $2;`;
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return res.status(500).json({
+                error: true,
+                errmsg: "couldn't connect to database",
+            });
+        }
+
+        const subscription = await query(connection, QueryString, [UserPublicToken, req.body.PackageToken], true);
+
+        const deletedSubscription = await req.stripe?.subscriptions.cancel(subscription[0].subsciptionid);
+
+        const DeleteQuery = `DELETE FROM Subscriptions WHERE UserpublicToken = $1 AND PackageToken = $2 AND SubsciptionId = $3;`;
+        await query(connection, DeleteQuery, [UserPublicToken, req.body.PackageToken, subscription[0].subsciptionid]);
+
+        if (deletedSubscription == null) {
+            return res.status(400).json({
+                error: true,
+                errmsg: 'Subscription not found',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+        });
+    } catch (error: any) {
+        logging.error('CHECKOUT_PACKAGE', error.message);
+        return res.status(200).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+export default { CheckoutPackage, CacnelSubscription };

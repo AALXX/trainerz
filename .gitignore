@@ -65,3 +65,8 @@ server/video-stream-server/src/main/resources/application.properties
 
 client-web/.million/store.json
 ignorelist.txt
+
+server/video-stream-server/bazel-bin
+server/video-stream-server/bazel-out
+server/video-stream-server/bazel-testlogs
+server/video-stream-server/bazel-video-stream-server

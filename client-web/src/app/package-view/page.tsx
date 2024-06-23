@@ -132,12 +132,6 @@ const PackageView = () => {
         }
     }
 
-    // const photos = [
-    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_1.jpg?cache=none`,
-    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_2.jpg?cache=none`,
-    //     `${process.env.FILE_SERVER}/${ownerToken}/Package_${urlParams.get('t') as string}/Photo_3.jpg?cache=none`
-    // ]
-
     return (
         <div className="flex h-full flex-col self-center">
             <div className="m-auto flex lg:h-[30rem] lg:w-[50rem] xl:h-[35rem] xl:w-[65rem] 3xl:h-[50rem] 3xl:w-[80rem]">

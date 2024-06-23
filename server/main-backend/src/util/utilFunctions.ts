@@ -3,9 +3,9 @@ import logging from '../config/logging';
 import { connect, query } from '../config/postgresql';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import utilFunctions from '../util/utilFunctions';
 import path from 'path';
 import { Pool } from 'pg';
+
 
 //* /////////////////////////////
 //*      Account related       //

@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import UtilFunc from '../../util/utilFunctions';
+import utilFunctions from '../../util/utilFunctions';
 
 const NAMESPACE = 'ClientPackageServiceManager';
 
@@ -34,7 +35,9 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
         const connection = await connect(req.pool!);
 
         if (connection == null) {
-            return false;
+            return res.status(202).json({
+                error: true,
+            });
         }
 
         const QueryString = `SELECT 
@@ -112,7 +115,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
                 coaching_101: data[0].standardcoaching,
                 custom_program: data[0].standardcustomprogram,
                 description: data[0].standarddescription,
-            }, 
+            },
 
             premiumTier: {
                 price: data[0].premiumprice,
@@ -134,4 +137,44 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export default { GetPackageData };
+const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach((error) => logging.error('CHECKOUT_PACKAGE', error.msg));
+        return res.status(400).json({ error: true, errors: errors.array() });
+    }
+
+    try {
+        const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, req.params.userPrivateToken);
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.userPrivateToken);
+        if (!UserEmail) {
+            return res.status(404).json({ error: true, errmsg: 'Email not found' });
+        }
+
+        const connection = await connect(req.pool!);
+
+        if (connection == null) {
+            return res.status(202).json({
+                error: true,
+            });
+        }
+
+        const QueryString = `SELECT p.PackageName, p.Rating, p.Tier, p.PackageSport, p.OwnerToken, p.PackageToken, u.UserName FROM Packages p LEFT JOIN subscriptions s ON p.PackageToken = s.PackageToken
+        LEFT JOIN users u ON s.UserpublicToken = u.UserPublicToken WHERE s.Userpublictoken = $1;`;
+
+        const products = await query(connection, QueryString, [UserPublicToken]);
+
+        return res.status(200).json({
+            packages: products,
+            error: false,
+        });
+    } catch (error: any) {
+        logging.error('CHECKOUT_PACKAGE', error.message);
+        return res.status(500).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+export default { GetPackageData, GetSubscribedPackages };

@@ -207,7 +207,6 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                         }
 
                         const priceResp = await req.stripe?.prices.create(priceParams);
-                        console.log(price);
                         // Insert into BasicTier table
                         const insertBasicTierQuery = `
       INSERT INTO ${price.tier} (PackageToken, Price, PriceID, Recurring, acces_videos, coaching_101, custom_program, Description)

@@ -15,7 +15,10 @@ const SearchResults = () => {
             if ((urlParams.get('q') as string) == '') {
             } else {
                 const res = await axios.get(`${process.env.SEARCH_SERVER}/search/${urlParams.get('q') as string}`)
-                setResultlist(res.data.results)
+                if (res.data.results !== null){
+
+                    setResultlist(res.data.results)
+                } 
             }
         })()
     }, [])
