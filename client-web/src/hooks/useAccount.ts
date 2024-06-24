@@ -53,6 +53,7 @@ const useAccountRegister = () => {
             if (!res.data.error && res.data.userPrivateToken != null) {
                 setCookie('userToken', res.data.userPrivateToken, { maxAge: 60 * 60 * 24 })
                 setCookie('userPublicToken', res.data.userPublicToken, { maxAge: 60 * 60 * 24 })
+                setCookie('accountType', res.data.accountType, { maxAge: 60 * 60 * 24 })
                 return true
             }
 
@@ -85,6 +86,7 @@ const useAccountLogin = () => {
             if (!res.data.error && res.data.userPrivateToken != null) {
                 setCookie('userToken', res.data.userPrivateToken, { maxAge: 60 * 60 * 24 })
                 setCookie('userPublicToken', res.data.userPublicToken, { maxAge: 60 * 60 * 24 })
+                setCookie('accountType', res.data.accountType, { maxAge: 60 * 60 * 24 })
                 return true
             }
 

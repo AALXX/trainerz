@@ -36,7 +36,10 @@ func RetrieveUsersFromDB(db *sql.DB) ([]models.User, error) {
 			return nil, err
 		}
 		user.Type = "user"
-		users = append(users, user)
+
+		if(user.AccountType == "Trainer"){
+			users = append(users, user)
+		}
 	}
 
 	if err := rows.Err(); err != nil {

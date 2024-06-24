@@ -23,7 +23,7 @@ const AccountProfileCardTemplate = (props: IAccountProfileTemplate) => {
                         className="mt-2 indent-3 resize-none rounded-xl bg-[#474084] text-white w-full h-full cursor-pointer"
                         placeholder="Description"
                         value={props.AccountDescription}
-                        readOnly={false}
+                        readOnly={true}
                     />
                 </div>
             </div>

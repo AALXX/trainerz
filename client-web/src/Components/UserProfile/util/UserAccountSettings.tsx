@@ -75,7 +75,7 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
                             className="mt-2 h-12 w-full rounded-xl border-none bg-[#474084] px-3 text-white placeholder:text-white"
                             onChange={e => setUserName(e.target.value)}
                             value={userName}
-                            maxLength={10}
+                            // maxLength={10}
                             type="text"
                             placeholder="User Name..."
                         />

@@ -1,15 +1,22 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [searchInput, setSearchInput] = useState<string>('')
+    const [accountType, setAccountType] = useState<string>('SportsPerson')
 
     const postSearch = () => {
         window.location.href = `http://localhost:3000/search?q=${searchInput}`
     }
+
+    useEffect(() => {
+        // Assuming getCookie is a function that retrieves the value of a cookie by name
+        const accountTypeFromCookie = getCookie('accountType') as string
+        setAccountType(accountTypeFromCookie )
+    }, [])
 
     return (
         <div className="bg-navbar-grey flex h-[6rem] w-[100%] flex-grow-0 bg-[#00000082]">
@@ -44,13 +51,17 @@ const NavBar = () => {
                     <button className="h-full w-full rounded-xl border-2 bg-none text-white">MESSAGES</button>
                 </Link>
 
-                <Link href={'/account/package-creator'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
-                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">CREATE PACKAGE</button>
-                </Link>
+                {accountType == 'Trainer' && (
+                    <>
+                        <Link href={'/account/package-creator'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
+                            <button className="h-full w-full rounded-xl border-2 bg-none text-white">CREATE PACKAGE</button>
+                        </Link>
 
-                <Link href={'/account/upload'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
-                    <button className="h-full w-full rounded-xl border-2 bg-none text-white">UPLOAD VIDEO</button>
-                </Link>
+                        <Link href={'/account/upload'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
+                            <button className="h-full w-full rounded-xl border-2 bg-none text-white">UPLOAD VIDEO</button>
+                        </Link>
+                    </>
+                )}
 
                 <Link href={'/account/my-subscriptions'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
                     <button className="h-full w-full rounded-xl border-2 bg-none text-white">MY SUBSCRIPTION</button>

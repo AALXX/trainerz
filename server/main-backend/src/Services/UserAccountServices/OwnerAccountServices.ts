@@ -133,6 +133,7 @@ Trainerz Team`,
             error: false,
             userPrivateToken,
             userPublicToken,
+            accountType: accountType,
         });
     } catch (error: any) {
         logging.error('REGISTER_USER_FUNC', error.message);
@@ -166,7 +167,7 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             return { error: true };
         }
 
-        const LoginQueryString = `SELECT UserPrivateToken, UserPublicToken, UserPwd FROM users WHERE UserEmail='${req.body.userEmail}';`;
+        const LoginQueryString = `SELECT UserPrivateToken, UserPublicToken, UserPwd, AccountType FROM users WHERE UserEmail='${req.body.userEmail}';`;
 
         const accountVideosDB = await query(connection, LoginQueryString);
 
@@ -194,6 +195,7 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
                     error: false,
                     userPrivateToken: data[0].userprivatetoken,
                     userPublicToken: data[0].userpublictoken,
+                    accountType: data[0].accounttype,
                 });
             }
         });
