@@ -34,6 +34,56 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: always
+  scylla-node1:
+    image: scylladb/scylla:latest
+    container_name: scylla-node1
+
+    environment:
+      - SCYLLA_DD='cassandra'
+      - SCYLLA_PASSWORD='serbvn'
+    ports:
+      - "9042:9042"
+      - "9160:9160"
+      - "7000:7000"
+      - "7001:7001"
+      - "7199:7199"
+      - "9180:9180"
+    volumes:
+      - scylla-data-node1:/var/lib/scylla
+    command: --reactor-backend=epoll
+    
+    entrypoint: [
+      "sh", "-c",
+      "/docker-entrypoint.py --smp 1 --memory 1G --overprovisioned 1 --authenticator PasswordAuthenticator --authorizer CassandraAuthorizer; \
+      until cqlsh -u cassandra -p cassandra -e 'ALTER ROLE cassandra WITH PASSWORD = '\''serbvn'\'' AND LOGIN = true;' ; do echo 'Waiting for Scylla to start...' ; sleep 5 ; done; \
+      cqlsh -u cassandra -p serbvn -e 'CREATE ROLE alx WITH PASSWORD = '\''serbvn'\'' AND LOGIN = true AND SUPERUSER = true;'; \
+      until cqlsh -u alx -p serbvn -e 'CREATE KEYSPACE IF NOT EXISTS trainerz_platform WITH replication = { '\''class'\'': '\''NetworkTopologyStrategy'\'', '\''datacenter1'\'': 3 };' ; do echo 'Waiting for Scylla to start...' ; sleep 5 ; done"
+    ]
+  scylla-node2:
+    image: scylladb/scylla:latest
+    container_name: scylla-node2
+    environment:
+      - SCYLLA_DD='cassandra'
+      - SCYLLA_PASSWORD='serbvn'
+    volumes:
+      - scylla-data-node2:/var/lib/scylla
+    command: --seeds=scylla-node1 --reactor-backend=epoll
+  scylla-node3:
+    image: scylladb/scylla:latest
+    container_name: scylla-node3
+    environment:
+      - SCYLLA_DD='cassandra'
+      - SCYLLA_PASSWORD='serbvn'
+    volumes:
+      - scylla-data-node2:/var/lib/scylla
+    command: --seeds=scylla-node1 --reactor-backend=epoll
+
 
 volumes:
   postgres-data:
+  scylla-data-node1:
+    driver: local
+  scylla-data-node2:
+    driver: local
+  scylla-data-node3:
+    driver: local

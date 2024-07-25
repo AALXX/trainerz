@@ -4,6 +4,7 @@ import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import multer from 'multer';
 import utilFunctions from '../../util/utilFunctions';
+import { SCYconnect, SCYquery } from '../../config/scylla';
 
 const NAMESPACE = 'PaymentServiceManager';
 
@@ -74,7 +75,6 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
         if (subscription?.status === 'active') {
             const GetTierQueryString = `
-            
             SELECT 'BasicTier' AS Tier, PackageToken, PriceID, Price, Recurring, acces_videos, coaching_101, custom_program, Description FROM BasicTier 
             WHERE PriceID = $1 
             
@@ -104,7 +104,13 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
             await query(connection, InsertQuery, [tierData[0].packagetoken, UserPublicToken, tierData[0].tier, subscription.id]);
 
-            if (tierData[0].acces_videos) {
+            if (tierData[0].coaching_101) {
+                const QueryString = `SELECT OwnerToken FROM Packages WHERE PackageToken = $1;`;
+                const data = await query(connection, QueryString, [tierData[0].packagetoken], true);
+
+                const chatToken = utilFunctions.CreateToken();
+                await SCYconnect();
+                await SCYquery(`INSERT INTO Chats (id, chatToken, athlete_public_token, trainer_public_token, PackageToken) VALUES (uuid(), '${chatToken}', '${UserPublicToken}', '${data[0].ownertoken}', '${tierData[0].packagetoken}');`);
                 return res.status(200).json({
                     newChat: true,
                     error: false,
