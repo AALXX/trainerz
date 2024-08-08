@@ -194,6 +194,6 @@ func SocketConnectionHandler(clients ...interface{}) {
 	})
 
 	client.On("disconnect", func(...interface{}) {
-		log.Println("Client disconnected")
+		log.Println("Client disconnected ")
 	})
 }

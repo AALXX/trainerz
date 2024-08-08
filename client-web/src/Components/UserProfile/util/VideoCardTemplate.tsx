@@ -6,6 +6,7 @@ import { getCookie } from 'cookies-next'
 import { abbreviateNumber } from '@/Components/CommonUi/util/NumberAbrev'
 import { IVideoTemplate } from '../IAccountProfile'
 import TruncatedText from '@/Components/CommonUi/util/TruncateText'
+import ImgWithAuth from '@/Components/CommonUi/ImageWithAuth'
 
 export const VideoTemplate = (props: IVideoTemplate) => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -13,7 +14,7 @@ export const VideoTemplate = (props: IVideoTemplate) => {
     return (
         <Link href={`/watch?vt=${props.videotoken}`} className="relative h-0 w-full overflow-hidden pb-[60%]">
             <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full rounded-2xl object-cover" />
+                <ImgWithAuth src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full rounded-2xl object-cover" />
                 {isHovered && (
                     <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-between">
                         <div className="flex justify-end p-2">
@@ -23,7 +24,7 @@ export const VideoTemplate = (props: IVideoTemplate) => {
                                 </Link>
                             ) : null}
                         </div>
-                        <div className="flex h-14 items-center justify-between bg-black bg-opacity-60 p-2 rounded-b-2xl">
+                        <div className="flex h-14 items-center justify-between rounded-b-2xl bg-black bg-opacity-60 p-2">
                             <div>
                                 <TruncatedText className="text-white" characters={20} text={props.videotitle} />
                                 <hr />

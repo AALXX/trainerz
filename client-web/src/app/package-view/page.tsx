@@ -11,7 +11,7 @@ import { Elements } from '@stripe/react-stripe-js'
 import axios from 'axios'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 const PackageView = () => {
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
@@ -213,4 +213,13 @@ const PackageView = () => {
     )
 }
 
-export default PackageView
+const PackageViewPage = () => {
+    return (
+        <div className="flex h-full flex-col">
+            <Suspense fallback={<div>Loading video content...</div>}>
+                <PackageView />
+            </Suspense>
+        </div>
+    )
+}
+export default PackageViewPage

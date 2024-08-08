@@ -50,7 +50,7 @@ const CommentSection = (props: ICommentSection) => {
                 onMouseLeave={() => setHover(false)}
             >
                 <div className="flex w-full">
-                    <h1 className="self-center text-xl text-white">package: {props.PacakageName}</h1>
+                    <h1 className="self-center text-xl text-white">package: {props.PackageName}</h1>
                     <h1 className="ml-auto self-center text-xl text-white">{props.PackageRating}/5</h1>
                     <img src="/assets/AccountIcons/Star_Icon.svg" className="h-8 w-8 self-center" alt="Star Icon" />
                 </div>

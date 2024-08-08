@@ -4,47 +4,64 @@ import { Suspense } from 'react'
 import { VideoPlayerFallback, VideoPlayer } from '@/Components/VideoPlayer/VideoPlayer'
 import CommentSection from '@/Components/VideoPlayer/CommentSection/CommentSection'
 import { useSearchParams } from 'next/navigation'
-import { getCookie } from 'cookies-next'
-import { VideosList } from '@/Components/VideoPlayer/NextVideoList/VideosList'
-import useViodeoSubscriptionCheck from '@/hooks/useSubscriptionCheck'
+import useVideoSubscriptionCheck from '@/hooks/useSubscriptionCheck'
 
-/**
- * watch video page
- * @return {JSX}
- */
-export default function WatchVideoPage() {
-    const urlParams = useSearchParams() //* vt = Video Token
-
-    const { subscriptionCheck, isLoading, error, subscribed } = useViodeoSubscriptionCheck()
-
+const VideoContent = () => {
+    const urlParams = useSearchParams()
+    const { subscriptionCheck, isLoading, error, subscribed } = useVideoSubscriptionCheck()
     const [packageName, setPackageName] = useState<string>('')
     const [packageRating, setPackageRating] = useState<number>(0)
 
     useEffect(() => {
-        (async () => {
-            if (urlParams.get('vt')!= null) {
+        ;(async () => {
+            if (urlParams.get('vt') != null) {
                 await subscriptionCheck(urlParams.get('vt') as string)
             }
         })()
-    }, [])
-    
+    }, [urlParams, subscriptionCheck])
+
+    // if (isLoading) {
+    //     return <div>Loading...</div>
+    // }
+
+    if (error) {
+        return <div>Error: {error}</div>
+    }
+
+    if (!subscribed) {
+        return (
+            <div className="flex h-full flex-col">
+                <h1 className="mt-5 self-center text-white">Not Subscribed</h1>
+            </div>
+        )
+    }
+
     return (
-        <div className="flex h-full flex-col">
-            {subscribed ? (
-                <div className="flex h-full">
-                    <Suspense fallback={<VideoPlayerFallback />}>
-                        <VideoPlayer VideoToken={urlParams.get('vt')} setPackageName={setPackageName} setPackageRating={setPackageRating} />
-                    </Suspense>
-                    <CommentSection VideoToken={urlParams.get('vt')} PacakageName={packageName} PackageRating={packageRating} />
-                </div>
-            ) : (
-                <div className='flex h-full flex-col'>
-                    <h1 className="mt-5 text-white self-center">Not Subscribed</h1>
-                </div>
-            )}
-            {/* <div className=" w-full">
-                <VideosList />
-            </div> */}
+        <div className="flex h-full">
+            <Suspense fallback={<VideoPlayerFallback />}>
+                <VideoPlayer VideoToken={urlParams.get('vt')} setPackageName={setPackageName} setPackageRating={setPackageRating} />
+            </Suspense>
+            <Suspense
+                fallback={
+                    <div>
+                        <h1>Loading</h1>
+                    </div>
+                }
+            >
+                {/* <CommentSection VideoToken={urlParams.get('vt')} PackageName={packageName} PackageRating={packageRating} /> */}
+            </Suspense>
         </div>
     )
 }
+
+const WatchVideoPage = () => {
+    return (
+        <div className="flex h-full flex-col">
+            <Suspense fallback={<div>Loading video content...</div>}>
+                <VideoContent />
+            </Suspense>
+        </div>
+    )
+}
+
+export default WatchVideoPage

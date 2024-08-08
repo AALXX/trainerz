@@ -7,7 +7,7 @@ export interface IVideoPlayerProps {
 }
 
 export interface ICommentSection extends IVideoPlayerProps {
-    PacakageName: string
+    PackageName: string
     PackageRating: number
 }
 

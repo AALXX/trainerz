@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
 import SelectableCards from './util/ProfileTabCards'
 import OptionPicker from '../CommonUi/OptionPicker'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 // import { IGraphType } from './utils/VideoAnalytics/VideoAnalytics'
 // const VideoAnalytics = dynamic(() => import('./utils/VideoAnalytics/VideoAnalytics'), { ssr: false })
 
@@ -164,7 +165,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                             setIsHovered(false)
                         }}
                     >
-                        <img
+                        <ImgWithAuth
                             src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`}
                             alt={`Frame`}
                             className="mt-auto h-[9rem] w-[15rem] cursor-pointer border-2 border-solid border-white"
@@ -210,7 +211,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
         <>
             <div className="flex">
                 <div className="ml-10 mt-10 flex h-[13rem] w-[22rem] bg-[#ffffff]">
-                    <img src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`} className="h-full w-full" />
+                    <ImgWithAuth src={`${process.env.FILE_SERVER}/${videoOwnerToken}/${videoToken}/Thumbnail_image.jpg`} className="h-full w-full" />
                 </div>
 
                 <div className="m-auto mt-10">

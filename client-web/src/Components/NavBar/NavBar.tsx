@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -60,6 +61,10 @@ const NavBar = () => {
                         <Link href={'/account/upload'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
                             <button className="h-full w-full rounded-xl border-2 bg-none text-white">UPLOAD VIDEO</button>
                         </Link>
+
+                        <Link href={'/account/plans'} className="mt-[1rem] h-[2rem] w-[90%] self-center">
+                            <button className="h-full w-full rounded-xl border-2 bg-none text-white">WORKOUT PLANS</button>
+                        </Link>
                     </>
                 )}
 
@@ -98,7 +103,7 @@ const NavBar = () => {
                 </div> */}
             </form>
             <Link className="ml-auto mr-16 self-center" href={'/account'}>
-                <img className="z-10 h-12 w-12 rounded-full" src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
+                <ImgWithAuth className="z-10 h-12 w-12 rounded-full" src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png?cache=none`} alt="Picture of the author" />
             </Link>
         </div>
     )

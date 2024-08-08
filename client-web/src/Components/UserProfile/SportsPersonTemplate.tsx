@@ -7,6 +7,7 @@ import AboutUserTab from './util/AboutUserTab'
 import SelectableCards from './util/ProfileTabCards'
 import useOwnerCheck from '@/hooks/useAccountOwnerCheck'
 import { getCookie } from 'cookies-next'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 /**
  * Renders a template for a user's athlete profile.
@@ -70,7 +71,7 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
             <div className="flex h-[10rem] w-full flex-grow-0 flex-col">
                 <div className="flex h-48 w-48 flex-col self-center">
                     <div className="relative z-10 h-28 w-40 self-center">
-                        <img
+                        <ImgWithAuth
                             className="m-auto flex h-28 w-28 self-center rounded-full"
                             onMouseEnter={() => {
                                 setIsAccIconHovered(true)

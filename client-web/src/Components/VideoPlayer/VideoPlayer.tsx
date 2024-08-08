@@ -6,6 +6,7 @@ import { getCookie } from 'cookies-next'
 import PlayerOverlay from './PlayerOverlay'
 import axios from 'axios'
 import { IVideoPlayerProps } from './CommentSection/IcommentSection'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 /**
  * Main Video PLayer
@@ -187,7 +188,7 @@ const VideoPlayer = (props: IVideoPlayerProps) => {
 
             <div className="mt-[.5vh] flex h-[11vh] w-[66.8vw] rounded-bl-xl bg-[#00000080]">
                 <Link className="ml-4 self-center" href={`/user?id=${VideoData.OwnerToken}`}>
-                    <img className="z-10 h-14 w-14 rounded-full" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
+                    <ImgWithAuth className="z-10 h-14 w-14 rounded-full" src={`${process.env.FILE_SERVER}/${VideoData.OwnerToken}/Main_icon.png?cache=none`} width={50} height={50} alt="Picture of the author" />
                 </Link>
                 <div className="ml-4 flex flex-col self-center">
                     <h1 className="mt-2 text-lg text-white">{VideoData.VideoTitle}</h1>

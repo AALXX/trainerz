@@ -4,6 +4,7 @@ import Link from 'next/link'
 import TruncatedText from '../CommonUi/util/TruncateText'
 import axios from 'axios'
 import { getCookie } from 'cookies-next'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 const SubscribedPackageTemplate = (props: ISubscriptions) => {
     const handleCancelClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -25,7 +26,7 @@ const SubscribedPackageTemplate = (props: ISubscriptions) => {
     return (
         <Link href={`/package-view?t=${props.packagetoken}`} className="relative h-0 w-full overflow-hidden pb-[60%]">
             <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white">
-                <img src={`${process.env.FILE_SERVER}/${props.ownertoken}/Package_${props.packagetoken}/Photo_1.jpg?cache=none`} className="h-full w-full rounded-2xl object-cover" />
+                <ImgWithAuth src={`${process.env.FILE_SERVER}/${props.ownertoken}/Package_${props.packagetoken}/Photo_1.jpg?cache=none`} className="h-full w-full rounded-2xl object-cover" />
                 <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-between">
                     <div className="flex justify-end p-2">
                         <button className="z-20 rounded-xl bg-red-800 p-2 text-white" onClick={handleCancelClick}>
@@ -33,7 +34,7 @@ const SubscribedPackageTemplate = (props: ISubscriptions) => {
                         </button>
                     </div>
                     <div className="flex h-16 items-center rounded-b-2xl bg-black bg-opacity-60 p-2">
-                        <img className="flex h-11 w-11 rounded-full" src={`${process.env.FILE_SERVER}/${props.ownertoken}/Main_icon.png?cache=none`} alt="Picture of the author" />
+                        <ImgWithAuth className="flex h-11 w-11 rounded-full" src={`${process.env.FILE_SERVER}/${props.ownertoken}/Main_icon.png?cache=none`} alt="Picture of the author" />
                         <div className="ml-2 flex h-full w-[80%] flex-col">
                             <div className="flex">
                                 <TruncatedText className="text-white" characters={20} text={props.packagename} />

@@ -1,61 +1,45 @@
+import fs from 'fs';
+import path from 'path';
+
+const LOG_FILE_PATH = path.join(process.cwd(), '/log/api.log');
+
 const getTimeStamp = (): string => {
-    return new Date().toString();
+    return new Date().toISOString();
 };
 
-/**
- * Logs an info
- * @param {string} namespace
- * @param {string} message
- * @param {any} object
- */
+const writeToFile = (logMessage: string) => {
+    fs.appendFile(LOG_FILE_PATH, logMessage + '\n', (err) => {
+        if (err) {
+            console.error('Failed to write to log file:', err);
+        }
+    });
+};
+
+const formatLogMessage = (level: string, namespace: string, message: string, object?: any): string => {
+    const baseMessage = `[${getTimeStamp()}] [${level}] [${namespace}] ${message}`;
+    return object ? `${baseMessage} ${JSON.stringify(object)}` : baseMessage;
+};
+
+const log = (level: string, namespace: string, message: string, object?: any) => {
+    const logMessage = formatLogMessage(level, namespace, message, object);
+    console[level.toLowerCase() as 'log' | 'warn' | 'error' | 'debug'](logMessage);
+    writeToFile(logMessage);
+};
+
 const info = (namespace: string, message: string, object?: any) => {
-    if (object) {
-        console.log(`[${getTimeStamp()}] [INFO] [${namespace}] ${message}`, object);
-    } else {
-        console.log(`[${getTimeStamp()}] [INFO] [${namespace}] ${message}`);
-    }
+    log('INFO', namespace, message, object);
 };
 
-/**
- * Logs an warn
- * @param {string} namespace
- * @param {string} message
- * @param {any} object
- */
 const warn = (namespace: string, message: string, object?: any) => {
-    if (object) {
-        console.warn(`[${getTimeStamp()}] [WARN] [${namespace}] ${message}`, object);
-    } else {
-        console.warn(`[${getTimeStamp()}] [WARN] [${namespace}] ${message}`);
-    }
+    log('WARN', namespace, message, object);
 };
 
-/**
- * Logs an error
- * @param {string} namespace
- * @param {string} message
- * @param {any} object
- */
 const error = (namespace: string, message: string, object?: any) => {
-    if (object) {
-        console.error(`[${getTimeStamp()}] [ERROR] [${namespace}] ${message}`, object);
-    } else {
-        console.error(`[${getTimeStamp()}] [ERROR] [${namespace}] ${message}`);
-    }
+    log('ERROR', namespace, message, object);
 };
 
-/**
- * Logs an debug
- * @param {string} namespace
- * @param {string} message
- * @param {any} object
- */
 const debug = (namespace: string, message: string, object?: any) => {
-    if (object) {
-        console.debug(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`, object);
-    } else {
-        console.debug(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`);
-    }
+    log('DEBUG', namespace, message, object);
 };
 
 export default {

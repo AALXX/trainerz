@@ -3,7 +3,6 @@ import multer from 'multer';
 import fs from 'fs';
 import FFmpeg from 'fluent-ffmpeg';
 import logging from '../../config/logging';
-import UtilFunc from '../../util/utilFunctions';
 import utilFunctions from '../../util/utilFunctions';
 import { validationResult } from 'express-validator';
 import { connect, CustomRequest, query } from '../../config/postgresql';
@@ -84,7 +83,7 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
             return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
         }
 
-        const VideoToken = UtilFunc.CreateToken();
+        const VideoToken = utilFunctions.CreateToken();
 
         fs.mkdir(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/${VideoToken}`, (err) => {
             if (err) {
@@ -284,7 +283,7 @@ const GetCreatorVideoData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
-    const UserPublicToken = await UtilFunc.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
+    const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
 
     const GetVideoDataQueryString = `SELECT 
         v.VideoTitle, 
@@ -359,7 +358,7 @@ const UpdateCreatorVideoData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
     try {
-        const UserPublicToken = await UtilFunc.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
 
         const connection = await connect(req.pool!);
 

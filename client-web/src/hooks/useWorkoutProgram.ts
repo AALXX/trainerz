@@ -7,7 +7,7 @@ interface SubscriptionCheckResponse {
     subscribed: boolean
 }
 
-const useVideoSubscriptionCheck = () => {
+const WorkoutProgramCheck = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [subscribed, setSubscribed] = useState<boolean | null>(null)
@@ -53,4 +53,4 @@ const useVideoSubscriptionCheck = () => {
     return { subscriptionCheck, isLoading, error, subscribed }
 }
 
-export default useVideoSubscriptionCheck
+export default WorkoutProgramCheck

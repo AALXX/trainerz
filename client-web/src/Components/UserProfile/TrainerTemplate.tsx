@@ -12,6 +12,7 @@ import AboutUserTab from './util/AboutUserTab'
 import { IAccountPackages } from '../Packages/IPackages'
 import PackageCardTemplate from '@/Components/Packages/PackageCardTemplate'
 import useOwnerCheck from '@/hooks/useAccountOwnerCheck'
+import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 /**
  * Renders a template for a user's trainer profile.`
@@ -110,20 +111,20 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                     <div className="flex h-full w-[90%] self-center">
                         <div className="flex h-32 w-80 self-center">
                             <div className="relative z-10 h-24 w-40 self-center">
-                                <img
-                                    className="m-auto flex h-full w-full self-center rounded-full"
-                                    onMouseEnter={() => {
-                                        setIsAccIconHovered(true)
-                                    }}
+                                <ImgWithAuth
+                                    className="m-auto flex h-24 w-24 self-center rounded-full"
                                     onMouseLeave={() => {
                                         setIsAccIconHovered(false)
                                     }}
                                     src={`${process.env.FILE_SERVER}/${props.userpublictoken}/Main_icon.png?cache=none`}
                                     alt="Picture of the author"
+                                    onMouseEnter={() => {
+                                        setIsAccIconHovered(true)
+                                    }}
                                 />
                                 {isAccIconHovered ? (
                                     <div
-                                        className="absolute inset-0 m-auto flex h-full w-full cursor-pointer rounded-full bg-black bg-opacity-80"
+                                        className="absolute inset-0 m-auto flex h-28 w-28 cursor-pointer rounded-full bg-black bg-opacity-80"
                                         onMouseEnter={() => {
                                             setIsAccIconHovered(true)
                                         }}

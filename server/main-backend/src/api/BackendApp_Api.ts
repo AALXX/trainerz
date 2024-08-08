@@ -6,6 +6,7 @@ import UserAccountManagerRoutes from '../routes/UserAccountManager/UserAccountMa
 import VideosManagerRoutes from '../routes/VideosManager/VideosManagerRoutes';
 import PackageManagerRoutes from '../routes/PackageRoutes/PackageRoutes';
 import PaymentManagerRoutes from '../routes/PaymentRoutes/PaymentRoutes';
+import WorkputProgramsManagerRoutes from '../routes/WorkoutProgramsManagerRoutes/WorkoutProgramsManagerRoutes';
 
 //* Configs
 import config from '../config/config';
@@ -39,6 +40,7 @@ router.use((req: any, res: any, next: NextFunction) => {
 //* Routes
 router.use('/api/user-account-manager/', UserAccountManagerRoutes);
 router.use('/api/videos-manager/', VideosManagerRoutes);
+router.use('/api/programs-manager/', WorkputProgramsManagerRoutes);
 router.use('/api/package-manager/', PackageManagerRoutes);
 router.use('/api/payment-manager/', PaymentManagerRoutes);
 
