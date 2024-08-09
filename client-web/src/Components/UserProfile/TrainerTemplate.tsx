@@ -104,9 +104,9 @@ const TrainerTemplate = (props: IUserPrivateData) => {
 
     return (
         <>
-            {isLoading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>}
             <div className="mt-[6rem] flex h-full w-full flex-col">
+                {isLoading && <h1 className="self-center text-lg text-white">Loading</h1>}
+                {error && <h1 className="self-center text-lg text-white">Error: {error}</h1>}
                 <div className="flex h-[6rem] w-full flex-grow-0 flex-col">
                     <div className="flex h-full w-[90%] self-center">
                         <div className="flex h-32 w-80 self-center">

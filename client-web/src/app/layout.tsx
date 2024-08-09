@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Meta from '@/Meta/Meta'
 import NavBar from '@/Components/NavBar/NavBar'
+import StoreProvider from './StoreProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +16,10 @@ export default function RootLayout({
         <html lang="en">
             <Meta title="Trainerz" description="Trainerz connects athlets with the best trainerz" keywords="fitness gym " />
             <body className={inter.className}>
-                <NavBar />
-                {children}
+                <StoreProvider>
+                    <NavBar />
+                    {children}
+                </StoreProvider>
             </body>
         </html>
     )

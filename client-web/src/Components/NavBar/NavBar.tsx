@@ -3,20 +3,28 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
 import ImgWithAuth from '../CommonUi/ImageWithAuth'
+import { useDispatch, useSelector } from 'react-redux'
+import { setAccountType } from '@/lib/redux/accountSlice'
+import { RootState } from '@/lib/redux/store'
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [searchInput, setSearchInput] = useState<string>('')
-    const [accountType, setAccountType] = useState<string>('SportsPerson')
+    // const [accountType, setAccountType] = useState<string>('SportsPerson')
+    const accountType = useSelector((state: RootState) => state.account.accountType)
+    
+    const dispatch = useDispatch()
 
     const postSearch = () => {
         window.location.href = `http://localhost:3000/search?q=${searchInput}`
     }
 
     useEffect(() => {
-        // Assuming getCookie is a function that retrieves the value of a cookie by name
-        const accountTypeFromCookie = getCookie('accountType') as string
-        setAccountType(accountTypeFromCookie )
+
+        const accountType = getCookie('accountType') as 'Trainer' | 'Sportsperson' | null
+        if (accountType) {
+            dispatch(setAccountType(accountType))
+        }
     }, [])
 
     return (

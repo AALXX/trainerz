@@ -1,5 +1,6 @@
 'use client'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import { getCookie } from 'cookies-next'
 import { useSearchParams } from 'next/navigation'
 import React, { Suspense, useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
@@ -7,49 +8,64 @@ import * as XLSX from 'xlsx'
 const PlanView = () => {
     const urlParams = useSearchParams()
     const [spreadsheetData, setSpreadsheetData] = useState<any>(null)
+    const [sheetNames, setSheetNames] = useState<string[]>([])
+    const [selectedSheet, setSelectedSheet] = useState<string>('')
     const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
+    const [excelFile, setExcelFile] = useState<ArrayBuffer | null>(null) // Store the loaded Excel file
 
     useEffect(() => {
         const loadSpreadsheet = async () => {
-            // const spreadsheetUrl = urlParams.get('t')
-            const spreadsheetUrl =
-                'http://192.168.72.81:5600/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTc5NjExNTd9.sWNypbTJ8swm8T4gx1UVzjBr35KmdZ5eeW_E6CfSTnY/Program_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjIxODE4NDR9.ckBFoxJ8AMOdLvHpLPXmZmoCCWY1mkZlH9XkyEn_a3Y/testProgram.xlsx'
-            if (spreadsheetUrl) {
-                setLoading(true)
-                try {
-                    // Fetch the spreadsheet file
-                    const response = await axios.get(spreadsheetUrl, {
-                        responseType: 'arraybuffer',
-                        auth: {
-                            username: `${process.env.FILE_SERVER_USERNAME}`, // Replace with actual username
-                            password: `${process.env.FILE_SERVER_PASSWORD}` // Replace with actual password
-                        },
-                        withCredentials: true
-                    })
+            setLoading(true)
+            try {
+                // Fetch the spreadsheet file
+                const response = await axios.get(`${process.env.SERVER_BACKEND}/programs-manager/get-program-data/${getCookie('userToken')}/${urlParams.get('t')}`, {
+                    responseType: 'arraybuffer'
+                })
 
-                    // Parse the spreadsheet
-                    const workbook = XLSX.read(new Uint8Array(response.data), { type: 'array' })
+                // Store the file data
+                const fileData = response.data
+                setExcelFile(fileData)
 
-                    // Assume we want to read the first sheet
-                    const firstSheetName = workbook.SheetNames[0]
-                    const worksheet = workbook.Sheets[firstSheetName]
+                // Parse the spreadsheet
+                const workbook = XLSX.read(new Uint8Array(fileData), { type: 'array' })
 
-                    // Convert the worksheet to JSON
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet)
+                // Get all sheet names and set them to state
+                const sheetNames = workbook.SheetNames
+                setSheetNames(sheetNames)
 
-                    setSpreadsheetData(jsonData)
-                    setLoading(false)
-                } catch (err) {
-                    console.error('Error loading spreadsheet:', err)
-                    setError('Failed to load spreadsheet')
-                    setLoading(false)
-                }
+                // Set the first sheet as the selected sheet initially
+                const firstSheetName = sheetNames[0]
+                setSelectedSheet(firstSheetName)
+
+                // Convert the first sheet to JSON
+                const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName])
+                setSpreadsheetData(jsonData)
+
+                setLoading(false)
+            } catch (err: any) {
+                const decodedString = JSON.parse(new TextDecoder('utf-8').decode(new Uint8Array(err.response.data)))
+
+                setError(decodedString.errormsg)
+                setLoading(false)
             }
         }
 
         loadSpreadsheet()
     }, [urlParams])
+
+    const handleSheetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedSheet = e.target.value
+        setSelectedSheet(selectedSheet)
+
+        // Load data for the selected sheet
+        if (excelFile) {
+            const workbook = XLSX.read(new Uint8Array(excelFile), { type: 'array' }) // re-read the workbook
+            const worksheet = workbook.Sheets[selectedSheet]
+            const jsonData = XLSX.utils.sheet_to_json(worksheet)
+            setSpreadsheetData(jsonData)
+        }
+    }
 
     if (loading) {
         return <div>Loading Plan...</div>
@@ -65,15 +81,33 @@ const PlanView = () => {
 
     return (
         <div className="flex h-full flex-col">
+            <div className="p-4">
+                <select value={selectedSheet} onChange={handleSheetChange} className="rounded bg-[#474084] px-4 py-2 text-white transition duration-300 hover:bg-[#322e5e]">
+                    {sheetNames.map(sheetName => (
+                        <option key={sheetName} value={sheetName}>
+                            {sheetName}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div className="h-[80vh] flex-grow overflow-y-scroll p-4">
                 {spreadsheetData.length > 0 ? (
                     <div className="overflow-hidden rounded-lg bg-white shadow-md">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <tbody className="divide-y divide-gray-200 bg-white">
+                        <table className="min-w-full border-collapse">
+                            <thead className="sticky top-0 z-10 bg-gray-200">
+                                <tr>
+                                    {Object.keys(spreadsheetData[0]).map(key => (
+                                        <th key={key} className="border border-gray-300 px-2 py-1 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
+                                            {key}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {spreadsheetData.map((row: any, rowIndex: number) => (
                                     <tr key={rowIndex}>
                                         {Object.entries(row).map(([key, value], colIndex) => (
-                                            <td key={colIndex} className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                            <td key={colIndex} className="border border-gray-300 bg-white p-2 text-sm hover:bg-gray-100">
                                                 <div>{value as React.ReactNode}</div>
                                             </td>
                                         ))}

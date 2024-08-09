@@ -1,5 +1,6 @@
 // components/PhotoSlider.tsx
 import React, { useState } from 'react'
+import ImageWithAuth from './ImageWithAuth'
 
 interface PhotoSliderProps {
     images: string[]
@@ -22,7 +23,7 @@ const PhotoSlider: React.FC<PhotoSliderProps> = ({ images }) => {
                 <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
                     {images.map((image, index) => (
                         <div key={index} className="w-full flex-shrink-0">
-                            <img src={image} alt={`Slide ${index}`} className="h-[25rem] w-full object-cover" />
+                            <ImageWithAuth src={image} alt={`Slide ${index}`} className="h-[25rem] w-full object-cover" />
                         </div>
                     ))}
                 </div>

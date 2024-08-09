@@ -1,6 +1,5 @@
 'use client'
 import OptionPicker from '@/Components/CommonUi/OptionPicker'
-import PopupCanvas from '@/Components/CommonUi/util/PopupCanvas'
 import CreateTierTemplate from '@/Components/Packages/CreateTierTemplate'
 import AddPhotoZone from '@/Components/Packages/util/addPhotoZone'
 import SelectableCards from '@/Components/UserProfile/util/ProfileTabCards'

@@ -15,7 +15,9 @@ const ChatArea = (props: IChatArea) => {
 
         props.socket.on('messages', (messages: IChatMessage[]) => {
             setChatMessages([])
-            setChatMessages(prevMessages => [...prevMessages, ...messages])
+            if (messages != null) {
+                setChatMessages(prevMessages => [...prevMessages, ...messages])
+            }
         })
 
         return () => {
@@ -39,7 +41,7 @@ const ChatArea = (props: IChatArea) => {
 
     return (
         <div className="flex h-[90vh] w-full flex-col">
-            <div className=" m-auto h-[85%] w-[90%] flex-grow-0 self-center overflow-y-scroll">
+            <div className="m-auto h-[85%] w-[90%] flex-grow-0 self-center overflow-y-scroll">
                 {chatMessages.map((message: IChatMessage, index: number) => (
                     <ChatMessage key={index} chatToken={message.chatToken} ownerToken={message.ownerToken} message={message.message} />
                 ))}

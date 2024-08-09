@@ -222,6 +222,18 @@ const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
             });
         }
 
+        const OwnerQueryString = `SELECT ownertoken FROM videos WHERE videotoken = $1;`;
+        const ownerResp = await query(connection, OwnerQueryString, [req.params.VideoToken], true);
+
+        if (Object.keys(ownerResp).length >= 0 && ownerResp[0].ownertoken === UserPublicToken) {
+            connection.release();
+
+            return res.status(202).json({
+                error: false,
+                subscribed: true,
+            });
+        }
+
         const QueryString = `SELECT s.UserpublicToken, s.Tier, s.PackageToken
 FROM subscriptions s
 JOIN videos v ON s.PackageToken = v.PackageToken
@@ -229,12 +241,13 @@ WHERE v.VideoToken = $1 AND s.userpublictoken = $2;`;
         const resp = await query(connection, QueryString, [req.params.VideoToken, UserPublicToken], true);
 
         if (resp.length == 0) {
+            connection.release();
             return res.status(202).json({
                 error: false,
                 subscribed: false,
             });
         }
-        
+
         const GetVideoAccesQuery = `SELECT acces_videos FROM ${resp[0].tier} WHERE PackageToken = $1; `;
 
         const videoAccessData = await query(connection, GetVideoAccesQuery, [resp[0].packagetoken]);

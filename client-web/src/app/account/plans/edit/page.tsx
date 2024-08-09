@@ -31,10 +31,10 @@ const EditWorkoutPlan = () => {
                 setSheetNames(workbook.SheetNames)
                 setSheetIndex(0)
                 setExcelData(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]))
+                setLoading(false)
             }
             reader.readAsArrayBuffer(e.target.files[0])
             setTypeError(false)
-            setLoading(false)
         } else {
             setTypeError(true)
         }
@@ -127,10 +127,10 @@ const EditWorkoutPlan = () => {
 
     const renderTableHeaders = useMemo(() => {
         return excelData.length > 0 ? (
-            <thead className="bg-gray-50">
+            <thead className="sticky top-0 z-10 bg-gray-200">
                 <tr>
                     {Object.keys(excelData[0]).map(key => (
-                        <th key={key} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th key={key} className="border border-gray-300 px-2 py-1 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
                             {key}
                         </th>
                     ))}
@@ -141,15 +141,19 @@ const EditWorkoutPlan = () => {
 
     const renderTableBody = useMemo(() => {
         return excelData.length > 0 ? (
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody>
                 {excelData.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                         {Object.entries(row).map(([key, value], colIndex) => (
-                            <td key={colIndex} className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            <td
+                                key={colIndex}
+                                className={`border border-gray-300 p-2 text-sm ${editCell?.row === rowIndex && editCell?.col === key ? 'bg-yellow-100' : 'bg-white hover:bg-gray-100'}`}
+                                onClick={() => handleCellEdit(rowIndex, key, value)}
+                            >
                                 {editCell?.row === rowIndex && editCell?.col === key ? (
-                                    <input value={editValue} onChange={e => setEditValue(e.target.value)} onBlur={handleSaveEdit} autoFocus className="w-full border-b border-blue-500 focus:outline-none" />
+                                    <input value={editValue} onChange={e => setEditValue(e.target.value)} onBlur={handleSaveEdit} autoFocus className="w-full border-none bg-transparent focus:outline-none" />
                                 ) : (
-                                    <div onClick={() => handleCellEdit(rowIndex, key, value)}>{value as React.ReactNode}</div>
+                                    <div>{value as React.ReactNode}</div>
                                 )}
                             </td>
                         ))}
@@ -203,7 +207,7 @@ const EditWorkoutPlan = () => {
             <div className="h-[80vh] flex-grow overflow-y-scroll p-4">
                 {excelData.length > 0 ? (
                     <div className="overflow-hidden rounded-lg bg-white shadow-md">
-                        <table className="min-w-full divide-y divide-gray-200">
+                        <table className="min-w-full border-collapse">
                             {renderTableHeaders}
                             {renderTableBody}
                         </table>

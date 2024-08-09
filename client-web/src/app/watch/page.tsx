@@ -48,7 +48,7 @@ const VideoContent = () => {
                     </div>
                 }
             >
-                {/* <CommentSection VideoToken={urlParams.get('vt')} PackageName={packageName} PackageRating={packageRating} /> */}
+                <CommentSection VideoToken={urlParams.get('vt')} PackageName={packageName} PackageRating={packageRating} />
             </Suspense>
         </div>
     )

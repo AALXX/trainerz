@@ -19,7 +19,6 @@ const WorkoutPlans = () => {
     return (
         <div className="h-full flex flex-col">
             <Link href={'/account/plans/edit'}>Create</Link>
-
             <>
                 <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {programs.map((program: IWorkoutProgram, index: number) => (

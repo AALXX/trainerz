@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { setCookie, getCookie, deleteCookie } from 'cookies-next'
+import { setAccountType } from '@/lib/redux/accountSlice'
+import { useDispatch } from 'react-redux'
 
 const useAccountRegister = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -72,6 +74,7 @@ const useAccountRegister = () => {
 const useAccountLogin = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const dispatch = useDispatch()
 
     const login = async (userEmail: string, password: string): Promise<boolean> => {
         setIsLoading(true)
@@ -87,6 +90,7 @@ const useAccountLogin = () => {
                 setCookie('userToken', res.data.userPrivateToken, { maxAge: 60 * 60 * 24 })
                 setCookie('userPublicToken', res.data.userPublicToken, { maxAge: 60 * 60 * 24 })
                 setCookie('accountType', res.data.accountType, { maxAge: 60 * 60 * 24 })
+                dispatch(setAccountType(res.data.accountType))
                 return true
             }
 
@@ -111,6 +115,8 @@ const useAccountLogout = () => {
         try {
             deleteCookie('userToken')
             deleteCookie('userPublicToken')
+            deleteCookie('accountType')
+
             window.location.reload()
         } catch (e) {
             console.log(`Logout error: ${e}`)
