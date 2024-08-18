@@ -104,7 +104,7 @@ const ChatArea = (props: IChatArea) => {
         <div className="flex h-[90vh] w-full flex-col">
             <div className="m-auto h-[85%] w-[90%] flex-grow-0 self-center overflow-y-scroll">
                 {chatMessages
-                    .sort((a, b) => new Date(a.sentat).getTime() - new Date(b.sentat).getTime()) // Sort by sentAt
+                    .sort((a, b) => new Date(a.sentat).getTime() - new Date(b.sentat).getTime())
                     .map((message: TChatMessage, index: number) => (
                         <ChatMessage
                             id={message.id}
@@ -128,7 +128,7 @@ const ChatArea = (props: IChatArea) => {
                 >
                     <div className="flex h-full w-full flex-col">
                         <h1 className="self-center text-2xl text-white">Select Workout</h1>
-                        <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 ">
+                        <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
                             {programs.map((program: IWorkoutProgramButton, index: number) => (
                                 <WorkoutPlanButton programname={program.programname} programtoken={program.programtoken} sendAttachment={e => SendAttachment(e, program.programtoken, program.programname)} key={index} />
                             ))}
@@ -136,30 +136,33 @@ const ChatArea = (props: IChatArea) => {
                     </div>
                 </PopupCanvas>
             )}
-            <form className="mb-2 mt-auto flex h-20 w-full" onSubmit={SendMessage}>
-                <div className="m-auto flex h-14 w-[90%] rounded-3xl bg-[#00000080]">
-                    <input
-                        className="h-full w-full rounded-3xl border-none bg-transparent indent-3 text-white"
-                        maxLength={256}
-                        value={message}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-                        placeholder="Type your message..."
-                    />
-                    <button
-                        className="mr-2 h-full"
-                        type="button"
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            e.preventDefault()
-                            setCheckoutPoUp(true)
-                        }}
-                    >
-                        <img src="/assets/Add_Icon.svg" className="m-auto h-[90%] w-[90%]" />
-                    </button>
-                    <button className="mr-2 h-full" type="submit">
-                        <img src="/assets/CommentsIcons/SendComment_icon.svg" className="m-auto h-[90%] w-[90%]" />
-                    </button>
-                </div>
-            </form>
+
+            {props.chattoken != '' && (
+                <form className="mb-2 mt-auto flex h-20 w-full" onSubmit={SendMessage}>
+                    <div className="m-auto flex h-14 w-[90%] rounded-3xl bg-[#00000080]">
+                        <input
+                            className="h-full w-full rounded-3xl border-none bg-transparent indent-3 text-white"
+                            maxLength={256}
+                            value={message}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+                            placeholder="Type your message..."
+                        />
+                        <button
+                            className="mr-2 h-full"
+                            type="button"
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.preventDefault()
+                                setCheckoutPoUp(true)
+                            }}
+                        >
+                            <img src="/assets/Add_Icon.svg" className="m-auto h-[90%] w-[90%]" />
+                        </button>
+                        <button className="mr-2 h-full" type="submit">
+                            <img src="/assets/CommentsIcons/SendComment_icon.svg" className="m-auto h-[90%] w-[90%]" />
+                        </button>
+                    </div>
+                </form>
+            )}
         </div>
     )
 }

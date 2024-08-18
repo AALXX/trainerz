@@ -132,6 +132,7 @@ const useAccountStatus = () => {
     const checkStatus = async () => {
         const userToken = getCookie('userToken')
         setIsLoggedIn(userToken !== undefined)
+        return userToken !== undefined
     }
 
     return { isLoggedIn, checkStatus }

@@ -46,7 +46,9 @@ const Account = () => {
          * Get user profile Data
          */
         ;(async () => {
-            await checkStatus()
+            if ((await checkStatus()) == false) {
+                return
+            }
 
             const profileData = await getProfileData(userToken)
             setUserData(profileData.userData)

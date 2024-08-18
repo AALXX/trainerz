@@ -211,3 +211,43 @@
 [2024-08-18T13:33:05.818Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
 [2024-08-18T13:33:26.596Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
 [2024-08-18T13:33:26.604Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T15:22:31.687Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T15:22:31.688Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T15:22:31.699Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T15:22:31.700Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T17:21:58.336Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T17:23:55.533Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T17:30:41.010Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T17:31:51.684Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T17:32:57.948Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T17:39:59.153Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T20:20:11.986Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:20:11.987Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:20:12.000Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:20:12.000Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:04.860Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T20:26:16.544Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:16.545Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:16.560Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:16.560Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:20.949Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:20.950Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:20.960Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:20.960Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:21.904Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:21.905Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:21.912Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:21.912Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:22.733Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:22.734Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:22.740Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:22.740Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:23.517Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:23.517Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:23.528Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:23.529Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:33.104Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T20:26:33.320Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:33.320Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:33.346Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
+[2024-08-18T20:26:33.345Z] [ERROR] [PG_QUERY_FUNC] relation "videos_category_alloc" does not exist
