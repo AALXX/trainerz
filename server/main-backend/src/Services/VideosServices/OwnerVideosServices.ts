@@ -142,9 +142,8 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
 const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, videoToken: string, VideoTitle: string, PackageToken: number) => {
     const today = new Date().toISOString().slice(0, 10);
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -154,6 +153,7 @@ const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, vi
         await query(connection, SendVidsDatasSqlQuery, [VideoTitle, today, videoToken, userPublicToken, PackageToken]);
         return true;
     } catch (error) {
+        connection?.release();
         return false;
     }
 };
@@ -246,9 +246,8 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
     LEFT JOIN packages AS p ON v.PackageToken = p.PackageToken
     WHERE v.OwnerToken = $1;`;
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -259,6 +258,7 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
             VideosData: VideosData,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
         return res.status(500).json({
             message: error.message,
@@ -305,9 +305,8 @@ const GetCreatorVideoData = async (req: CustomRequest, res: Response) => {
         v.VideoToken = $1 
     AND 
         v.OwnerToken = $2;`;
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -334,6 +333,7 @@ const GetCreatorVideoData = async (req: CustomRequest, res: Response) => {
             Views: Videodata[0].views,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
         return res.status(500).json({
             message: error.message,
@@ -357,10 +357,9 @@ const UpdateCreatorVideoData = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
+    const connection = await connect(req.pool!);
     try {
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
-
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return false;
@@ -393,7 +392,7 @@ const UpdateCreatorVideoData = async (req: CustomRequest, res: Response) => {
         });
     } catch (error: any) {
         logging.error(NAMESPACE, error.message);
-
+        connection?.release();
         return res.status(500).json({
             message: error.message,
             error: true,

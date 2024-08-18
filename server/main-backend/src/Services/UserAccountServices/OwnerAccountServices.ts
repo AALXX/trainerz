@@ -60,6 +60,8 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
         return res.status(400).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
+
     try {
         const { password, userEmail, userName, description, userBirthDate, locationLat, locationLon, sport, phoneNumber, accountType } = req.body;
         const hashedpwd = await utilFunctions.HashPassword(password);
@@ -67,8 +69,6 @@ const RegisterUser = async (req: CustomRequest, res: Response) => {
         const jwtSecretKey = `${process.env.ACCOUNT_SECRET}${hashedpwd}${userEmail}`;
         const userPrivateToken = jwt.sign({}, jwtSecretKey);
         const userPublicToken = jwt.sign({}, `${process.env.ACCOUNT_REGISTER_SECRET}`);
-
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             logging.error('REGISTER_USER_FUNC', 'Could not connect to database');
@@ -136,6 +136,7 @@ Trainerz Team`,
             accountType: accountType,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('REGISTER_USER_FUNC', error.message);
         return res.status(500).json({
             error: true,
@@ -160,9 +161,8 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return { error: true };
         }
@@ -200,6 +200,7 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             }
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(202).json({
@@ -222,6 +223,8 @@ const DeleteUserAccount = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
+
     try {
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.userToken);
         if (UserPublicToken == null) {
@@ -229,7 +232,6 @@ const DeleteUserAccount = async (req: CustomRequest, res: Response) => {
                 error: true,
             });
         }
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return res.status(500).json({ error: true, message: 'Database connection failed' });
@@ -263,6 +265,7 @@ const DeleteUserAccount = async (req: CustomRequest, res: Response) => {
             }
         }
     } catch (error: any) {
+        connection?.release();
         logging.error('DELETE_USER_ACCOUNT_FUNC', error.message);
         res.status(202).json({ error: true, errmsg: error.message });
     }
@@ -284,9 +287,8 @@ const GetUserAccountData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return { error: true };
         }
@@ -327,6 +329,7 @@ const GetUserAccountData = async (req: CustomRequest, res: Response) => {
             userData: data[0],
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(202).json({
@@ -353,9 +356,8 @@ const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return { error: true };
         }
@@ -382,6 +384,7 @@ const CheckAccountOwner = async (req: CustomRequest, res: Response) => {
             isOwner: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(202).json({
@@ -407,9 +410,8 @@ const ChangeUserData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return { error: true };
         }
@@ -440,6 +442,7 @@ const ChangeUserData = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(202).json({

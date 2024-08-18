@@ -228,6 +228,7 @@ const CreatePackage = async (req: CustomRequest, res: Response) => {
                 });
             } catch (err: any) {
                 await connection.query('ROLLBACK');
+                connection.release();
                 logging.error('CREATE_PACKAGE_FUNC', err);
                 return res.status(200).json({
                     error: false,
@@ -277,9 +278,8 @@ const GetPackages = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return res.status(500).json({
                 error: true,
@@ -294,6 +294,7 @@ const GetPackages = async (req: CustomRequest, res: Response) => {
             packagesData: data,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(500).json({
@@ -312,8 +313,9 @@ const UpdatePackage = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
+
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
         if (connection == null) {
             return res.status(500).json({
                 error: true,
@@ -355,14 +357,7 @@ const UpdatePackage = async (req: CustomRequest, res: Response) => {
         await query(
             connection,
             QueryStringBasicTier,
-            [
-                req.body.basicTier.recurring,
-                req.body.basicTier.acces_videos,
-                req.body.basicTier.custom_program,
-                req.body.basicTier.coaching_101,
-                req.body.basicTier.description,
-                req.body.packageToken,
-            ],
+            [req.body.basicTier.recurring, req.body.basicTier.acces_videos, req.body.basicTier.custom_program, req.body.basicTier.coaching_101, req.body.basicTier.description, req.body.packageToken],
             true,
         );
 
@@ -378,14 +373,7 @@ const UpdatePackage = async (req: CustomRequest, res: Response) => {
         await query(
             connection,
             QueryStringStandardTier,
-            [
-                req.body.standardTier.recurring,
-                req.body.standardTier.acces_videos,
-                req.body.standardTier.custom_program,
-                req.body.standardTier.coaching_101,
-                req.body.standardTier.description,
-                req.body.packageToken,
-            ],
+            [req.body.standardTier.recurring, req.body.standardTier.acces_videos, req.body.standardTier.custom_program, req.body.standardTier.coaching_101, req.body.standardTier.description, req.body.packageToken],
             true,
         );
 
@@ -411,6 +399,7 @@ const UpdatePackage = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         return res.status(500).json({

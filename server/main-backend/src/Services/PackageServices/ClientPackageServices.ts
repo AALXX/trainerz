@@ -30,9 +30,8 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return res.status(202).json({
                 error: true,
@@ -128,7 +127,7 @@ const GetPackageData = async (req: CustomRequest, res: Response) => {
         });
     } catch (error: any) {
         logging.error(NAMESPACE, error.message);
-
+        connection?.release();
         res.status(202).json({
             error: true,
             errmsg: error.message,
@@ -142,7 +141,8 @@ const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
         errors.array().forEach((error) => logging.error('CHECKOUT_PACKAGE', error.msg));
         return res.status(400).json({ error: true, errors: errors.array() });
     }
-
+    
+    const connection = await connect(req.pool!);
     try {
         const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, req.params.userPrivateToken);
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.userPrivateToken);
@@ -150,7 +150,6 @@ const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
             return res.status(404).json({ error: true, errmsg: 'Email not found' });
         }
 
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return res.status(202).json({
@@ -168,6 +167,7 @@ const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('CHECKOUT_PACKAGE', error.message);
         return res.status(500).json({
             error: true,

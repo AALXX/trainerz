@@ -36,6 +36,8 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
+
+    const connection = await connect(req.pool!);
     try {
         const { UserPrivateToken, priceId, paymentMethodId } = req.body;
 
@@ -90,7 +92,6 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
             SELECT 'StandardTier' AS Tier, PackageToken, PriceID, Price, Recurring, acces_videos, coaching_101, custom_program, Description
             FROM StandardTier
             WHERE PriceID = $1;`;
-            const connection = await connect(req.pool!);
 
             if (connection == null) {
                 return res.status(500).json({
@@ -111,7 +112,6 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
 
                 const chatToken = utilFunctions.CreateToken();
 
-
                 fs.mkdir(`${process.env.CHATS_FOLDER_PATH}/${chatToken}/`, async (err) => {
                     if (err) {
                         logging.error(NAMESPACE, err.message);
@@ -122,14 +122,12 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
                     await SCYquery(
                         `INSERT INTO Chats (id, chatToken, athlete_public_token, trainer_public_token, PackageToken) VALUES (uuid(), '${chatToken}', '${UserPublicToken}', '${data[0].ownertoken}', '${tierData[0].packagetoken}');`,
                     );
-
                 });
                 return res.status(200).json({
                     newChat: true,
                     error: false,
                 });
             }
-
 
             return res.status(200).json({
                 newChat: false,
@@ -141,6 +139,7 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
             error: true,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('CHECKOUT_PACKAGE', error.message);
         return res.status(500).json({
             error: true,
@@ -166,6 +165,8 @@ const CacnelSubscription = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
+
     try {
         const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, req.body.UserPrivateToken);
         if (UserEmail == null) {
@@ -178,7 +179,6 @@ const CacnelSubscription = async (req: CustomRequest, res: Response) => {
         }
 
         const QueryString = `SELECT SubsciptionId FROM subscriptions WHERE UserpublicToken=$1 AND PackageToken = $2;`;
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return res.status(500).json({
@@ -205,6 +205,7 @@ const CacnelSubscription = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('CHECKOUT_PACKAGE', error.message);
         return res.status(200).json({
             error: true,

@@ -32,9 +32,9 @@ const GetCreatorAccountData = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
-
+    
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return false;
@@ -63,6 +63,7 @@ const GetCreatorAccountData = async (req: CustomRequest, res: Response) => {
             userFollowsCreator: itFollows,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message);
 
         res.status(202).json({

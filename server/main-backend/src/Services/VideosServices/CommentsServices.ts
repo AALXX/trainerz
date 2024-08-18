@@ -22,14 +22,6 @@ interface IVideoCommentsToBeSendType {
     comment: string;
     ownerName: string;
 }
-// interface ISearchVideoCards {
-//     VideoTitle: string;
-//     VideoToken: string;
-//     Likes: number;
-//     Dislikes: number;
-//     OwnerName: string;
-//     OwnerToken: string;
-// }
 
 /**
  * post comment to a video
@@ -47,9 +39,8 @@ const PostCommentToVideo = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -69,6 +60,7 @@ const PostCommentToVideo = async (req: CustomRequest, res: Response) => {
             userName: userName[1][0].UserName,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('POST_COMMENT_FUNC', error.message);
         res.status(202).json({
             error: true,
@@ -113,6 +105,8 @@ const DeleteComment = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
+        logging.error('DELETE_COMMENT_FUNC', error.msg);
         res.status(202).json({
             error: true,
             errmsg: error.msg,
@@ -136,8 +130,8 @@ const GetVideoComments = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
 
         if (connection == null) {
             return false;
@@ -179,6 +173,7 @@ const GetVideoComments = async (req: CustomRequest, res: Response) => {
             CommentsFound: true,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error('POST_COMMENT_FUNC', error.message);
         res.status(202).json({
             error: true,

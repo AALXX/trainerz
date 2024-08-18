@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
 import { Pool } from 'pg';
 
-
 //* /////////////////////////////
 //*      Account related       //
 //* /////////////////////////////
@@ -57,12 +56,11 @@ const checkEmailExists = async (pool: Pool, userEmail: string): Promise<boolean>
     const NAMESPACE = 'CHECK_EMAIL_EXISTS_FUNC';
     const QueryString = `SELECT 1 FROM users WHERE UserEmail = $1 LIMIT 1;`;
 
+    const connection = await connect(pool);
     try {
         if (userEmail === 'undefined' || userEmail === '') {
             return false;
         }
-
-        const connection = await connect(pool);
 
         if (connection == null) {
             return false;
@@ -77,6 +75,7 @@ const checkEmailExists = async (pool: Pool, userEmail: string): Promise<boolean>
             return false;
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return false;
     }
@@ -93,11 +92,11 @@ const getUserPrivateTokenFromPublicToken = async (pool: Pool, userToken: string)
     const NAMESPACE = 'GET_USER_PRIVATE_TOKEN_FUNC';
     const QueryString = `SELECT UserPrivateToken FROM users WHERE UserPublicToken='${userToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userToken === 'undefined') {
             return null;
         }
-        const connection = await connect(pool);
 
         if (connection == null) {
             return null;
@@ -111,6 +110,7 @@ const getUserPrivateTokenFromPublicToken = async (pool: Pool, userToken: string)
             return null;
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return null;
     }
@@ -120,11 +120,11 @@ const getUserEmailFromPrivateToken = async (pool: Pool, userPrivateToken: string
     const NAMESPACE = 'GET_USER_EMAIL_FUNC';
     const QueryString = `SELECT UserEmail FROM users WHERE UserPrivateToken='${userPrivateToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userPrivateToken === 'undefined') {
             return null;
         }
-        const connection = await connect(pool);
 
         if (connection == null) {
             return null;
@@ -137,6 +137,7 @@ const getUserEmailFromPrivateToken = async (pool: Pool, userPrivateToken: string
             return null;
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return null;
     }
@@ -146,11 +147,11 @@ const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: 
     const NAMESPACE = 'GET_USER_PRIVATE_TOKEN_FUNC';
     const QueryString = `SELECT UserPublicToken FROM users WHERE UserPrivateToken='${userPrivateToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userPrivateToken === 'undefined') {
             return null;
         }
-        const connection = await connect(pool);
 
         if (connection == null) {
             return null;
@@ -163,6 +164,7 @@ const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: 
             return null;
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return null;
     }
@@ -172,12 +174,12 @@ const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: str
     const NAMESPACE = 'GET_USER_ROLE_FUNCTION';
     const QueryString = `SELECT RoleCategoryId FROM channel_roles_alloc WHERE UserPrivateToken='${userToken}' AND ChannelToken='${chanelPublicToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userToken === 'undefined') {
             return null;
         }
 
-        const connection = await connect(pool);
 
         if (connection == null) {
             return null;
@@ -188,6 +190,7 @@ const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: str
         }
         return data[0].RoleCategoryId;
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return null;
     }
@@ -196,13 +199,13 @@ const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: str
 const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanelPublicToken: string): Promise<{ isBanned: boolean; reason?: string }> => {
     const NAMESPACE = 'CHECK_USER_BAN_FUNCTION';
     const QueryString = `SELECT * FROM blocked_list WHERE UserToken='${userPrivateToken}' AND CreatorToken='${chanelPublicToken}';`;
+    const connection = await connect(pool);
     try {
         if (userPrivateToken === 'undefined') {
             return {
                 isBanned: false,
             };
         }
-        const connection = await connect(pool);
 
         if (connection == null) {
             return {
@@ -221,6 +224,7 @@ const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanel
             reason: data[0].Reason,
         };
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return {
             isBanned: false,
@@ -240,11 +244,11 @@ const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPubl
     const NAMESPACE = 'USER_FOLLOW_CHECK_FUNCTION';
     const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken='${userToken}' AND accountToken='${accountPublicToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userToken === 'undefined') {
             return false;
         }
-        const connection = await connect(pool);
 
         if (connection == null) {
             return false;
@@ -257,6 +261,7 @@ const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPubl
             return false;
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return false;
     }
@@ -270,12 +275,12 @@ const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoT
     const NAMESPACE = 'USER_LIKED_OR_DISLIKED_FUNCTION';
     const CheckIfUserFollwsAccountQuerryString = `SELECT * FROM user_liked_or_disliked_video_class WHERE userToken='${userToken}' AND videoToken='${VideoToken}';`;
 
+    const connection = await connect(pool);
     try {
         if (userToken === 'undefined') {
             return { userLiked: false, like_or_dislike: 0 };
         }
 
-        const connection = await connect(pool);
 
         if (connection == null) {
             return { userLiked: false, like_or_dislike: 0 };
@@ -287,6 +292,7 @@ const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoT
         }
         return { userLiked: false, like_or_dislike: 0 };
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
         return { userLiked: false, like_or_dislike: 0 };
     }

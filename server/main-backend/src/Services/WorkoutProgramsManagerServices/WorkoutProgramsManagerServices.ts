@@ -123,9 +123,8 @@ const UploadWorkoutProgram = async (req: CustomRequest, res: Response) => {
  * @returns `true` if the program data was successfully sent to the database, `false` otherwise.
  */
 const SendProgramDataToDb = async (req: CustomRequest, userPublicToken: string, programToken: string, programName: string) => {
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -133,13 +132,14 @@ const SendProgramDataToDb = async (req: CustomRequest, userPublicToken: string, 
         const InserProgramSqlQuery = `INSERT INTO programs (ProgramName, OwnerToken, ProgramToken)
         VALUES($1, $2, $3)`;
         await query(connection, InserProgramSqlQuery, [programName, userPublicToken, programToken], true);
-        
+
         const GrantPermissionSqlQuery = `INSERT INTO program_premissions (ProgramToken, UserPublicToken)
         VALUES($1, $2)`;
-        
+
         await query(connection, GrantPermissionSqlQuery, [programToken, userPublicToken]);
         return true;
     } catch (error) {
+        connection?.release();
         return false;
     }
 };
@@ -152,9 +152,8 @@ const GetAllPrograms = async (req: CustomRequest, res: Response) => {
         });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -168,6 +167,7 @@ const GetAllPrograms = async (req: CustomRequest, res: Response) => {
         const programs = await query(connection, SqlQuery, [userPublicToken]);
         return res.status(200).json({ error: false, programs: programs });
     } catch (error) {
+        connection?.release();
         return res.status(200).json({ error: true, errormsg: 'an error has ocurred' });
     }
 };
@@ -180,10 +180,9 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
         });
     }
 
-    let connection;
-    try {
-        connection = await connect(req.pool!);
+    const connection = await connect(req.pool!);
 
+    try {
         if (!connection) {
             return res.status(500).json({ error: true, errormsg: 'Database connection failed' });
         }
@@ -213,42 +212,24 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
 
         const readStream = fs.createReadStream(filePath);
 
-        readStream
-            .pipe(res)
-            .on('error', (err) => {
-                logging.error('GET_PROGRAM_DATA', `File streaming error: ${err.message}`);
-                return res.status(500).json({ error: true, errormsg: 'File streaming error' });
-            });
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+        // const stat = await fs.promises.stat(filePath);
+
+        // if (stat.size > MAX_FILE_SIZE) {
+        //     res.status(413).json({ error: true, errormsg: 'File too large to stream' });
+        //     return;
+        // }
+
+        readStream.pipe(res).on('error', (err) => {
+            logging.error('GET_PROGRAM_DATA', `File streaming error: ${err.message}`);
+            return res.status(500).json({ error: true, errormsg: 'File streaming error' });
+        });
     } catch (error: any) {
+        connection?.release();
         logging.error('GET_PROGRAM_DATA', `An error occurred: ${error.message}`);
         res.status(500).json({ error: true, errormsg: 'An error has occurred' });
     }
-};
-
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
-const streamFile = async (res: Response, filePath: string): Promise<void> => {
-    // const stat = await fs.promises.stat(filePath);
-
-    // if (stat.size > MAX_FILE_SIZE) {
-    //     res.status(413).json({ error: true, errormsg: 'File too large to stream' });
-    //     return;
-    // }
-
-    res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="programFile.xlsx"`);
-
-    const readStream = fs.createReadStream(filePath);
-
-    return await new Promise((resolve) => {
-        readStream
-            .pipe(res)
-            .on('finish', resolve)
-            .on('error', (err) => {
-                logging.error('GET_PROGRAM_DATA', `File streaming error: ${err.message}`);
-                return res.status(500).json({ error: true, errormsg: 'File streaming error' });
-            });
-    });
 };
 
 export default { UploadWorkoutProgram, GetAllPrograms, GetProgramData };

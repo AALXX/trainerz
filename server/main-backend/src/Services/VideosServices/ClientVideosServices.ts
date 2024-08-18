@@ -34,9 +34,8 @@ const GetVideoDataByToken = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
-        const connection = await connect(req.pool!);
-
         if (connection == null) {
             return false;
         }
@@ -80,6 +79,7 @@ const GetVideoDataByToken = async (req: CustomRequest, res: Response) => {
             UserLikedOrDislikedVideo: getuserlikedordislike,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
 
         return res.status(500).json({
@@ -105,12 +105,11 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
     try {
         const getuserlikedordisliked = await UtilFunc.getUserLikedOrDislikedVideo(req.pool!, req.body.UserPublicToken, req.body.videoToken);
         if (getuserlikedordisliked.userLiked) {
             if (req.body.likeOrDislike === 0) {
-                const connection = await connect(req.pool!);
-
                 if (connection == null) {
                     return res.status(500).json({
                         error: true,
@@ -132,8 +131,6 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
                 `;
                 await query(connection, updateSql, [getuserlikedordisliked.like_or_dislike, req.body.videoToken]);
             } else {
-                const connection = await connect(req.pool!);
-
                 if (connection == null) {
                     return res.status(500).json({
                         error: true,
@@ -157,8 +154,6 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
                 await query(connection, updateVideoLikesSql, [req.body.likeOrDislike, req.body.videoToken]);
             }
         } else {
-            const connection = await connect(req.pool!);
-
             if (connection == null) {
                 return res.status(500).json({
                     error: true,
@@ -187,6 +182,7 @@ const LikeDislikeVideoFunc = async (req: CustomRequest, res: Response) => {
             error: false,
         });
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
 
         res.status(500).json({
@@ -206,6 +202,8 @@ const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({ error: true, errors: errors.array() });
     }
 
+    const connection = await connect(req.pool!);
+
     try {
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
         if (UserPublicToken == null) {
@@ -214,7 +212,6 @@ const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
             });
         }
 
-        const connection = await connect(req.pool!);
         if (connection == null) {
             return res.status(500).json({
                 error: true,
@@ -270,6 +267,7 @@ WHERE v.VideoToken = $1 AND s.userpublictoken = $2;`;
             });
         }
     } catch (error: any) {
+        connection?.release();
         logging.error(NAMESPACE, error.message, error);
 
         res.status(500).json({
