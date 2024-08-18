@@ -154,3 +154,60 @@
 [2024-08-09T18:23:50.017Z] [ERROR] [AccountUploadServiceManager] relation "videos_category_alloc" does not exist
 [2024-08-09T18:39:23.546Z] [ERROR] [CHECKOUT_PACKAGE] Your card was declined. Your request was in test mode, but used a non test (live) card. For a list of valid test cards, visit: https://stripe.com/docs/testing.
 [2024-08-09T20:35:14.357Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-10T12:23:03.506Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-10T18:04:43.075Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T10:49:13.411Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T10:49:41.751Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T10:50:14.508Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T10:58:38.615Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T10:58:59.821Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T11:07:14.046Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T11:10:35.920Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T11:11:17.038Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T11:11:56.671Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T14:10:20.706Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T14:11:04.855Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-11T14:11:29.111Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-11T14:11:49.231Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-11T14:39:24.376Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-11T21:01:28.997Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-12T18:24:02.063Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-12T18:50:41.429Z] [ERROR] [CHECKOUT_PACKAGE] The product prod_QGlo6OXWC3bIGg is marked as inactive, and thus no new subscriptions can be create to any plans of this product. You provided the plan price_1PQEH1HKhevhi95LS6sMfNKa.
+[2024-08-13T13:20:55.522Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-13T22:36:52.308Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-14T13:20:55.745Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T14:56:32.315Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T14:56:50.662Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T15:06:02.926Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T15:06:16.130Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T15:06:47.781Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:12:12.012Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:12:27.435Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:12:52.507Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:13:26.540Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:13:37.649Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:13:51.748Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:14:58.263Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:15:20.118Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:15:50.599Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:17:51.991Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:17:58.809Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:18:19.998Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:18:45.110Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-15T19:18:49.853Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T14:45:46.034Z] [ERROR] [POST_COMMENT_FUNC] Cannot read properties of undefined (reading '1')
+[2024-08-17T14:45:47.233Z] [ERROR] [POST_COMMENT_FUNC] Cannot read properties of undefined (reading '1')
+[2024-08-17T15:00:00.337Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T15:17:39.986Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T15:31:33.240Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T15:32:32.339Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T15:32:48.863Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-17T21:31:54.922Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T10:25:51.807Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T10:48:59.839Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-18T13:32:45.810Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T13:33:02.748Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T13:33:02.753Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T13:33:05.818Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T13:33:26.596Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-18T13:33:26.604Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432

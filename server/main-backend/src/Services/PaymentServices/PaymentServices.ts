@@ -5,6 +5,7 @@ import { connect, CustomRequest, query } from '../../config/postgresql';
 import multer from 'multer';
 import utilFunctions from '../../util/utilFunctions';
 import { SCYconnect, SCYquery } from '../../config/scylla';
+import fs from 'fs';
 
 const NAMESPACE = 'PaymentServiceManager';
 
@@ -109,13 +110,26 @@ const CheckoutPackage = async (req: CustomRequest, res: Response) => {
                 const data = await query(connection, QueryString, [tierData[0].packagetoken], true);
 
                 const chatToken = utilFunctions.CreateToken();
-                await SCYconnect();
-                await SCYquery(`INSERT INTO Chats (id, chatToken, athlete_public_token, trainer_public_token, PackageToken) VALUES (uuid(), '${chatToken}', '${UserPublicToken}', '${data[0].ownertoken}', '${tierData[0].packagetoken}');`);
+
+
+                fs.mkdir(`${process.env.CHATS_FOLDER_PATH}/${chatToken}/`, async (err) => {
+                    if (err) {
+                        logging.error(NAMESPACE, err.message);
+                        return res.status(500).json({ error: true, errormsg: 'Directory creation error' });
+                    }
+
+                    await SCYconnect();
+                    await SCYquery(
+                        `INSERT INTO Chats (id, chatToken, athlete_public_token, trainer_public_token, PackageToken) VALUES (uuid(), '${chatToken}', '${UserPublicToken}', '${data[0].ownertoken}', '${tierData[0].packagetoken}');`,
+                    );
+
+                });
                 return res.status(200).json({
                     newChat: true,
                     error: false,
                 });
             }
+
 
             return res.status(200).json({
                 newChat: false,

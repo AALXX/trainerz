@@ -3,7 +3,10 @@ package services
 import (
 	"chat-server/config"
 	"chat-server/models"
+	"chat-server/util"
+	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 
 	"github.com/lib/pq"
@@ -112,32 +115,33 @@ func SocketConnectionHandler(clients ...interface{}) {
 	})
 
 	client.On("join-chat", func(data ...interface{}) {
-	    if len(data) == 0 {
-	        log.Println("No data received for join-chat")
-	        return
-	    }
+		if len(data) == 0 {
+			log.Println("No data received for join-chat")
+			return
+		}
 
-	    chatRoomStr := fmt.Sprintf("%v", data[0])
-	    chatRoom := socket.Room(chatRoomStr)
-	    client.Join(chatRoom)
+		chatRoomStr := fmt.Sprintf("%v", data[0])
+		chatRoom := socket.Room(chatRoomStr)
+		client.Join(chatRoom)
 
-	    rows, err := config.ExecuteScyllaQuery("SELECT OwnerToken, Message, SentAt FROM Messages_by_ChatToken WHERE ChatToken = ?", chatRoomStr)
-	    if err != nil {
-	        log.Printf("Error querying messages: %v\n", err)
-	        return
-	    }
+		rows, err := config.ExecuteScyllaQuery("SELECT OwnerToken, Message, Type, SentAt FROM Messages_by_ChatToken WHERE ChatToken = ?", chatRoomStr)
+		if err != nil {
+			log.Printf("Error querying messages: %v\n", err)
+			return
+		}
 
-	    var messages []models.ReciveChatMessage
-	    for _, row := range rows {
-	        message := models.ReciveChatMessage{
-	            OwnerToken: fmt.Sprint(row["ownertoken"]),
-	            Message:    fmt.Sprint(row["message"]),
-	            SentAt:     fmt.Sprint(row["sentat"]),
-	        }
-	        messages = append(messages, message)
-	    }
+		var messages []models.ReciveChatMessage
+		for _, row := range rows {
+			message := models.ReciveChatMessage{
+				OwnerToken: fmt.Sprint(row["ownertoken"]),
+				Message:    fmt.Sprint(row["message"]),
+				Type:       fmt.Sprint(row["type"]),
+				SentAt:     fmt.Sprint(row["sentat"]),
+			}
+			messages = append(messages, message)
+		}
 
-	    client.Emit("messages", messages)
+		client.Emit("messages", messages)
 	})
 
 	client.On("leave-chat", func(data ...interface{}) {
@@ -163,26 +167,81 @@ func SocketConnectionHandler(clients ...interface{}) {
 			return
 		}
 
+		// Sanitize input
+		sanitizedMessage := html.EscapeString(dataMap["Message"].(string))
+
 		row, err := config.ExecutePostgresQueryRow("SELECT UserPublicToken FROM users WHERE UserPrivateToken = $1", dataMap["UserPrivateToken"].(string))
 		if err != nil {
 			log.Printf("Error getting user public token: %v\n", err)
 			return
 		}
+
 		userPublicToken, ok := row["userpublictoken"].(string)
 		if !ok {
 			log.Println("UserPublicToken not found or not a string")
 			return
 		}
 
-		chatMessage := models.SendChatMessage{
-			ChatToken:       dataMap["ChatToken"].(string),
-			UserPublicToken: userPublicToken,
-			Message:         dataMap["message"].(string),
+		chatMessage := models.SendChatMessage{}
+		switch dataMap["Type"].(string) {
+		case "text":
+			chatMessage = models.SendChatMessage{
+				ChatToken:       dataMap["ChatToken"].(string),
+				UserPublicToken: userPublicToken,
+				Message:         sanitizedMessage,
+				Type:            dataMap["Type"].(string),
+				FileName:        "",
+			}
+		case "workoutProgram":
+			// log.Println(dataMap)
+
+			chatMessage = models.SendChatMessage{
+				ChatToken:       dataMap["ChatToken"].(string),
+				UserPublicToken: userPublicToken,
+				Message:         sanitizedMessage,
+				Type:            dataMap["Type"].(string),
+				FileName:        "",
+			}
+
+			var obj map[string]interface{}
+			errs := json.Unmarshal([]byte(html.UnescapeString(chatMessage.Message)), &obj)
+			if errs != nil {
+				fmt.Println(errs)
+				return
+			}
+
+			programToken, ok := obj["ProgramToken"].(string)
+			if !ok {
+				fmt.Println("Error: name is not a string")
+				return
+			}
+
+			athlete_public_token_data, err := config.ExecuteScyllaQueryRow("SELECT athlete_public_token FROM Chats_by_chatToken WHERE chatToken = ?", dataMap["ChatToken"].(string))
+			if err != nil {
+				log.Printf("Error getting user public token: %v\n", err)
+				return
+			}
+
+			grantPermissions, err := util.GiveWorkoutPresmission(programToken, athlete_public_token_data["athlete_public_token"].(string), dataMap["UserPrivateToken"].(string))
+
+			if err != nil {
+				log.Printf("Error getting user public token: %v\n", err)
+				return
+			}
+
+			log.Println(grantPermissions)
+
+		case "photo":
+			chatMessage = models.SendChatMessage{
+				ChatToken:       dataMap["ChatToken"].(string),
+				UserPublicToken: userPublicToken,
+				Message:         "",
+				Type:            dataMap["Type"].(string),
+				FileName:        dataMap["FileName"].(string),
+			}
 		}
 
-		log.Printf("Message received: %+v\n", chatMessage)
-
-		insertRow, err := config.ExecuteScyllaQuery("INSERT INTO DirectMessages (id, ChatToken, OwnerToken, Message, SentAt) VALUES (uuid(),?,?,?, toTimestamp(now()))", dataMap["ChatToken"].(string), userPublicToken, dataMap["message"].(string))
+		insertRow, err := config.ExecuteScyllaQuery("INSERT INTO DirectMessages (id, ChatToken, OwnerToken, Message, Type, FilePath, SentAt) VALUES (uuid(),?,?,?,?,?,toTimestamp(now()))", chatMessage.ChatToken, userPublicToken, chatMessage.Message, chatMessage.Type, chatMessage.FileName)
 		if err != nil {
 			log.Printf("Error getting user public token: %v\n", err)
 			return
@@ -194,6 +253,6 @@ func SocketConnectionHandler(clients ...interface{}) {
 	})
 
 	client.On("disconnect", func(...interface{}) {
-		log.Println("Client disconnected ")
+		log.Println("Client disconnected")
 	})
 }

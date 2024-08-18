@@ -130,9 +130,14 @@ const SendProgramDataToDb = async (req: CustomRequest, userPublicToken: string, 
             return false;
         }
 
-        const SqlQuery = `INSERT INTO programs (ProgramName, OwnerToken, ProgramToken)
+        const InserProgramSqlQuery = `INSERT INTO programs (ProgramName, OwnerToken, ProgramToken)
         VALUES($1, $2, $3)`;
-        await query(connection, SqlQuery, [programName, userPublicToken, programToken]);
+        await query(connection, InserProgramSqlQuery, [programName, userPublicToken, programToken], true);
+        
+        const GrantPermissionSqlQuery = `INSERT INTO program_premissions (ProgramToken, UserPublicToken)
+        VALUES($1, $2)`;
+        
+        await query(connection, GrantPermissionSqlQuery, [programToken, userPublicToken]);
         return true;
     } catch (error) {
         return false;
@@ -191,6 +196,7 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
         const PermissionCheckSqlQuery = `SELECT * FROM program_premissions WHERE ProgramToken = $1 AND UserPublicToken = $2`;
         const PermissionCheck = await query(connection, PermissionCheckSqlQuery, [req.params.ProgramToken, userPublicToken], true);
         if (Object.keys(PermissionCheck).length === 0) {
+            connection.release();
             return res.status(403).json({ error: true, errormsg: 'Permission denied' });
         }
 
@@ -202,7 +208,17 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
         }
 
         const filePath = path.resolve(`${process.env.ACCOUNTS_FOLDER_PATH}/${program[0].ownertoken}/Program_${req.params.ProgramToken}/programFile.xlsx`);
-        await streamFile(res, filePath);
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="programFile.xlsx"`);
+
+        const readStream = fs.createReadStream(filePath);
+
+        readStream
+            .pipe(res)
+            .on('error', (err) => {
+                logging.error('GET_PROGRAM_DATA', `File streaming error: ${err.message}`);
+                return res.status(500).json({ error: true, errormsg: 'File streaming error' });
+            });
     } catch (error: any) {
         logging.error('GET_PROGRAM_DATA', `An error occurred: ${error.message}`);
         res.status(500).json({ error: true, errormsg: 'An error has occurred' });
@@ -224,14 +240,13 @@ const streamFile = async (res: Response, filePath: string): Promise<void> => {
 
     const readStream = fs.createReadStream(filePath);
 
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
         readStream
             .pipe(res)
             .on('finish', resolve)
             .on('error', (err) => {
                 logging.error('GET_PROGRAM_DATA', `File streaming error: ${err.message}`);
-                res.status(500).json({ error: true, errormsg: 'File streaming error' });
-                reject(err);
+                return res.status(500).json({ error: true, errormsg: 'File streaming error' });
             });
     });
 };

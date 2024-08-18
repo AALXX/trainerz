@@ -2,10 +2,17 @@ import { Dispatch, SetStateAction } from 'react'
 import { Socket } from 'socket.io-client'
 
 export interface IChatMessage {
+    id: string
     message: string
     ownerToken: string
     chatToken: string
+    type: string
+    sentat: Date
+    DeleteMessage: (message: TChatMessage) => void
+    EditMessage: (message: TChatMessage) => void
 }
+
+export type TChatMessage = Omit<IChatMessage, 'DeleteMessage' | 'EditMessage'>
 
 export interface IChatArea {
     chattoken: string
@@ -26,3 +33,10 @@ export interface IChatList {
     selectedChatToken: string
     setChatToken: Dispatch<SetStateAction<string>>
 }
+
+export interface IWorkoutProgramButton {
+    programtoken: string
+    programname: string
+    sendAttachment: (e: React.FormEvent, programToken: string, programName: string) => void
+}
+

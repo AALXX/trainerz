@@ -202,25 +202,31 @@ func convertNullTypes(v interface{}) interface{} {
     }
 }
 
-// ExecuteScyllaQueryRow executes a CQL query and returns a single row
-func ExecuteScyllaQueryRow(query string) (map[string]interface{}, error) {
-    if session == nil {
-        reconnect()
-    }
+// ExecuteScyllaQueryRow executes a query on ScyllaDB and returns a single row as a map
+func ExecuteScyllaQueryRow(query string, args ...interface{}) (map[string]interface{}, error) {
+	// Ensure session is connected
+	if session == nil {
+		reconnect()
+	}
 
-    iter := session.Query(query).Iter()
-    defer iter.Close()
+	// Execute the query and get an iterator
+	iter := session.Query(query, args...).Iter()
+	defer iter.Close()
 
-    row := make(map[string]interface{})
-    if !iter.MapScan(row) {
-        return nil, sql.ErrNoRows
-    }
+	// Prepare the map to store the row data
+	row := make(map[string]interface{})
+	if !iter.MapScan(row) {
+		// If no rows were found, return an error
+		return nil, gocql.ErrNotFound
+	}
 
-    if err := iter.Close(); err != nil {
-        return nil, fmt.Errorf("query error: %w", err)
-    }
+	// Check for errors in closing the iterator
+	if err := iter.Close(); err != nil {
+		return nil, fmt.Errorf("query error: %w", err)
+	}
 
-    return row, nil
+	// Return the row data
+	return row, nil
 }
 
 // ExecutePostgresQueryRow executes a parameterized SQL query on PostgreSQL and returns a single row
