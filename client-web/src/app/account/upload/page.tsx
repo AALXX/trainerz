@@ -16,7 +16,8 @@ const UploadPage = () => {
     }, [])
 
     return (
-        <>
+        <div className="flex h-full flex-col">
+        
             {isLoggedIn ? (
                 <UploadComopnent />
             ) : (
@@ -27,7 +28,7 @@ const UploadPage = () => {
                     </Link>
                 </div>
             )}
-        </>
+        </div>
     )
 }
 

@@ -9,7 +9,6 @@ const EditVideo = () => {
     const urlParams = useSearchParams() //* t =  search query
     const { isLoggedIn, checkStatus } = useAccountStatus()
 
-
     useEffect(() => {
         ;(async () => {
             checkStatus()
@@ -17,7 +16,7 @@ const EditVideo = () => {
     }, [])
 
     return (
-        <div className="flex flex-col">
+        <div className="flex h-full flex-col">
             {isLoggedIn ? (
                 <EditVideoComponent videoToken={urlParams.get('vt') as string} />
             ) : (

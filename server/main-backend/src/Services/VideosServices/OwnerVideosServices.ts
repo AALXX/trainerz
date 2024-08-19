@@ -292,15 +292,10 @@ const GetCreatorVideoData = async (req: CustomRequest, res: Response) => {
         v.Dislikes, 
         v.PublishDate, 
         v.Visibility, 
-        v.VideoPrice, 
         v.Views, 
-        vc.SportName
+        v.packagetoken
     FROM 
         videos v
-    LEFT JOIN 
-        videos_category_alloc vc
-    ON 
-        v.VideoToken = vc.VideoToken
     WHERE 
         v.VideoToken = $1 
     AND 
@@ -326,8 +321,7 @@ const GetCreatorVideoData = async (req: CustomRequest, res: Response) => {
             VideoLikes: Videodata[0].likes,
             VideoDislikes: Videodata[0].dislikes,
             OwnerToken: Videodata[0].ownertoken,
-            VideoPrice: Videodata[0].videoprice,
-            Sport: Videodata[0].sportname,
+            PackageToken: Videodata[0].packagetoken,
             // ShowLikesDislikes: Videodata[0].ShowLikesDislikes === 0 ? false : Videodata[0].ShowLikesDislikes === 1 ? true : undefined,
             // AvrageWatchTime: Videodata[0].AvrageWatchTime,
             Views: Videodata[0].views,
@@ -369,23 +363,16 @@ const UpdateCreatorVideoData = async (req: CustomRequest, res: Response) => {
             UPDATE videos 
             SET 
                 VideoTitle = $1, 
-                Visibility = $2 
+                Visibility = $2,
+                PackageToken = $3
             WHERE 
-                VideoToken = $3 
+                VideoToken = $4 
             AND 
-                OwnerToken = $4;
+                OwnerToken = $5;
         `;
-        await query(connection, updateVideoQuery, [req.body.VideoTitle, req.body.VideoVisibility, req.body.VideoToken, UserPublicToken], true);
+        await query(connection, updateVideoQuery, [req.body.VideoTitle, req.body.VideoVisibility, req.body.PackageToken, req.body.VideoToken, UserPublicToken]);
 
-        // Update videos_category_alloc table
-        const updateCategoryQuery = `
-            UPDATE videos_category_alloc 
-            SET 
-                SportName = $1 
-            WHERE 
-                VideoToken = $2;
-        `;
-        await query(connection, updateCategoryQuery, [req.body.Sport, req.body.VideoToken]);
+     
 
         res.status(202).json({
             error: false,

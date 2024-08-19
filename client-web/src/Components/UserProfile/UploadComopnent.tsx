@@ -216,6 +216,7 @@ const UploadComponent = () => {
 
     return (
         <div className="flex h-full flex-col items-center">
+            
             <div className="flex h-[24rem] w-[100%] flex-row items-center">
                 <label htmlFor="VideoFile" className="ml-[3vw] flex h-[10rem] w-[20rem] cursor-pointer border-2 border-solid border-white">
                     <input

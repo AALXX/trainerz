@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 import axios from 'axios'
-import dynamic from 'next/dynamic'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
 import SelectableCards from './util/ProfileTabCards'
 import OptionPicker from '../CommonUi/OptionPicker'
 import ImgWithAuth from '../CommonUi/ImageWithAuth'
+import DoubleValueOptionPicker from '../CommonUi/DoubleValueOptionPicker'
 // import { IGraphType } from './utils/VideoAnalytics/VideoAnalytics'
 // const VideoAnalytics = dynamic(() => import('./utils/VideoAnalytics/VideoAnalytics'), { ssr: false })
 
@@ -23,7 +23,9 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
     const [showLikesDislikes, setShowLikesDislikes] = useState<boolean>(false)
     const [videoViews, setVideoViews] = useState<number>(0)
     const [avrageWatchTime, setAvrageWatchTime] = useState<number>(0)
-    const [sport, setSport] = useState<string>('')
+
+    const [packages, setPackages] = useState<{ name: string; token: string }[]>([])
+    const [selectedPackageToken, setSelectedPackageToken] = useState<string>('')
 
     const [thumbnalFile, setThumbnalFile] = useState<File | null>(null)
     const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -47,7 +49,7 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
             setVideoOwnerToken(res.data.OwnerToken)
             setShowComments(res.data.ShowComments)
             setShowLikesDislikes(res.data.ShowLikesDislikes)
-            setSport(res.data.Sport)
+            setSelectedPackageToken(res.data.PackageToken)
             setVideoViews(res.data.Views)
             setAvrageWatchTime(res.data.AvrageWatchTime)
 
@@ -56,11 +58,24 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
         })()
     }, [])
 
+    useEffect(() => {
+        ;(async () => {
+            const packagesresp = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-account-packages/${getCookie('userPublicToken')}`)
+
+            const packagesList = packagesresp.data.packagesData.map((item: { packagename: string; packagetoken: string }) => ({
+                name: item.packagename,
+                token: item.packagetoken
+            }))
+
+            setPackages(packagesList)
+        })()
+    }, [])
+
     const updateVideoData = async () => {
         const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/update-creator-video-data`, {
             VideoTitle: videoTitle,
             VideoVisibility: videoVisibility,
-            Sport: sport,
+            PackageToken: selectedPackageToken,
             VideoToken: videoToken,
             UserPrivateToken: getCookie('userToken')
         })
@@ -236,12 +251,12 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                             <OptionPicker label="Video Visibility" options={['Public', 'Private']} value={videoVisibility} onChange={value => setVideoVisibility(value)} />
                         </div>
                         <div className="flex w-full flex-col self-center">
-                            <h1 className="h1-sm text-white">Video Sport</h1>
-                            <OptionPicker
-                                label="Video Visibility"
-                                options={['Football', 'Basketball', 'Cricket', 'Tennis', 'Golf', 'Rugby', 'Ice Hockey', 'Athletics (Track and Field):', 'Swimming', 'Powerlifting', 'Bodybuilding', 'Other']}
-                                value={sport}
-                                onChange={value => setSport(value)}
+                            <h1 className="h1-sm text-white">Video Package</h1>
+                            <DoubleValueOptionPicker
+                                label="Course Package"
+                                options={packages.map(pkg => ({ label: pkg.name, value: pkg.token }))}
+                                value={selectedPackageToken}
+                                onChange={value => {setSelectedPackageToken(value)}}
                             />
                         </div>
                         <button className="mb-4 mt-2 h-10 w-full justify-center self-center rounded-xl bg-[#474084] active:bg-[#3b366c]" onClick={async () => await updateVideoData()}>
@@ -285,20 +300,20 @@ const EditVideoComponent = ({ videoToken }: { videoToken: string }) => {
                     TabName="Thumbnails"
                     activeTab={componentToShow}
                     setComponentToShow={setComponentToShow}
-                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    className="ml-2 h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                 />
                 <SelectableCards
                     Title="ANALYTICS"
                     TabName="Analytics"
                     setComponentToShow={setComponentToShow}
-                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    className="ml-2 h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                     activeTab={componentToShow}
                 />
                 <SelectableCards
                     Title="EDITOR"
                     TabName="editor"
                     setComponentToShow={setComponentToShow}
-                    className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                    className="ml-2 h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                     activeTab={componentToShow}
                 />
             </div>

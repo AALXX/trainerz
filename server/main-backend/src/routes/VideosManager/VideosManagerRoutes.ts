@@ -21,7 +21,7 @@ router.post(
     body('VideoTitle').not().isEmpty().isLength({ max: 40 }),
     body('VideoVisibility').not().isEmpty(),
     // body('ShowComments').not().isEmpty(),
-    body('Sport').not().isEmpty(),
+    body('PackageToken').not().isEmpty(),
     // body('ShowLikesDislikes').not().isEmpty(),
     body('VideoToken').not().isEmpty(),
     body('UserPrivateToken').not().isEmpty(),
