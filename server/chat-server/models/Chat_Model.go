@@ -17,6 +17,7 @@ type SendChatMessage struct {
 }
 
 type ReciveChatMessage struct {
+	Id         string `json:"id"`
 	OwnerToken string `json:"ownerToken"`
 	Message    string `json:"message"`
 	Type       string `json:"type"`

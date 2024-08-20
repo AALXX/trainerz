@@ -7,8 +7,8 @@ const ChatList = (props: IChatList) => {
             {props.conversations != null && (
                 <>
                     {props.conversations.map((conversation, index) => (
-                        <div
-                            className="mt-2 flex h-24 w-full flex-col bg-[#0000005e]"
+                        <button
+                            className="mt-2 flex h-24 w-full flex-col bg-[#0000005e] cursor-pointer"
                             key={index}
                             onClick={() => {
                                 props.socket.emit('leave-chat', props.selectedChatToken)
@@ -16,10 +16,10 @@ const ChatList = (props: IChatList) => {
                                 props.socket.emit('join-chat', conversation.chatToken)
                             }}
                         >
-                            <h1 className="ml-3 mt-3 text-lg text-white">
+                            <h1 className="ml-3 mt-3 text-lg text-white ">
                                 {conversation.athleteUserName} and {conversation.trainerUserName}
                             </h1>
-                        </div>
+                        </button>
                     ))}
                 </>
             )}

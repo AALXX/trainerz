@@ -27,6 +27,10 @@ const ChatArea = (props: IChatArea) => {
             }
         })
 
+        props.socket.on('deleted message', (MessageId: string) => {
+            setChatMessages(prevMessages => prevMessages.filter(message => message.id !== MessageId))
+        })
+
         return () => {
             props.socket.off('message')
             props.socket.off('messages')
@@ -92,12 +96,13 @@ const ChatArea = (props: IChatArea) => {
         setCheckoutPoUp(!checkoutPoUp)
     }
 
-    const DeleteMessage = async (message: TChatMessage) => {
-        props.socket.emit('delete message', { MessageId: message.id })
+    const DeleteMessage = async (id: string) => {
+        props.socket.emit('delete message', { MessageId: id, ChatToken: props.chattoken })
+        setChatMessages(prevMessages => prevMessages.filter(message => message.id !== id))
     }
 
-    const EditMessage = async (message: TChatMessage) => {
-        props.socket.emit('edit message', { MessageId: message.id })
+    const EditMessage = async (id: string) => {
+        props.socket.emit('edit message', { MessageId: id, ChatToken: props.chattoken })
     }
 
     return (
@@ -114,8 +119,12 @@ const ChatArea = (props: IChatArea) => {
                             message={message.message}
                             sentat={message.sentat}
                             type={message.type}
-                            DeleteMessage={DeleteMessage}
-                            EditMessage={EditMessage}
+                            DeleteMessage={() => {
+                                DeleteMessage(message.id)
+                            }}
+                            EditMessage={() => {
+                                EditMessage(message.id)
+                            }}
                         />
                     ))}
                 <div ref={chatEndRef} />

@@ -8,8 +8,8 @@ export interface IChatMessage {
     chatToken: string
     type: string
     sentat: Date
-    DeleteMessage: (message: TChatMessage) => void
-    EditMessage: (message: TChatMessage) => void
+    DeleteMessage: (id: string) => void
+    EditMessage: (id: string) => void
 }
 
 export type TChatMessage = Omit<IChatMessage, 'DeleteMessage' | 'EditMessage'>
@@ -29,7 +29,7 @@ export interface IConversations {
 
 export interface IChatList {
     conversations: IConversations[]
-    socket: Socket,
+    socket: Socket
     selectedChatToken: string
     setChatToken: Dispatch<SetStateAction<string>>
 }
@@ -39,4 +39,3 @@ export interface IWorkoutProgramButton {
     programname: string
     sendAttachment: (e: React.FormEvent, programToken: string, programName: string) => void
 }
-

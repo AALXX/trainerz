@@ -124,7 +124,7 @@ func SocketConnectionHandler(clients ...interface{}) {
 		chatRoom := socket.Room(chatRoomStr)
 		client.Join(chatRoom)
 
-		rows, err := config.ExecuteScyllaQuery("SELECT OwnerToken, Message, Type, SentAt FROM Messages_by_ChatToken WHERE ChatToken = ?", chatRoomStr)
+		rows, err := config.ExecuteScyllaQuery("SELECT Id, OwnerToken, Message, Type, SentAt FROM Messages_by_ChatToken WHERE ChatToken = ?", chatRoomStr)
 		if err != nil {
 			log.Printf("Error querying messages: %v\n", err)
 			return
@@ -133,6 +133,7 @@ func SocketConnectionHandler(clients ...interface{}) {
 		var messages []models.ReciveChatMessage
 		for _, row := range rows {
 			message := models.ReciveChatMessage{
+				Id:         fmt.Sprint(row["id"]),
 				OwnerToken: fmt.Sprint(row["ownertoken"]),
 				Message:    fmt.Sprint(row["message"]),
 				Type:       fmt.Sprint(row["type"]),
@@ -250,6 +251,31 @@ func SocketConnectionHandler(clients ...interface{}) {
 		room := socket.Room(chatMessage.ChatToken)
 		client.Broadcast().To(room).Emit("message", chatMessage)
 		log.Printf("Message broadcasted to room: %s\n", insertRow)
+	})
+
+	client.On("delete message", func(data ...interface{}) {
+		if len(data) == 0 {
+			log.Println("No data received for chat message")
+			return
+		}
+
+		dataMap, ok := data[0].(map[string]interface{})
+		if !ok {
+			log.Println("Data is not a map")
+			return
+		}
+
+		DeleteMsg, err := config.ExecuteScyllaQuery("DELETE FROM DirectMessages WHERE id = ?", dataMap["MessageId"])
+		if err != nil {
+			log.Printf("Error getting user public token: %v\n", err)
+			return
+		}
+
+		if len(DeleteMsg) == 0 {
+			room := socket.Room(dataMap["ChatToken"].(string))
+
+			client.Broadcast().To(room).Emit("deleted message", dataMap["MessageId"])
+		}
 	})
 
 	client.On("disconnect", func(...interface{}) {

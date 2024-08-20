@@ -12,7 +12,6 @@ const ChatMessage = (props: IChatMessage) => {
     const toggleExpand = () => {
         setExpanded(!expanded)
     }
-    // console.log(props.ownerToken)
     const messageToShow = expanded ? props.message : props.message.substring(0, 256)
     const showReadMore = props.message.length > 256 && !expanded
     switch (props.type) {
@@ -26,8 +25,22 @@ const ChatMessage = (props: IChatMessage) => {
                     >
                         {isOwnMessage && hover && (
                             <div className="flex h-4 w-full">
-                                <img src="/assets/AccountIcons/Settings_icon.svg" className="ml-auto mr-2 h-4 w-4 cursor-pointer self-center" alt="Settings Icon " />
-                                <img src="/assets/AccountIcons/Settings_icon.svg" className="h-4 w-4 cursor-pointer self-center" alt="Settings Icon " />
+                                <img
+                                    src="/assets/ChatIcons/Edit_Message_Icon.svg"
+                                    className="ml-auto mr-2 h-4 w-4 cursor-pointer self-center"
+                                    alt="Settings Icon"
+                                    onClick={() => {
+                                        props.EditMessage
+                                    }}
+                                />
+                                <img
+                                    src="/assets/ChatIcons/Delete_Message_Icon.svg"
+                                    className="h-4 w-4 cursor-pointer self-center"
+                                    alt="Settings Icon "
+                                    onClick={() => {
+                                        props.DeleteMessage(props.id)
+                                    }}
+                                />
                             </div>
                         )}
                         <p className="self-center whitespace-pre-wrap">{decode(messageToShow)}</p>

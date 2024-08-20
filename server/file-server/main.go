@@ -136,7 +136,7 @@ func watchFiles(ctx context.Context, dir string) {
 				return
 			}
 			if event.Op&fsnotify.Write == fsnotify.Write {
-				log.Println("File modified:", event.Name)
+				// log.Println("File modified:", event.Name)
 				resetCache()
 			}
 		case err, ok := <-watcher.Errors:
