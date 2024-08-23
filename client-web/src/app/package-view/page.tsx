@@ -213,13 +213,4 @@ const PackageView = () => {
     )
 }
 
-const PackageViewPage = () => {
-    return (
-        <div className="flex h-full flex-col">
-            <Suspense fallback={<div>Loading video content...</div>}>
-                <PackageView />
-            </Suspense>
-        </div>
-    )
-}
-export default PackageViewPage
+export default PackageView

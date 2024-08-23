@@ -1,13 +1,7 @@
-'use client'
-import React, { Suspense } from 'react'
-import SearchResults from '@/Components/Search/SearchResults'
+import React from 'react'
 
-const SearchResultsPage = () => {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <SearchResults />
-        </Suspense>
-    )
+const Page = () => {
+    return <div></div>
 }
 
-export default SearchResultsPage
+export default Page

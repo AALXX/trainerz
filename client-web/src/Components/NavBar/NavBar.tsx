@@ -16,7 +16,8 @@ const NavBar = () => {
     const dispatch = useDispatch()
 
     const postSearch = () => {
-        window.location.href = `http://localhost:3000/search?q=${searchInput}`
+        
+        window.location.href = `http://localhost:3000/search/${searchInput}`
     }
 
     useEffect(() => {

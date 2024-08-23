@@ -1,4 +1,4 @@
-wexport interface ISubscriptions {
+export interface ISubscriptions {
     packagetoken: string
     ownertoken: string
     rating: number

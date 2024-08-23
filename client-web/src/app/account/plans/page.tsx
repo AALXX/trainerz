@@ -13,7 +13,7 @@ const WorkoutPlans = () => {
 
     useEffect(() => {
         ;(async () => {
-            if(await checkStatus() == false){
+            if ((await checkStatus()) == false) {
                 return
             }
 
@@ -27,11 +27,15 @@ const WorkoutPlans = () => {
         <div className="flex h-full flex-col">
             {isLoggedIn ? (
                 <>
-                    <Link href={'/account/plans/edit'}>Create</Link>
                     <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {programs.map((program: IWorkoutProgram, index: number) => (
                             <WorkoutProgramTemplate programname={program.programname} programtoken={program.programtoken} key={index} />
                         ))}
+                        <Link href={`/account/plans/create`}>
+                            <div className="flex h-[20vh] w-[15vw] cursor-pointer flex-col rounded-xl bg-[#00000080] p-4">
+                                <img src="/assets/Add_Icon.svg" alt="Workout Program Add" className="m-auto h-20 w-20" />
+                            </div>
+                        </Link>
                     </div>
                 </>
             ) : (

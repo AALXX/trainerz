@@ -6,8 +6,16 @@ import utilFunctions from '../../util/utilFunctions';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import * as XLSX from 'xlsx';
 
 const NAMESPACE = 'ClientPackageServiceManager';
+
+interface ChunkData {
+    chunk: string;
+    chunkIndex: number;
+    totalChunks: number;
+    isLastChunk: boolean;
+}
 
 /**
  * Validates and cleans the CustomRequest form
@@ -232,4 +240,125 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export default { UploadWorkoutProgram, GetAllPrograms, GetProgramData };
+const UpdateWorkoutProgram = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().map((error) => {
+            logging.error('UPLOAD_WORKOUT_PROGRAM', error.errorMsg);
+        });
+
+        return res.status(200).json({ error: true, errors: errors.array() });
+    }
+
+    programUpload(req, res, async (err: any) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.array().map((error) => {
+                logging.error('REGISTER_USER_FUNC', error.msg);
+            });
+
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        if (err) {
+            logging.error(NAMESPACE, err.message);
+            return res.status(500).json({ error: true, errormsg: 'File upload error' });
+        }
+
+        const userPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        if (!userPublicToken) {
+            return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
+        }
+
+        fs.stat(`${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Program_${req.body.ProgramToken}`, (err) => {
+            if (err) {
+                logging.error(NAMESPACE, err.message);
+                return res.status(500).json({ error: true, errormsg: 'Directory creation error' });
+            }
+
+            const programFile = (req.files as { [fieldname: string]: Express.Multer.File[] })['workoutProgram']?.[0];
+
+            if (!programFile) {
+                return res.status(400).json({ error: true, errormsg: 'Video file or thumbnail not provided' });
+            }
+
+            fs.rename(
+                `${process.env.ACCOUNTS_FOLDER_PATH}/ProgramsTmp/${programFile.originalname}`,
+                `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Program_${req.body.ProgramToken}/programFile${path.extname(programFile.originalname)}`,
+                async (err) => {
+                    if (err) {
+                        logging.error(NAMESPACE, err.message);
+                        return res.status(500).json({ error: true, errormsg: 'File renaming error' });
+                    }
+
+                    return res.status(200).json({ error: false });
+                },
+            );
+        });
+    });
+};
+
+const UpdateWorkoutProgram_old = async (req: CustomRequest, res: Response) => {
+    const errors = CustomRequestValidationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach((error) => {
+            logging.error('UPDATE_PROGRAM', error.errorMsg);
+        });
+        return res.status(400).json({ error: true, errormsg: 'Validation failed', errors: errors.array() });
+    }
+
+    const connection = await connect(req.pool!);
+    try {
+        if (connection == null) {
+            return res.status(500).json({ error: true, errormsg: 'Connection to db failed' });
+        }
+        const { chunk, chunkIndex, totalChunks, isLastChunk }: ChunkData = req.body.xcelData;
+
+        // Define the temporary file path
+        const tempFilePath = `${process.env.ACCOUNTS_FOLDER_PATH}/ProgramsTmp/temp_${req.params.UserPrivateToken}.json`; // Adjust the path as needed
+
+        // Append the chunk to the temporary file
+        fs.appendFileSync(tempFilePath, chunk);
+
+        if (isLastChunk) {
+            // Read the complete JSON data from the temporary file
+            const jsonString = fs.readFileSync(tempFilePath, 'utf-8');
+            const sheetData = JSON.parse(jsonString);
+
+            // Create a new workbook
+            const workbook = XLSX.utils.book_new();
+
+            // Iterate over each sheet in the data
+            for (const [sheetName, sheetContent] of Object.entries(sheetData)) {
+                const worksheet = XLSX.utils.json_to_sheet(sheetContent as object[]);
+                XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+            }
+
+            const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+            if (!UserPublicToken) {
+                return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
+            }
+
+            // Generate a unique filename
+            const filepath = `${process.env.ACCOUNTS_FOLDER_PATH}/${UserPublicToken}/Program_${req.body.ProgramToken}/programFile.xlsx`; // Adjust the path as needed
+
+            // Write the workbook to a file
+            XLSX.writeFile(workbook, filepath);
+
+            // Delete the temporary file
+            fs.unlinkSync(tempFilePath);
+
+            connection.release();
+            return res.status(200).json({ error: false, message: 'Excel file created successfully' });
+        } else {
+            // If it's not the last chunk, just acknowledge receipt
+            return res.status(200).json({ error: false, message: 'Chunk received' });
+        }
+    } catch (error) {
+        logging.error('UPDATE_PROGRAM', 'An error occurred', error);
+        connection?.release();
+        return res.status(500).json({ error: true, errormsg: 'An error has occurred' });
+    }
+};
+
+export default { UploadWorkoutProgram, GetAllPrograms, GetProgramData, UpdateWorkoutProgram };

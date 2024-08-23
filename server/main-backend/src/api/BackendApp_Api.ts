@@ -16,8 +16,8 @@ import Stripe from 'stripe';
 const NAMESPACE = 'BackendApp_Api';
 const router = express();
 
-router.use(express.urlencoded({ extended: false }));
-router.use(express.json());
+router.use(express.json({ limit: '10mb' }));
+router.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 const pool = createPool();
 const stripe = new Stripe(`${process.env.StripeKey}`, { apiVersion: '2024-04-10' });
