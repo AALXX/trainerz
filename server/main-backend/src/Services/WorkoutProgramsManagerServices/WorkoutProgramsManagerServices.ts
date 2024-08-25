@@ -215,6 +215,11 @@ const GetProgramData = async (req: CustomRequest, res: Response) => {
         }
 
         const filePath = path.resolve(`${process.env.ACCOUNTS_FOLDER_PATH}/${program[0].ownertoken}/Program_${req.params.ProgramToken}/programFile.xlsx`);
+
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: true, errormsg: 'Program not found' });
+        }
+
         res.setHeader('Content-Type', 'application/octet-stream');
         res.setHeader('Content-Disposition', `attachment; filename="programFile.xlsx"`);
 
@@ -298,67 +303,48 @@ const UpdateWorkoutProgram = async (req: CustomRequest, res: Response) => {
     });
 };
 
-const UpdateWorkoutProgram_old = async (req: CustomRequest, res: Response) => {
+const DeleteWorkoutProgram = async (req: CustomRequest, res: Response) => {
     const errors = CustomRequestValidationResult(req);
     if (!errors.isEmpty()) {
-        errors.array().forEach((error) => {
-            logging.error('UPDATE_PROGRAM', error.errorMsg);
+        errors.array().map((error) => {
+            logging.error('DELETE_WORKOUT_PROGRAM', error.errorMsg);
         });
-        return res.status(400).json({ error: true, errormsg: 'Validation failed', errors: errors.array() });
     }
-
     const connection = await connect(req.pool!);
+
     try {
-        if (connection == null) {
-            return res.status(500).json({ error: true, errormsg: 'Connection to db failed' });
+        if (!connection) {
+            return res.status(500).json({ error: true, errormsg: 'Database connection failed' });
         }
-        const { chunk, chunkIndex, totalChunks, isLastChunk }: ChunkData = req.body.xcelData;
 
-        // Define the temporary file path
-        const tempFilePath = `${process.env.ACCOUNTS_FOLDER_PATH}/ProgramsTmp/temp_${req.params.UserPrivateToken}.json`; // Adjust the path as needed
-
-        // Append the chunk to the temporary file
-        fs.appendFileSync(tempFilePath, chunk);
-
-        if (isLastChunk) {
-            // Read the complete JSON data from the temporary file
-            const jsonString = fs.readFileSync(tempFilePath, 'utf-8');
-            const sheetData = JSON.parse(jsonString);
-
-            // Create a new workbook
-            const workbook = XLSX.utils.book_new();
-
-            // Iterate over each sheet in the data
-            for (const [sheetName, sheetContent] of Object.entries(sheetData)) {
-                const worksheet = XLSX.utils.json_to_sheet(sheetContent as object[]);
-                XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-            }
-
-            const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
-            if (!UserPublicToken) {
-                return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
-            }
-
-            // Generate a unique filename
-            const filepath = `${process.env.ACCOUNTS_FOLDER_PATH}/${UserPublicToken}/Program_${req.body.ProgramToken}/programFile.xlsx`; // Adjust the path as needed
-
-            // Write the workbook to a file
-            XLSX.writeFile(workbook, filepath);
-
-            // Delete the temporary file
-            fs.unlinkSync(tempFilePath);
-
-            connection.release();
-            return res.status(200).json({ error: false, message: 'Excel file created successfully' });
-        } else {
-            // If it's not the last chunk, just acknowledge receipt
-            return res.status(200).json({ error: false, message: 'Chunk received' });
+        const userPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+        if (!userPublicToken) {
+            return res.status(400).json({ error: true, errormsg: 'Invalid user token' });
         }
-    } catch (error) {
-        logging.error('UPDATE_PROGRAM', 'An error occurred', error);
+
+        const programPath = `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/Program_${req.body.ProgramToken}`;
+
+        const DeletePermissionSqlQuery = `DELETE FROM program_premissions WHERE ProgramToken = $1 AND UserPublicToken = $2`;
+        const PermissionDelete = await query(connection, DeletePermissionSqlQuery, [req.body.ProgramToken, userPublicToken], true);
+        
+        
+        const DeleteProgramSqlQuery = `DELETE FROM programs WHERE ProgramToken = $1 AND OwnerToken = $2`;
+        const ProgramDelete = await query(connection, DeleteProgramSqlQuery, [req.body.ProgramToken, userPublicToken]);
+
+        if (!PermissionDelete || !ProgramDelete) {
+            return res.status(500).json({ error: true, errormsg: 'Database error' });
+        }
+
+        if (fs.existsSync(programPath)) {
+            await utilFunctions.RemoveDirectory(programPath);
+        }
+
+        return res.status(200).json({ error: false });
+    } catch (error: any) {
         connection?.release();
-        return res.status(500).json({ error: true, errormsg: 'An error has occurred' });
+        logging.error('DELETE_WORKOUT_PROGRAM', `An error occurred: ${error.message}`);
+        res.status(500).json({ error: true, errormsg: 'An error has occurred' });
     }
 };
 
-export default { UploadWorkoutProgram, GetAllPrograms, GetProgramData, UpdateWorkoutProgram };
+export default { UploadWorkoutProgram, GetAllPrograms, GetProgramData, UpdateWorkoutProgram, DeleteWorkoutProgram };

@@ -20,12 +20,12 @@ const VideoContent = () => {
         })()
     }, [urlParams, subscriptionCheck])
 
-    // if (isLoading) {
-    //     return <div>Loading...</div>
-    // }
-
     if (error) {
-        return <div>Error: {error}</div>
+        return (
+            <div>
+                <h1 className="m-auto text-white">Error: {error}</h1>
+            </div>
+        )
     }
 
     if (!subscribed) {
@@ -54,14 +54,4 @@ const VideoContent = () => {
     )
 }
 
-const WatchVideoPage = () => {
-    return (
-        <div className="flex h-full flex-col">
-            <Suspense fallback={<div>Loading video content...</div>}>
-                <VideoContent />
-            </Suspense>
-        </div>
-    )
-}
-
-export default WatchVideoPage
+export default VideoContent

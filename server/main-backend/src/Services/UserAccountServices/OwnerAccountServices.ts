@@ -167,9 +167,9 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             return { error: true };
         }
 
-        const LoginQueryString = `SELECT UserPrivateToken, UserPublicToken, UserPwd, AccountType FROM users WHERE UserEmail='${req.body.userEmail}';`;
+        const LoginQueryString = `SELECT UserPrivateToken, UserPublicToken, UserPwd, AccountType FROM users WHERE UserEmail=$1;`;
 
-        const accountVideosDB = await query(connection, LoginQueryString);
+        const accountVideosDB = await query(connection, LoginQueryString, [req.body.userEmail], true);
 
         const data = JSON.parse(JSON.stringify(accountVideosDB));
         if (Object.keys(data).length === 0) {
@@ -179,9 +179,8 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
             });
         }
 
-        bcrypt.compare(req.body.password, data[0].userpwd, (err, isMatch) => {
+        bcrypt.compare(req.body.password, data[0].userpwd, async (err, isMatch) => {
             if (err) {
-                console.log(err);
                 return res.status(500).json({
                     error: true,
                 });
@@ -191,9 +190,13 @@ const LoginUser = async (req: CustomRequest, res: Response) => {
                     userPrivateToken: null,
                 });
             } else {
+                const userPrivateToken = utilFunctions.CreateSesionToken();
+                const NewTokenQueryString = `UPDATE users SET UserPrivateToken=$1 WHERE UserEmail=$2;`;
+                await query(connection, NewTokenQueryString, [userPrivateToken, req.body.userEmail]);
+
                 return res.status(200).json({
                     error: false,
-                    userPrivateToken: data[0].userprivatetoken,
+                    userPrivateToken: userPrivateToken,
                     userPublicToken: data[0].userpublictoken,
                     accountType: data[0].accounttype,
                 });

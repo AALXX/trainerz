@@ -24,10 +24,10 @@ const WorkoutPlans = () => {
     }, [])
 
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col overflow-y-scroll">
             {isLoggedIn ? (
                 <>
-                    <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:grid-rows-4  xl:grid-cols-5 xl:grid-rows-4 ">
                         {programs.map((program: IWorkoutProgram, index: number) => (
                             <WorkoutProgramTemplate programname={program.programname} programtoken={program.programtoken} key={index} />
                         ))}

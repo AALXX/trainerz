@@ -32,10 +32,9 @@ const GetCreatorAccountData = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
-    
+
     const connection = await connect(req.pool!);
     try {
-
         if (connection == null) {
             return false;
         }
@@ -43,11 +42,6 @@ const GetCreatorAccountData = async (req: CustomRequest, res: Response) => {
         const GetUserDataQueryString = `SELECT UserName, Description,  AccountFolowers, Sport, PhoneNumber, UserEmail, AccountType, userVisibility FROM users WHERE UserPublicToken='${req.params.profileToken}';`;
 
         const accData = await query(connection, GetUserDataQueryString);
-
-        let itFollows = false;
-        if (req.params.userPublicToken != null) {
-            itFollows = await UtilFunc.userFollowAccountCheck(req.pool!, req.params.userPublicToken, req.params.profileToken);
-        }
 
         if (Object.keys(accData).length === 0) {
             return res.status(200).json({
@@ -60,7 +54,6 @@ const GetCreatorAccountData = async (req: CustomRequest, res: Response) => {
         return res.status(200).json({
             error: false,
             userData: accData[0],
-            userFollowsCreator: itFollows,
         });
     } catch (error: any) {
         connection?.release();

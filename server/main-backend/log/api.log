@@ -297,3 +297,111 @@
 [2024-08-23T19:38:50.205Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-23T19:39:02.070Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-23T19:40:46.808Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:04:47.977Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:16:19.745Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:16:38.848Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:17:36.262Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:17:48.845Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:18:13.861Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:18:22.136Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:19:53.099Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:19:59.330Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:21:52.415Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:26:03.338Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:26:16.399Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:26:40.579Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:26:47.025Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:26:55.655Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:28:44.624Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-23T23:28:57.774Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T15:05:32.428Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:10:00.590Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:10:34.651Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:10:46.842Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:12:46.088Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:38:58.873Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T19:47:26.027Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T19:47:26.027Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T19:49:03.335Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T19:49:38.549Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T19:49:38.550Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T20:02:36.636Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T20:02:36.636Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T20:02:48.125Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T20:02:54.165Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T20:02:54.166Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-24T21:59:33.234Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:00:10.886Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:00:22.167Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:00:42.455Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:01:43.384Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:02:05.569Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:02:13.362Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:02:17.882Z] [ERROR] [PG_QUERY_FUNC] syntax error at or near "END"
+[2024-08-24T22:02:17.883Z] [ERROR] [DELETE_WORKOUT_PROGRAM] An error occurred: syntax error at or near "END"
+[2024-08-24T22:02:31.050Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:02:42.512Z] [ERROR] [PG_QUERY_FUNC] cannot insert multiple commands into a prepared statement
+[2024-08-24T22:02:42.513Z] [ERROR] [DELETE_WORKOUT_PROGRAM] An error occurred: cannot insert multiple commands into a prepared statement
+[2024-08-24T22:03:29.757Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:11:53.667Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:12:01.764Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:12:12.490Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:12:32.233Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-24T22:28:05.142Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T12:07:37.179Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-25T12:07:37.180Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-25T12:07:37.180Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-25T12:07:37.180Z] [ERROR] [LOGiN_USER_FUNC] Invalid value
+[2024-08-25T13:30:53.785Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:31:20.919Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:40:36.378Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:42:18.410Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:44:43.843Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:48:57.120Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:49:08.016Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:53:45.825Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T13:54:14.750Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T14:01:32.601Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T19:57:13.144Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T20:06:07.014Z] [ERROR] [PostgreSQL Pool Error:] Connection terminated unexpectedly
+[2024-08-25T20:06:07.060Z] [ERROR] [PostgreSQL Pool Error:] Connection terminated unexpectedly
+[2024-08-25T21:12:47.289Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:19:52.705Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:20:04.692Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:21:38.815Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:23:51.946Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:25:12.980Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:26:05.759Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:26:18.325Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:26:48.766Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:27:10.097Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:27:41.875Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:28:28.932Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:30:15.401Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:30:58.576Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:33:28.503Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:33:42.875Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:39:12.354Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:39:32.483Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:39:38.092Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:42:45.813Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:43:21.738Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:43:38.919Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:43:41.092Z] [ERROR] [PG_QUERY_FUNC] Release called on client which has already been released to the pool.
+[2024-08-25T21:43:41.112Z] [ERROR] [PG_QUERY_FUNC] Release called on client which has already been released to the pool.
+[2024-08-25T21:44:02.522Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:45:26.541Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:45:43.230Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:45:58.489Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:46:34.509Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:47:52.155Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:48:46.057Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:49:36.208Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:49:52.284Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:50:11.543Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:50:24.840Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T21:50:36.242Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T22:41:00.072Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T22:41:31.158Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T22:41:56.321Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T22:42:14.699Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070

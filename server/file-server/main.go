@@ -92,7 +92,7 @@ func resetCache() {
 func restrictIP(next http.Handler, allowedIPs []string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		remoteIP := strings.Split(r.RemoteAddr, ":")[0]
-		log.Printf("Remote address: %s\n", remoteIP)
+		// log.Printf("Remote address: %s\n", remoteIP)
 
 		allowed := false
 		for _, ip := range allowedIPs {

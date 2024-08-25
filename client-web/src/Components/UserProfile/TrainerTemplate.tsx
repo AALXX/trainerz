@@ -112,7 +112,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                         <div className="flex h-32 w-80 self-center">
                             <div className="relative z-10 h-24 w-40 self-center">
                                 <ImgWithAuth
-                                    className="m-auto flex h-24 w-24 self-center rounded-full"
+                                    className="m-auto flex h-24 w-24 self-center rounded-full "
                                     onMouseLeave={() => {
                                         setIsAccIconHovered(false)
                                     }}
@@ -124,7 +124,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                 />
                                 {isAccIconHovered ? (
                                     <div
-                                        className="absolute inset-0 m-auto flex h-28 w-28 cursor-pointer rounded-full bg-black bg-opacity-80"
+                                        className="absolute inset-0 m-auto flex h-24 w-24 cursor-pointer rounded-full bg-black bg-opacity-80 border "
                                         onMouseEnter={() => {
                                             setIsAccIconHovered(true)
                                         }}

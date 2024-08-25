@@ -3,6 +3,7 @@ import axios from 'axios'
 import { setCookie, getCookie, deleteCookie } from 'cookies-next'
 import { setAccountType } from '@/lib/redux/accountSlice'
 import { useDispatch } from 'react-redux'
+import jwt from 'jsonwebtoken'
 
 const useAccountRegister = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -130,9 +131,21 @@ const useAccountStatus = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
     const checkStatus = async () => {
-        const userToken = getCookie('userToken')
-        setIsLoggedIn(userToken !== undefined)
-        return userToken !== undefined
+        const userToken = getCookie('userToken') as string
+        jwt.verify(userToken, `${process.env.ACCOUNT_SECRET}`, (err, decoded) => {
+            if (err) {
+                console.error(err)
+                setIsLoggedIn(false)
+                deleteCookie('userToken')
+                deleteCookie('userPublicToken')
+                deleteCookie('accountType')
+                return false
+            } else {
+                // Token is valid, decoded contains user info
+                setIsLoggedIn(userToken !== undefined)
+                return userToken !== undefined
+            }
+        })
     }
 
     return { isLoggedIn, checkStatus }

@@ -45,6 +45,16 @@ const CreateToken = (): string => {
     return userprivateToken;
 };
 
+const CreateSesionToken = (): string => {
+    // const secretExt = new Date().getTime().toString();
+
+    const jwtSecretKey = `${process.env.ACCOUNT_SECRET}`;
+
+    const userprivateToken = jwt.sign({}, jwtSecretKey, { expiresIn: '1d' });
+
+    return userprivateToken;
+};
+
 /**
  * Checks if a given email address exists in the users table.
  *
@@ -150,6 +160,8 @@ const getUserPublicTokenFromPrivateToken = async (pool: Pool, userPrivateToken: 
     const connection = await connect(pool);
     try {
         if (userPrivateToken === 'undefined') {
+            connection?.release();
+
             return null;
         }
 
@@ -179,7 +191,6 @@ const getUserRole = async (pool: Pool, userToken: string, chanelPublicToken: str
         if (userToken === 'undefined') {
             return null;
         }
-
 
         if (connection == null) {
             return null;
@@ -240,32 +251,32 @@ const checkIfUserIsBlocked = async (pool: Pool, userPrivateToken: string, chanel
  * @param {string} accountPublicToken - The account's public token.
  * @return {Promise<boolean>} A promise that resolves to true if the user is following the account, false otherwise.
  */
-const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPublicToken: string): Promise<boolean> => {
-    const NAMESPACE = 'USER_FOLLOW_CHECK_FUNCTION';
-    const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken='${userToken}' AND accountToken='${accountPublicToken}';`;
+// const userFollowAccountCheck = async (pool: Pool, userToken: string, accountPublicToken: string): Promise<boolean> => {
+//     const NAMESPACE = 'USER_FOLLOW_CHECK_FUNCTION';
+//     const QueryString = `SELECT * FROM user_follw_account_class WHERE userToken='${userToken}' AND accountToken='${accountPublicToken}';`;
 
-    const connection = await connect(pool);
-    try {
-        if (userToken === 'undefined') {
-            return false;
-        }
+//     const connection = await connect(pool);
+//     try {
+//         if (userToken === 'undefined') {
+//             return false;
+//         }
 
-        if (connection == null) {
-            return false;
-        }
-        const checkfollowResponse = await query(connection, QueryString);
-        const data = JSON.parse(JSON.stringify(checkfollowResponse));
-        if (Object.keys(data).length != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error: any) {
-        connection?.release();
-        logging.error(NAMESPACE, error.message, error);
-        return false;
-    }
-};
+//         if (connection == null) {
+//             return false;
+//         }
+//         const checkfollowResponse = await query(connection, QueryString);
+//         const data = JSON.parse(JSON.stringify(checkfollowResponse));
+//         if (Object.keys(data).length != 0) {
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     } catch (error: any) {
+//         connection?.release();
+//         logging.error(NAMESPACE, error.message, error);
+//         return false;
+//     }
+// };
 
 //* /////////////////////////////
 //*      Videos related        //
@@ -280,7 +291,6 @@ const getUserLikedOrDislikedVideo = async (pool: Pool, userToken: string, VideoT
         if (userToken === 'undefined') {
             return { userLiked: false, like_or_dislike: 0 };
         }
-
 
         if (connection == null) {
             return { userLiked: false, like_or_dislike: 0 };
@@ -350,9 +360,9 @@ export default {
     HashPassword,
     checkEmailExists,
     CreateToken,
+    CreateSesionToken,
     getUserRole,
     checkIfUserIsBlocked,
-    userFollowAccountCheck,
     getUserEmailFromPrivateToken,
     getUserLikedOrDislikedVideo,
     getUserPublicTokenFromPrivateToken,

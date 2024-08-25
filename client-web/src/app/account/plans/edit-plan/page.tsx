@@ -184,6 +184,19 @@ const EditWorkoutPlan = () => {
         })
     }, [workbook, sheetNames, sheetIndex])
 
+    const handleDeleteProgram = async() => {
+        const resp = await axios.post(`${process.env.SERVER_BACKEND}/programs-manager/delete-workout-program`, {
+            ProgramToken: urlParams.get('t'),
+            UserPrivateToken: getCookie('userToken')
+        })
+
+        if (resp.data.error) {
+            window.alert(resp.data.errormsg)
+        } else {
+            window.location.href = '/account/plans'
+        }
+    }
+
     const renderTableHeaders = useMemo(() => {
         return excelData.length > 0 ? (
             <thead className="sticky top-0 z-10 bg-gray-200">
@@ -254,6 +267,16 @@ const EditWorkoutPlan = () => {
                                 className="rounded bg-[#0000003d] px-4 py-2 text-white transition duration-300 hover:bg-[#00000070]"
                             >
                                 Add Row
+                            </button>
+
+                            <button
+                                onClick={e => {
+                                    e.preventDefault()
+                                    handleDeleteProgram()
+                                }}
+                                className="rounded bg-[#d31b1b7e] px-4 py-2 text-white transition duration-300 hover:bg-[#d31b1ba4]"
+                            >
+                                Delete
                             </button>
 
                             <div className="text-red-500">{uploadStatus}</div>

@@ -203,19 +203,19 @@ const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
     }
 
     const connection = await connect(req.pool!);
+    if (connection == null) {
+        return res.status(500).json({
+            error: true,
+            message: 'could not connect to database',
+        });
+    }
 
     try {
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.UserPrivateToken);
         if (UserPublicToken == null) {
+            connection!.release();
             return res.status(200).json({
                 error: true,
-            });
-        }
-
-        if (connection == null) {
-            return res.status(500).json({
-                error: true,
-                message: 'could not connect to database',
             });
         }
 
