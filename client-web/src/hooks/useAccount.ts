@@ -130,22 +130,22 @@ const useAccountLogout = () => {
 const useAccountStatus = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
-    const checkStatus = async () => {
+    const checkStatus = async (): Promise<boolean> => {
         const userToken = getCookie('userToken') as string
-        jwt.verify(userToken, `${process.env.ACCOUNT_SECRET}`, (err, decoded) => {
-            if (err) {
-                console.error(err)
-                setIsLoggedIn(false)
+        if (userToken !== undefined) {
+            if (jwt.verify(userToken, `${process.env.ACCOUNT_SECRET}`)) {
+                setIsLoggedIn(userToken !== undefined)
+                return userToken !== undefined
+            } else {
                 deleteCookie('userToken')
                 deleteCookie('userPublicToken')
                 deleteCookie('accountType')
                 return false
-            } else {
-                // Token is valid, decoded contains user info
-                setIsLoggedIn(userToken !== undefined)
-                return userToken !== undefined
             }
-        })
+        }
+        setIsLoggedIn(false)
+
+        return false
     }
 
     return { isLoggedIn, checkStatus }

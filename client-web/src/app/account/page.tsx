@@ -56,25 +56,25 @@ const Account = () => {
     }, [userToken])
 
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col overflow-y-scroll">
             {isLoggedIn ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
-                        <TrainerTemplate
-                            accountfolowers={userData.accountfolowers}
-                            accounttype={userData.accounttype}
-                            birthDate={userData.birthDate}
-                            description={userData.description}
-                            locationlat={userData.locationlat}
-                            locationlon={userData.locationlon}
-                            sport={userData.sport}
-                            phonenumber={userData.phonenumber}
-                            useremail={userData.useremail}
-                            username={userData.username}
-                            userpublictoken={getCookie('userPublicToken') as string}
-                            uservisibility={userData.uservisibility}
-                            rating={userData.rating}
-                        />
+                            <TrainerTemplate
+                                accountfolowers={userData.accountfolowers}
+                                accounttype={userData.accounttype}
+                                birthDate={userData.birthDate}
+                                description={userData.description}
+                                locationlat={userData.locationlat}
+                                locationlon={userData.locationlon}
+                                sport={userData.sport}
+                                phonenumber={userData.phonenumber}
+                                useremail={userData.useremail}
+                                username={userData.username}
+                                userpublictoken={getCookie('userPublicToken') as string}
+                                uservisibility={userData.uservisibility}
+                                rating={userData.rating}
+                            />
                     ) : (
                         <SportsPersonTemplate
                             accountfolowers={0}

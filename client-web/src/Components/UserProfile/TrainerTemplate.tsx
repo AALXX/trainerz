@@ -38,7 +38,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 return (
                     <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
                         {Object.keys(userPackages).length > 0 ? (
-                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
                                 {userPackages.map((packageData: IAccountPackages, index: number) => (
                                     <PackageCardTemplate
                                         packagesport={packageData.packagesport}
@@ -50,6 +50,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                         ownertoken={packageData.ownertoken}
                                     />
                                 ))}
+                              
                             </div>
                         ) : (
                             <h1 className="mt-4 self-center text-white">No Packages!</h1>
@@ -59,21 +60,28 @@ const TrainerTemplate = (props: IUserPrivateData) => {
 
             case 'Videos':
                 return (
-                    <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                        {videosData.map((video: IVideoTemplate, index: number) => (
-                            <VideoTamplate
-                                isOwner={isOwner!}
-                                key={index}
-                                videotitle={video.videotitle}
-                                dislikes={video.dislikes}
-                                likes={video.likes}
-                                ownertoken={video.ownertoken}
-                                publishdate={video.publishdate}
-                                packagesport={video.packagesport}
-                                videotoken={video.videotoken}
-                                visibility={video.visibility}
-                            />
-                        ))}
+                    <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
+                        {Object.keys(userPackages).length > 0 ? (
+                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                                {videosData.map((video: IVideoTemplate, index: number) => (
+                                    <VideoTamplate
+                                        isOwner={isOwner!}
+                                        key={index}
+                                        videotitle={video.videotitle}
+                                        dislikes={video.dislikes}
+                                        likes={video.likes}
+                                        ownertoken={video.ownertoken}
+                                        publishdate={video.publishdate}
+                                        packagesport={video.packagesport}
+                                        videotoken={video.videotoken}
+                                        visibility={video.visibility}
+                                        status={video.status}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <h1 className="mt-4 self-center text-white">No Packages!</h1>
+                        )}
                     </div>
                 )
 
@@ -112,7 +120,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                         <div className="flex h-32 w-80 self-center">
                             <div className="relative z-10 h-24 w-40 self-center">
                                 <ImgWithAuth
-                                    className="m-auto flex h-24 w-24 self-center rounded-full "
+                                    className="m-auto flex h-24 w-24 self-center rounded-full"
                                     onMouseLeave={() => {
                                         setIsAccIconHovered(false)
                                     }}
@@ -124,7 +132,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                 />
                                 {isAccIconHovered ? (
                                     <div
-                                        className="absolute inset-0 m-auto flex h-24 w-24 cursor-pointer rounded-full bg-black bg-opacity-80 border "
+                                        className="absolute inset-0 m-auto flex h-24 w-24 cursor-pointer rounded-full border bg-black bg-opacity-80"
                                         onMouseEnter={() => {
                                             setIsAccIconHovered(true)
                                         }}

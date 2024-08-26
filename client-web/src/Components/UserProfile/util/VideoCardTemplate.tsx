@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getCookie } from 'cookies-next'
 import { abbreviateNumber } from '@/Components/CommonUi/util/NumberAbrev'
 import { IVideoTemplate } from '../IAccountProfile'
 import TruncatedText from '@/Components/CommonUi/util/TruncateText'
@@ -11,8 +10,16 @@ import ImgWithAuth from '@/Components/CommonUi/ImageWithAuth'
 export const VideoTemplate = (props: IVideoTemplate) => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
 
+    if (props.status == 'processing') {
+        return (
+            <div className="flex flex-col relative h-0 w-full overflow-hidden bg-[#00000080] pb-[60%] rounded-xl">
+                <h1 className="m-auto text-lg text-white"> {props.videotitle} is processing</h1>
+            </div>
+        )
+    }
+
     return (
-        <Link href={`/watch?vt=${props.videotoken}`} className="relative h-0 w-full overflow-hidden pb-[60%]">
+        <Link href={`/watch?vt=${props.videotoken}`} className="relative h-[13rem] w-full overflow-hidden ">
             <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                 <ImgWithAuth src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full rounded-2xl object-cover" />
                 {isHovered && (

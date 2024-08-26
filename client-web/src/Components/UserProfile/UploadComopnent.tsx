@@ -139,6 +139,9 @@ const UploadComponent = () => {
         }
 
         try {
+
+            if (formData.get('VideoTitle') == null || formData.get('VideoTitle') == null) return
+
             const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/upload-video`, formData, config)
             console.log(res)
         } catch (error) {

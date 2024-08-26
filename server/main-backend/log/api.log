@@ -405,3 +405,35 @@
 [2024-08-25T22:41:31.158Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-25T22:41:56.321Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-25T22:42:14.699Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-25T23:22:02.334Z] [INFO] [AccountUploadServiceManager] Posting Video service called
+[2024-08-26T08:37:35.147Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:38:59.299Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:39:24.322Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:40:38.651Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:40:47.697Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:42:07.081Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:42:49.576Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:42:55.664Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:43:31.517Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:46:53.032Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:52:39.274Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:52:47.935Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:52:55.348Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T08:54:44.235Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:11:01.389Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:11:21.796Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:11:30.351Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:11:39.523Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:11:47.279Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:31:16.607Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:34:11.119Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:37:32.667Z] [INFO] [AccountUploadServiceManager] Posting Video service called
+[2024-08-26T09:37:33.044Z] [ERROR] [PG_QUERY_FUNC] unterminated quoted string at or near "'processing)"
+[2024-08-26T09:38:07.494Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T09:38:23.432Z] [INFO] [AccountUploadServiceManager] Posting Video service called
+[2024-08-26T09:46:38.267Z] [ERROR] [PG_QUERY_FUNC] syntax error at or near "("
+[2024-08-26T09:48:31.820Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T11:07:44.600Z] [INFO] [AccountUploadServiceManager] Posting Video service called
+[2024-08-26T11:09:23.150Z] [ERROR] [PG_QUERY_FUNC] syntax error at or near "VALUES"
+[2024-08-26T11:10:23.004Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-26T11:43:28.774Z] [INFO] [AccountUploadServiceManager] Posting Video service called

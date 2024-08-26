@@ -6,6 +6,7 @@ import logging from '../../config/logging';
 import utilFunctions from '../../util/utilFunctions';
 import { validationResult } from 'express-validator';
 import { connect, CustomRequest, query } from '../../config/postgresql';
+import { Pool } from 'pg';
 
 const NAMESPACE = 'AccountUploadServiceManager';
 
@@ -109,7 +110,12 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
                         return res.status(500).json({ error: true, errormsg: 'File renaming error' });
                     }
 
-                    await VideoProceesor(
+                    const success = await SendInitialVideoDataToDb(req.pool!, userPublicToken, VideoToken, req.body.VideoTitle, req.body.PackageToken);
+                    if (!success) {
+                        return res.status(500).json({ error: true, errormsg: 'Database error' });
+                    }
+
+                    const resp = await VideoProceesor(
                         `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/${VideoToken}/Original.mp4`,
                         `${process.env.ACCOUNTS_FOLDER_PATH}/${userPublicToken}/${VideoToken}/Source.mp4`,
                         req.body.width,
@@ -117,11 +123,12 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
                         16,
                     );
 
-                    const success = await SendVideoDataToDb(req, userPublicToken, VideoToken, req.body.VideoTitle, req.body.PackageToken);
-                    if (!success) {
+                    console.log(resp);
+
+                    const updateSuccess = await UpdateVideoStatus(req.pool!, VideoToken);
+                    if (!updateSuccess) {
                         return res.status(500).json({ error: true, errormsg: 'Database error' });
                     }
-
                     return res.status(200).json({ error: false });
                 });
             });
@@ -139,18 +146,36 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
  * @param {number} price - The price of the video.
  * @return {boolean}  `true` if the video data was successfully sent to the database, `false` otherwise.
  */
-const SendVideoDataToDb = async (req: CustomRequest, userPublicToken: string, videoToken: string, VideoTitle: string, PackageToken: number) => {
+const SendInitialVideoDataToDb = async (pool: Pool, userPublicToken: string, videoToken: string, VideoTitle: string, PackageToken: number) => {
     const today = new Date().toISOString().slice(0, 10);
 
-    const connection = await connect(req.pool!);
+    const connection = await connect(pool);
     try {
         if (connection == null) {
+            connection!.release();
             return false;
         }
 
-        const SendVidsDatasSqlQuery = `INSERT INTO videos (VideoTitle, VideoDescription, PublishDate, VideoToken, OwnerToken, Visibility, Packagetoken)
-        VALUES($1, '', $2, $3, $4, 'public', $5)`;
+        const SendVidsDatasSqlQuery = `INSERT INTO videos (VideoTitle, VideoDescription, PublishDate, VideoToken, OwnerToken, Visibility, Packagetoken, Status)
+        VALUES($1, '', $2, $3, $4, 'public', $5, 'processing')`;
         await query(connection, SendVidsDatasSqlQuery, [VideoTitle, today, videoToken, userPublicToken, PackageToken]);
+        return true;
+    } catch (error) {
+        connection?.release();
+        return false;
+    }
+};
+
+const UpdateVideoStatus = async (pool: Pool, videoToken: string) => {
+    const connection = await connect(pool);
+    try {
+        if (connection == null) {
+            connection!.release();
+            return false;
+        }
+
+        const SendVidsDatasSqlQuery = `UPDATE videos SET Status='ready' WHERE VideoToken = $1`;
+        await query(connection, SendVidsDatasSqlQuery, [videoToken]);
         return true;
     } catch (error) {
         connection?.release();
@@ -240,7 +265,7 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
-    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoToken, v.Visibility, v.Views, u.UserName as OwnerName, p.PackageSport
+    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoToken, v.Visibility, v.Views, v.Status, u.UserName as OwnerName, p.PackageSport
     FROM videos AS v
     JOIN users AS u ON v.OwnerToken = u.UserPublicToken
     LEFT JOIN packages AS p ON v.PackageToken = p.PackageToken
@@ -371,8 +396,6 @@ const UpdateCreatorVideoData = async (req: CustomRequest, res: Response) => {
                 OwnerToken = $5;
         `;
         await query(connection, updateVideoQuery, [req.body.VideoTitle, req.body.VideoVisibility, req.body.PackageToken, req.body.VideoToken, UserPublicToken]);
-
-     
 
         res.status(202).json({
             error: false,

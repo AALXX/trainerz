@@ -6,7 +6,7 @@ import ImgWithAuth from '../CommonUi/ImageWithAuth'
 
 const PackageCardTemplate = (props: IAccountPackages) => {
     return (
-        <Link href={`/package-view?t=${props.packagetoken}`} className="relative h-0 w-full overflow-hidden pb-[60%]">
+        <Link href={`/package-view?t=${props.packagetoken}`} className="relative h-[13rem] w-full overflow-hidden ">
             <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white">
                 <ImgWithAuth src={`${process.env.FILE_SERVER}/${props.ownertoken}/Package_${props.packagetoken}/Photo_1.jpg?cache=none`} className="h-full w-full rounded-2xl object-cover" alt="package iamge" />
                 <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-between">

@@ -54,4 +54,5 @@ export interface IVideoTemplate {
     dislikes: number
     visibility: string
     isOwner: boolean
+    status: string
 }
