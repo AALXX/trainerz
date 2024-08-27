@@ -38,7 +38,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 return (
                     <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
                         {Object.keys(userPackages).length > 0 ? (
-                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
+                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {userPackages.map((packageData: IAccountPackages, index: number) => (
                                     <PackageCardTemplate
                                         packagesport={packageData.packagesport}
@@ -50,7 +50,6 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                         ownertoken={packageData.ownertoken}
                                     />
                                 ))}
-                              
                             </div>
                         ) : (
                             <h1 className="mt-4 self-center text-white">No Packages!</h1>
@@ -168,23 +167,19 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                             </div>
                         </div>
                         <div className="ml-auto flex h-32 w-72 flex-col self-center rounded-xl bg-[#0000005e]">
-                            <div className="mt-4 flex w-full">
+                            <div className="m-auto flex w-full flex-col">
                                 <h1 className="ml-4 self-center text-white">Account Rating</h1>
                                 {props.rating == null ? (
-                                    <>
-                                        <h1 className="ml-auto mr-2 self-center text-white">0/5</h1>
-                                        <img className="z-10 mr-4 h-10 w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
-                                    </>
+                                    <div className="ml-8 flex h-10 self-center">
+                                        <h1 className="self-center text-white">0/5</h1>
+                                        <img className="w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
+                                    </div>
                                 ) : (
-                                    <>
-                                        <h1 className="ml-auto mr-2 self-center text-white">{props.rating}/5</h1>
-                                        <img className="z-10 mr-4 h-10 w-10 self-center text-white" src={`/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
-                                    </>
+                                    <div className="ml-8 flex h-10 self-center">
+                                        <h1 className="self-center text-white">props.rating/5</h1>
+                                        <img className="w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
+                                    </div>
                                 )}
-                            </div>
-                            <div className="mt-4 flex w-full self-center">
-                                <h1 className="ml-4 self-center text-white">Account Folowers</h1>
-                                <h1 className="ml-auto mr-16 text-white">{props.accountfolowers}</h1>
                             </div>
                         </div>
                     </div>
@@ -193,13 +188,6 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                     <SelectableCards
                         Title="PACKAGES"
                         TabName="PackagesPage"
-                        setComponentToShow={setComponentToShow}
-                        className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
-                        activeTab={componentToShow}
-                    />
-                    <SelectableCards
-                        Title="POSTS"
-                        TabName="Posts"
                         setComponentToShow={setComponentToShow}
                         className="ml-2 h-[3rem] w-[10rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                         activeTab={componentToShow}

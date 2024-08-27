@@ -22,8 +22,8 @@ RUN export $(grep -v '^#' .env | xargs)
 # Build the Go app
 RUN go build -o main .
 
-# Expose port 5500
-EXPOSE 5500
+# Expose port 7250
+EXPOSE 7250
 
 # Command to run the executable
 CMD ["./main"]

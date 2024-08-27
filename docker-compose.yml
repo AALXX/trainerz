@@ -3,9 +3,7 @@ version: '4.15'
 # !FOR DEPLOYMENT ONLY
 services:
   web-client:
-    build: 
-      context: ./client-web
-      dockerfile: Dockerfile
+    build: ./client-web
     container_name: web-client
     ports:
       - '3000:3000'

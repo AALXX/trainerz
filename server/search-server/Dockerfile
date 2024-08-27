@@ -13,17 +13,17 @@ RUN go mod download
 # Copy the source code from the current directory to the Working Directory inside the container
 COPY . .
 
+# Copy the .env file to the container
+COPY .env .env
+
+# Set environment variables from the .env file using a shell command
+RUN export $(grep -v '^#' .env | xargs)
+
 # Build the Go app
 RUN go build -o main .
 
 # Expose port 7300
 EXPOSE 7300
-
-ENV MYSQL_HOST=trainerz-db-server.clucio0esuhj.us-east-1.rds.amazonaws.com
-ENV MYSQL_PORT=3308
-ENV MYSQL_USER=alxAdmin
-ENV MYSQL_PASS=Alexecelmaitarefemeilemoare2
-
 
 # Command to run the executable
 CMD ["./main"]

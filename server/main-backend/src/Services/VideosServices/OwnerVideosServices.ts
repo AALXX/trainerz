@@ -123,7 +123,9 @@ const UploadVideoFileToServer = async (req: CustomRequest, res: Response) => {
                         16,
                     );
 
-                    console.log(resp);
+                    if (resp.error) {
+                        return res.status(500).json({ error: true, errormsg: 'Video Processing error' });
+                    }
 
                     const updateSuccess = await UpdateVideoStatus(req.pool!, VideoToken);
                     if (!updateSuccess) {
@@ -213,7 +215,7 @@ const ThumbnailProceesor = async (path: string) =>
  * @param {number} numThreads - The number of threads to use for the transcoding process.
  * @return {void} A Promise that resolves with an object containing an 'error' property indicating whether the operation was successful.
  */
-const VideoProceesor = async (srcPath: string, dstPath: string, width: number, height: number, numThreads: number) =>
+const VideoProceesor = async (srcPath: string, dstPath: string, width: number, height: number, numThreads: number): Promise<{ error: boolean }> =>
     new Promise((resolve, reject) => {
         const ffprobe = FFmpeg.ffprobe;
 

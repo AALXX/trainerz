@@ -31,7 +31,7 @@ const VideoContent = () => {
     if (!subscribed) {
         return (
             <div className="flex h-full flex-col">
-                <h1 className="mt-5 self-center text-white">Not Subscribed</h1>
+                <h1 className="mt-5 self-center text-white">Not Subscribed to the package</h1>
             </div>
         )
     }

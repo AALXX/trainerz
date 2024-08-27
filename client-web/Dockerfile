@@ -13,12 +13,8 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
-RUN npm run build
-
-COPY .next ./.next
-
 # Expose the port Next.js will run on
 EXPOSE 3000
 
-# Start the Next.js development server
+# Start the Next.js development server  
 CMD ["npm", "run", "dev"]

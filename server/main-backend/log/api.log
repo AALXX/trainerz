@@ -437,3 +437,4 @@
 [2024-08-26T11:09:23.150Z] [ERROR] [PG_QUERY_FUNC] syntax error at or near "VALUES"
 [2024-08-26T11:10:23.004Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-26T11:43:28.774Z] [INFO] [AccountUploadServiceManager] Posting Video service called
+[2024-08-26T12:51:42.276Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
