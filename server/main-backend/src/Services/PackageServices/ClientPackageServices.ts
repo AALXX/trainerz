@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validationResult, body } from 'express-validator';
 import logging from '../../config/logging';
 import { connect, CustomRequest, query } from '../../config/postgresql';
 import utilFunctions from '../../util/utilFunctions';
@@ -141,15 +141,16 @@ const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
         errors.array().forEach((error) => logging.error('CHECKOUT_PACKAGE', error.msg));
         return res.status(400).json({ error: true, errors: errors.array() });
     }
-    
+
     const connection = await connect(req.pool!);
     try {
         const UserEmail = await utilFunctions.getUserEmailFromPrivateToken(req.pool!, req.params.userPrivateToken);
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.params.userPrivateToken);
         if (!UserEmail) {
+            connection?.release();
+
             return res.status(404).json({ error: true, errmsg: 'Email not found' });
         }
-
 
         if (connection == null) {
             return res.status(202).json({
@@ -176,4 +177,78 @@ const GetSubscribedPackages = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export default { GetPackageData, GetSubscribedPackages };
+const PostReview = async (req: CustomRequest, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach((error) => logging.error('POST_REVIEW_FUNC', error.msg));
+        return res.status(400).json({ error: true, errors: errors.array() });
+    }
+
+    const connection = await connect(req.pool!);
+    try {
+        const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.userPrivateToken);
+        if (!UserPublicToken) {
+            connection?.release();
+            return res.status(404).json({ error: true, errmsg: 'User not found' });
+        }
+
+        if (connection == null) {
+            return res.status(202).json({
+                error: true,
+            });
+        }
+
+        const ReviewToken = utilFunctions.CreateToken();
+
+        const QueryString = `INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating) VALUES ($1, $2, $3, $4, $5);`;
+
+        const products = await query(connection, QueryString, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating]);
+
+        return res.status(200).json({
+            packages: products,
+            error: false,
+        });
+    } catch (error: any) {
+        connection?.release();
+        logging.error('CHECKOUT_PACKAGE', error.message);
+        return res.status(500).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+const GetPackageReviews = async (req: CustomRequest, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach((error) => logging.error('GET_REVIEW_FUNC', error.msg));
+        return res.status(400).json({ error: true, errors: errors.array() });
+    }
+
+    const connection = await connect(req.pool!);
+    try {
+        if (connection == null) {
+            return res.status(202).json({
+                error: true,
+            });
+        }
+
+        const QueryString = `SELECT r.ReviewText, r.ReviewRating, r.ReviewToken, r.ownertoken, u.UserName FROM reviews r LEFT JOIN users u ON r.OwnerToken = u.UserPublicToken WHERE r.PackageToken = $1;`;
+
+        const reviwes = await query(connection, QueryString, [req.params.packageToken]);
+        return res.status(200).json({
+            reviews: reviwes,
+            error: false,
+        });
+
+    } catch (error: any) {
+        connection?.release();
+        logging.error('GET_REVIEW_FUNC', error.message);
+        return res.status(500).json({
+            error: true,
+            errmsg: error.message,
+        });
+    }
+};
+
+export default { GetPackageData, GetSubscribedPackages, PostReview, GetPackageReviews };

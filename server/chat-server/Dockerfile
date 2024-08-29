@@ -17,7 +17,7 @@ COPY . .
 COPY .env .env
 
 # Set environment variables from the .env file using a shell command
-RUN export $(grep -v '^#' .env | xargs)
+RUN export $(grep -v '^[[:space:]]*#' .env | grep -v '^[[:space:]]*$' | xargs)
 
 # Build the Go app
 RUN go build -o main .

@@ -23,7 +23,7 @@ const PhotoSlider: React.FC<PhotoSliderProps> = ({ images }) => {
                 <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
                     {images.map((image, index) => (
                         <div key={index} className="w-full flex-shrink-0">
-                            <ImageWithAuth src={image} alt={`Slide ${index}`} className="h-[25rem] w-full object-cover" />
+                            <ImageWithAuth src={image} alt={`Slide ${index}`} className="w-full object-cover xl:h-[20rem] 3xl:h-[25rem]" />
                         </div>
                     ))}
                 </div>
