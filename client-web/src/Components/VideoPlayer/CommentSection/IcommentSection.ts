@@ -18,5 +18,5 @@ export interface ICommentCard {
     comment: string
     ownerName: string
     viwerPublicToken: string
-    DeleteComment: (CommentID: number) => void
+    DeleteComment?: (CommentID: number) => void
 }

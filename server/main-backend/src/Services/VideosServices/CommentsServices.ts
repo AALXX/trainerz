@@ -47,17 +47,23 @@ const PostCommentToVideo = async (req: CustomRequest, res: Response) => {
 
         const ownerToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
         if (ownerToken == null) {
+            connection?.release();
+
             return res.status(200).json({
                 error: true,
             });
         }
 
-        const PostCommentSQL = `INSERT INTO comments (ownerToken, videoToken, comment) VALUES ('${ownerToken}','${req.body.VideoToken}','${req.body.Comment}'); SELECT UserName FROM users WHERE UserPublicToken='${ownerToken}';`;
-        const userName = await query(connection, PostCommentSQL);
+        const PostCommentSQL = `INSERT INTO comments (ownerToken, videoToken, comment) VALUES ($1, $2, $3);`;
+        await query(connection, PostCommentSQL, [ownerToken, req.body.VideoToken, req.body.Comment], true);
 
-        res.status(202).json({
+        const GetUserNameSQL = `SELECT UserName FROM users WHERE userpublictoken = '${ownerToken}';`;
+        const resp = await query(connection, GetUserNameSQL);
+
+        console.log(resp[0].username);
+        return res.status(202).json({
             error: false,
-            userName: userName[1][0].UserName,
+            userName: resp[0].username,
         });
     } catch (error: any) {
         connection?.release();
@@ -93,7 +99,9 @@ const DeleteComment = async (req: CustomRequest, res: Response) => {
 
     try {
         const ownerToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.UserPrivateToken);
+
         if (ownerToken == null) {
+            connection?.release();
             return res.status(200).json({
                 error: true,
             });
@@ -101,7 +109,7 @@ const DeleteComment = async (req: CustomRequest, res: Response) => {
 
         const PostCommentSQL = `DELETE FROM comments WHERE ownerToken='${ownerToken}' AND videoToken='${req.body.VideoToken}' AND id='${req.body.CommentID}'`;
         await query(connection, PostCommentSQL);
-        res.status(202).json({
+        return res.status(202).json({
             error: false,
         });
     } catch (error: any) {
@@ -132,7 +140,6 @@ const GetVideoComments = async (req: CustomRequest, res: Response) => {
 
     const connection = await connect(req.pool!);
     try {
-
         if (connection == null) {
             return false;
         }
@@ -164,7 +171,7 @@ const GetVideoComments = async (req: CustomRequest, res: Response) => {
             ownerToken: comment.ownertoken,
             videoToken: comment.videotoken,
             comment: comment.comment,
-            ownerName: comment.ownername, // use correct field name
+            ownerName: comment.ownername,
         }));
 
         return res.status(202).json({

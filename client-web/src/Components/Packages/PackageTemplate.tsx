@@ -37,7 +37,7 @@ const PackageTemplate = (props: IPackageTemplate) => {
                 </div>
             </div>
 
-            <textarea className="mt-6 h-40 resize-none rounded-2xl bg-[#474084] indent-3 text-white" value={props.description} readOnly={true} />
+            <textarea className="mt-6 h-40 resize-none rounded-2xl bg-[#474084] indent-3 text-white" value={props.description}  readOnly={true} />
         </div>
     )
 }

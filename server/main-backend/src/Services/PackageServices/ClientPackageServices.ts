@@ -202,10 +202,26 @@ const PostReview = async (req: CustomRequest, res: Response) => {
 
         const QueryString = `INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating) VALUES ($1, $2, $3, $4, $5);`;
 
-        const products = await query(connection, QueryString, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating]);
+        const products = await query(connection, QueryString, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating], true);
+        const updatePackageRatingQuery = `
+WITH insert_review AS (
+    INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING PackageToken
+),
+average_rating AS (
+    SELECT AVG(ReviewRating) as rating 
+    FROM reviews 
+    WHERE PackageToken = $3
+)
+UPDATE packages
+SET Rating = ROUND((SELECT rating FROM average_rating))
+WHERE PackageToken = (SELECT PackageToken FROM insert_review);
+`;
+
+        await query(connection, updatePackageRatingQuery, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating]);
 
         return res.status(200).json({
-            packages: products,
             error: false,
         });
     } catch (error: any) {
@@ -240,7 +256,6 @@ const GetPackageReviews = async (req: CustomRequest, res: Response) => {
             reviews: reviwes,
             error: false,
         });
-
     } catch (error: any) {
         connection?.release();
         logging.error('GET_REVIEW_FUNC', error.message);

@@ -14,22 +14,30 @@ const CommentSection = (props: ICommentSection) => {
     const [hasComments, setHasComments] = useState<boolean>(false)
     const [hover, setHover] = useState<boolean>(false)
 
-    const postComment = async () => {
-        const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/post-comment`, { UserPrivateToken: getCookie('userToken'), VideoToken: props.VideoToken, Comment: commentInput })
-
-        if (hasComments == false) {
-            setHasComments(true)
-        }
-
-        // setVideoComments(videoComments => [...videoComments, { ownerToken: props.UserPublicToken!, videoToken: props.VideoToken!, comment: commentInput, ownerName: res.data.userName }])
-    }
-
     const deleteComment = async (CommentID: number) => {
         const res = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/delete-comment`, {
             UserPrivateToken: getCookie('userToken'),
             VideoToken: props.VideoToken,
             CommentID: CommentID
         })
+        // setVideoComments(videoComments.filter((comment) => comment.CommentID !== CommentID))
+    }
+
+    const postComment = async () => {
+        const resp = await axios.post(`${process.env.SERVER_BACKEND}/videos-manager/post-comment`, { UserPrivateToken: getCookie('userToken'), VideoToken: props.VideoToken, Comment: commentInput })
+
+        if (resp.data.error) {
+            return
+        }
+
+        if (hasComments == false) {
+            setHasComments(true)
+        }
+
+        console.log(resp.data)
+
+        setCommentInput('')
+        setVideoComments(videoComments => [...videoComments, { comment: commentInput, ownerName: resp.data.userName,  id: 0, ownerToken: getCookie('userPublicToken') as string, viwerPublicToken: '' }])
     }
 
     useEffect(() => {

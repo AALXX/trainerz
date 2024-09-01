@@ -39,3 +39,65 @@
 [2024-08-29T14:32:06.768Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-29T14:46:06.799Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
 [2024-08-29T14:47:17.438Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-29T19:07:57.415Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-29T19:07:57.652Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-29T19:07:57.667Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-29T19:07:57.676Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-29T19:07:57.683Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-29T19:08:28.833Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-29T19:09:30.004Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:26:47.055Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:29:12.016Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:29:59.977Z] [ERROR] [PG_CONNECT] connect ECONNREFUSED 0.0.0.0:5432
+[2024-08-30T15:30:03.984Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:36:31.729Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:50:12.711Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:52:04.168Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:52:56.497Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:53:02.482Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:53:04.733Z] [ERROR] [POST_COMMENT_FUNC] Cannot read properties of undefined (reading '1')
+[2024-08-30T15:53:23.336Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:53:31.449Z] [ERROR] [POST_COMMENT_FUNC] Cannot read properties of undefined (reading '0')
+[2024-08-30T15:53:54.605Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:54:09.576Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:54:15.721Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:54:43.638Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:55:17.197Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T15:56:02.529Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:13:51.906Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:13:58.512Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:14:14.707Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:14:17.892Z] [ERROR] [PG_QUERY_FUNC] unterminated quoted string at or near "');"
+[2024-08-30T16:14:17.892Z] [ERROR] [POST_COMMENT_FUNC] unterminated quoted string at or near "');"
+[2024-08-30T16:14:30.105Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:14:32.264Z] [ERROR] [PG_QUERY_FUNC] column "publictoken" does not exist
+[2024-08-30T16:14:32.265Z] [ERROR] [POST_COMMENT_FUNC] column "publictoken" does not exist
+[2024-08-30T16:15:17.760Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:16:01.998Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:17:16.015Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:17:33.290Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T16:17:58.815Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:02:47.233Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:04:18.484Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:06:09.384Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:06:18.783Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:06:25.807Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:07:36.462Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:08:08.524Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:08:17.446Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:08:38.318Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:09:05.913Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:10:07.026Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:11:16.639Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:11:48.422Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:13:00.990Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:13:20.702Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:13:27.059Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:13:40.622Z] [ERROR] [PG_QUERY_FUNC] column "userpublictoken" of relation "reviews" does not exist
+[2024-08-30T18:13:40.623Z] [ERROR] [CHECKOUT_PACKAGE] column "userpublictoken" of relation "reviews" does not exist
+[2024-08-30T18:14:29.699Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:15:47.782Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:16:00.005Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:16:22.868Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-08-30T18:16:39.689Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-01T17:16:46.867Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070

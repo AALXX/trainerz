@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# Copy the .env file to the container
+COPY .env .env
+
+# Set environment variables from the .env file using a shell command
+RUN export $(grep -v '^#' .env | xargs)
+
 # Expose the port Next.js will run on
 EXPOSE 3000
 

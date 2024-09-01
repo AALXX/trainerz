@@ -26,4 +26,6 @@ router.get('/get-subscribed-packages/:userPrivateToken', param('userPrivateToken
 router.post('/post-review', body('userPrivateToken').not().isEmpty(), body('packageToken').not().isEmpty(), body('reviewText').not().isEmpty(), body('rating').not().isEmpty(), ClientPackageServices.PostReview);
 
 router.get('/get-package-reviews/:packageToken', param('packageToken').not().isEmpty(), ClientPackageServices.GetPackageReviews);
+
 export = router;
+ 
