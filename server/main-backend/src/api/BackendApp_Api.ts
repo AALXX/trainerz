@@ -6,7 +6,8 @@ import UserAccountManagerRoutes from '../routes/UserAccountManager/UserAccountMa
 import VideosManagerRoutes from '../routes/VideosManager/VideosManagerRoutes';
 import PackageManagerRoutes from '../routes/PackageRoutes/PackageRoutes';
 import PaymentManagerRoutes from '../routes/PaymentRoutes/PaymentRoutes';
-import WorkputProgramsManagerRoutes from '../routes/WorkoutProgramsManagerRoutes/WorkoutProgramsManagerRoutes';
+import WorkputProgramsManagerRoutes from '../routes/WorkoutProgramsManager/WorkoutProgramsManagerRoutes';
+import RecommandationManagerRoutes from '../routes/RecommandationManager/RecommandationManagerRoutes';
 
 //* Configs
 import config from '../config/config';
@@ -43,6 +44,7 @@ router.use('/api/videos-manager/', VideosManagerRoutes);
 router.use('/api/programs-manager/', WorkputProgramsManagerRoutes);
 router.use('/api/package-manager/', PackageManagerRoutes);
 router.use('/api/payment-manager/', PaymentManagerRoutes);
+router.use('/api/recomandation-manager/', RecommandationManagerRoutes);;
 
 //* Error Handleling
 router.use((req: any, res: any, next: NextFunction) => {
