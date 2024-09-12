@@ -115,12 +115,12 @@ func AddToIndex(c *gin.Context, db *sql.DB, index bleve.Index) {
 	}
 
 	var UserPublicToken = lib.GetPublicTokenByPrivateToken(user.UserPrivateToken, db)
-	var rating = lib.GetAccountRating(UserPublicToken, db)
+	// var rating = lib.GetAccountRating(UserPublicToken, db)
 
 	newUser := models.User{
 		UserName:        user.UserName,
 		UserPublicToken: UserPublicToken,
-		Rating:          rating,
+		Rating:          0,
 		Sport:           user.Sport,
 		AccountType:     user.AccountType,
 	}

@@ -28,8 +28,7 @@ const Account = () => {
         uservisibility: '',
         accounttype: '',
         userpublictoken: '',
-        rating: 0,
-        accountfolowers: 0
+        rating: 0
     })
 
     const getProfileData = async (userToken: CookieValueTypes) => {
@@ -60,24 +59,22 @@ const Account = () => {
             {isLoggedIn ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
-                            <TrainerTemplate
-                                accountfolowers={userData.accountfolowers}
-                                accounttype={userData.accounttype}
-                                birthDate={userData.birthDate}
-                                description={userData.description}
-                                locationlat={userData.locationlat}
-                                locationlon={userData.locationlon}
-                                sport={userData.sport}
-                                phonenumber={userData.phonenumber}
-                                useremail={userData.useremail}
-                                username={userData.username}
-                                userpublictoken={getCookie('userPublicToken') as string}
-                                uservisibility={userData.uservisibility}
-                                rating={userData.rating}
-                            />
+                        <TrainerTemplate
+                            accounttype={userData.accounttype}
+                            birthDate={userData.birthDate}
+                            description={userData.description}
+                            locationlat={userData.locationlat}
+                            locationlon={userData.locationlon}
+                            sport={userData.sport}
+                            phonenumber={userData.phonenumber}
+                            useremail={userData.useremail}
+                            username={userData.username}
+                            userpublictoken={getCookie('userPublicToken') as string}
+                            uservisibility={userData.uservisibility}
+                            rating={userData.rating}
+                        />
                     ) : (
                         <SportsPersonTemplate
-                            accountfolowers={0}
                             accounttype={userData.accounttype}
                             birthDate={userData.birthDate}
                             description={userData.description}

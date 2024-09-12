@@ -12,7 +12,8 @@ import { Elements } from '@stripe/react-stripe-js'
 import axios from 'axios'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const PackageView = () => {
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
@@ -20,6 +21,8 @@ const PackageView = () => {
     const urlParams = useSearchParams() //* t =  search query
     const [checkoutPoUp, setCheckoutPoUp] = useState<boolean>(false)
     const [photos, setPhotos] = useState<string[]>([])
+
+    const router = useRouter()
 
     const [basicTierData, setBasicTierData] = useState<IPackageData>({
         acces_videos: false,
@@ -52,16 +55,25 @@ const PackageView = () => {
     })
 
     const [packageName, setPackageName] = useState<string>('')
-    const [ownerToken, setOwnerToken] = useState<string>('')
     const [rating, setRating] = useState<number>(0)
     const [sport, setSport] = useState<string>('')
     const [selectedPriceId, setSelectedPriceId] = useState<string>('')
+
+    const [found, setFound] = useState<boolean>(false)
 
     useEffect(() => {
         ;(async () => {
             await checkStatus()
 
             const { data } = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-package-data/${urlParams.get('t') as string}`)
+
+            if (data.packageData == null) {
+                // router.push('/ss')
+                setFound(false)
+                return
+            }
+            setFound(true)
+
             const newPhotos = Array.from({ length: data.photosNumber }, (_, i) => `${process.env.FILE_SERVER}/${data.ownerToken}/Package_${urlParams.get('t') as string}/Photo_${i + 1}.jpg?cache=none`)
 
             setPhotos(newPhotos)
@@ -72,7 +84,6 @@ const PackageView = () => {
             setSelectedPriceId(data.basicTier.priceId)
 
             setRating(data.rating)
-            setOwnerToken(data.ownerToken)
             setPackageName(data.packageName)
             setSport(data.sport)
         })()
@@ -121,9 +132,17 @@ const PackageView = () => {
         }
     }
 
+    if (!found) {
+        return (
+            <div className="flex h-screen flex-col">
+                <h1 className="text-white self-center mt-5">Package not found</h1>
+            </div>
+        )
+    }
+
     return (
-        <div className="flex h-full flex-col self-center w-full">
-            <div className="m-auto flex lg:h-[30rem] lg:w-[60rem] xl:h-[40rem] xl:w-[85%] 3xl:h-[50rem] 3xl:w-[80rem] ">
+        <div className="flex h-full w-full flex-col self-center">
+            <div className="m-auto flex lg:h-[30rem] lg:w-[60rem] xl:h-[40rem] xl:w-[85%] 3xl:h-[50rem] 3xl:w-[80rem]">
                 <div className="flex flex-col rounded-2xl bg-[#0000005e] lg:w-[29rem] xl:w-[39rem] 2xl:w-[49rem]">
                     <div className="flex w-full items-center justify-center xl:h-16 3xl:h-24">
                         <h1 className="text-lg text-white">{packageName}</h1>

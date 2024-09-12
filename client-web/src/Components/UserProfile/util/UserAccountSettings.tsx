@@ -64,8 +64,8 @@ const AccountSettingsPopup = (props: IAccoutSettingsPopup) => {
     }
 
     return (
-        <div className="flex w-full flex-col items-center space-y-6 px-4 py-6">
-            <form className="flex w-full max-w-3xl flex-col items-center space-y-6" onSubmit={changeUserData}>
+        <div className="flex w-full flex-col items-center space-y-6 px-4 py-6 ">
+            <form className="flex w-full max-w-3xl flex-col items-center space-y-6 " onSubmit={changeUserData}>
                 <h1 className="text-xl text-white">SETTINGS</h1>
                 <hr className="w-full border-gray-500" />
                 <div className="flex w-full flex-col space-y-6">

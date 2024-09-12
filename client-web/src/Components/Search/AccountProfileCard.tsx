@@ -13,19 +13,15 @@ const AccountProfileCardTemplate = (props: IAccountProfileTemplate) => {
                     <div className="ml-4 flex h-full w-full flex-col">
                         <div className="flex">
                             <TruncatedText className="text-white" characters={20} text={props.UserName} />
-                            <h1 className="ml-auto text-white">{props.Rating} / 5</h1>
+                            <h1 className="ml-auto text-white self-center">{props.Rating}/5</h1>
+                            <img src="/assets/AccountIcons/Star_icon.svg" className='self-center' width={25} height={25} alt="Star Icon" />
                         </div>
                         <hr />
                         <h1 className="text-white">{props.Sport} Coach</h1>
                     </div>
                 </div>
-                <div className="mt-4  h-[50%]">
-                    <textarea
-                        className="mt-2 indent-3 resize-none rounded-xl bg-[#474084] text-white w-full h-full cursor-pointer"
-                        placeholder="Description"
-                        value={props.AccountDescription}
-                        readOnly={true}
-                    />
+                <div className="mt-4 h-[50%]">
+                    <textarea className="mt-2 h-full w-full cursor-pointer resize-none rounded-xl bg-[#474084] indent-3 text-white" placeholder="Description" value={props.AccountDescription} readOnly={true} />
                 </div>
             </div>
         </Link>

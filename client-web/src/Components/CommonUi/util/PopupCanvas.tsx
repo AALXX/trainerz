@@ -7,12 +7,14 @@ interface IPopupCanvasProps {
 
 const PopupCanvas = (props: IPopupCanvasProps) => {
     return (
-        <div className="fixed bottom-0 left-0 right-0 top-0 z-10 m-auto h-[100%] w-[100%] bg-[#0000005b]">
-            <div className="absolute bottom-[25%] left-[25%] right-[25%] top-[25%] z-10 m-auto flex h-[88vh] 3xl:w-[50vw] flex-col items-center overflow-y-scroll rounded-2xl bg-gradient-to-tr from-[#1E3B80] to-[#784EB9]">
-                <button className="ml-auto mr-[1vw] mt-[1vh] cursor-pointer bg-transparent text-[#ffffff] outline-none" onClick={props.closePopup}>
-                    &#9587;
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative mx-auto h-[90vh] w-[95%] max-w-7xl overflow-y-auto rounded-lg bg-gradient-to-tr from-[#1E3B80] to-[#784EB9] shadow-xl sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 2xl:w-1/2">
+                <button className="absolute right-2 top-2 text-white hover:text-gray-300 focus:outline-none" onClick={props.closePopup} aria-label="Close">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
-                <>{props.children}</>
+                <div className="p-4 sm:p-6 md:p-8">{props.children}</div>
             </div>
         </div>
     )

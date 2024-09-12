@@ -10,18 +10,15 @@ import { RootState } from '@/lib/redux/store'
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [searchInput, setSearchInput] = useState<string>('')
-    // const [accountType, setAccountType] = useState<string>('SportsPerson')
     const accountType = useSelector((state: RootState) => state.account.accountType)
-    
+
     const dispatch = useDispatch()
 
     const postSearch = () => {
-        
         window.location.href = `http://localhost:3000/search/${searchInput}`
     }
 
     useEffect(() => {
-
         const accountType = getCookie('accountType') as 'Trainer' | 'Sportsperson' | null
         if (accountType) {
             dispatch(setAccountType(accountType))
@@ -29,7 +26,7 @@ const NavBar = () => {
     }, [])
 
     return (
-        <div className="bg-navbar-grey flex h-[6rem] w-[100%] flex-grow-0 bg-[#00000082]">
+        <div className="bg-navbar-grey flex h-[6rem] w-[100%] flex-grow-0 items-center justify-between bg-[#00000082] px-4">
             <div className={`fixed left-0 top-0 h-full w-full bg-black transition-opacity duration-500 ease-in-out ${isOpen ? 'opacity-50' : 'pointer-events-none opacity-0'}`}></div>
             <div
                 onMouseOver={() => {
@@ -81,9 +78,8 @@ const NavBar = () => {
                     <button className="h-full w-full rounded-xl border-2 bg-none text-white">MY SUBSCRIPTION</button>
                 </Link>
             </div>
-
             <h1
-                className="z-20 ml-8 cursor-pointer self-center text-white"
+                className="z-20 cursor-pointer text-white"
                 onMouseEnter={() => {
                     setIsOpen(true)
                 }}
@@ -94,24 +90,15 @@ const NavBar = () => {
                 Trainerz
             </h1>
             <form
-                className="ml-[40vw] flex h-full w-[20vw] self-center"
+                className="flex max-w-lg sm:w-[20vw]"
                 onSubmit={e => {
                     e.preventDefault()
-
                     postSearch()
                 }}
             >
-                <input type="search" className="h-9 w-[75%] self-center rounded-xl border-2 bg-transparent indent-3 text-white" placeholder="Search" onChange={e => setSearchInput(e.currentTarget.value)} />
-                {/* <div
-                    className="flex bg-[#373737] ml-3 w-10  h-9 self-center cursor-pointer hover:bg-[#444444]"
-                    onClick={() => {
-                        postSearch()
-                    }}
-                >
-                    <Image className="ml-1 self-center" src="/assets/CommentsIcons/SendComment_icon.svg" width={30} height={30} alt="Send image" />
-                </div> */}
+                <input type="search" className="h-9 w-full rounded-xl border-2 bg-transparent indent-3 text-white" placeholder="Search" onChange={e => setSearchInput(e.currentTarget.value)} />
             </form>
-            <Link className="ml-auto mr-16 self-center" href={'/account'}>
+            <Link href={'/account'}>
                 <ImgWithAuth className="z-10 h-12 w-12 rounded-full" src={`${process.env.FILE_SERVER}/${getCookie('userPublicToken')}/Main_icon.png?cache=none`} alt="Picture of the author" />
             </Link>
         </div>

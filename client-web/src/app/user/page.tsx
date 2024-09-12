@@ -25,7 +25,6 @@ export default function CreatorAccountPage() {
         accounttype: '',
         userpublictoken: '',
         rating: 0,
-        accountfolowers: 0
     })
     const [userFound, setUserFound] = useState<boolean>(false)
     const [userFollwsAccount, setUserFollwsAccount] = useState<boolean>(false)
@@ -46,12 +45,12 @@ export default function CreatorAccountPage() {
     }, [])
 
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col overflow-y-scroll">
+
             {userFound ? (
                 <>
                     {userData.accounttype === 'Trainer' ? (
                         <TrainerTemplate
-                            accountfolowers={userData.accountfolowers}
                             accounttype={userData.accounttype}
                             birthDate={new Date()}
                             description={userData.description}
@@ -67,7 +66,6 @@ export default function CreatorAccountPage() {
                         />
                     ) : (
                         <SportsPersonTemplate
-                            accountfolowers={userData.accountfolowers}
                             accounttype={userData.accounttype}
                             birthDate={new Date()}
                             description={userData.description}

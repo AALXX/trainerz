@@ -4,7 +4,6 @@ export interface IUserPrivateData {
     username: string
     description: string
     birthDate: Date
-    accountfolowers: number
     locationlon: string
     locationlat: string
     sport: string
@@ -19,7 +18,6 @@ export interface IUserPrivateData {
 export interface IUserPublicData {
     username: string
     description: string
-    accountfolowers: number
     sport: string
     useremail: string
     phonenumber: string

@@ -15,6 +15,7 @@ CREATE TABLE users (
     UserPrivateToken VARCHAR(150) NOT NULL,
     UserPublicToken VARCHAR(150) NOT NULL,
     UserVisibility VARCHAR(255) NOT NULL DEFAULT 'public',
+    Rating INT NOT NULL DEFAULT 0,
     JoinDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (UserPrivateToken),
     UNIQUE (UserPublicToken)

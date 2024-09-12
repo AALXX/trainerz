@@ -297,27 +297,22 @@ const GetUserAccountData = async (req: CustomRequest, res: Response) => {
         }
 
         const GetUserDataQueryString = `SELECT 
-            u.UserName, 
-            u.Description, 
-            u.BirthDate, 
-            u.LocationLat, 
-            u.LocationLon, 
-            u.AccountFolowers, 
-            u.Sport, 
-            u.UserEmail, 
-            u.PhoneNumber, 
-            u.UserVisibility, 
-            u.AccountType, 
-            u.UserPublicToken, 
-            r.Rating
+            UserName, 
+            Description, 
+            BirthDate, 
+            LocationLat, 
+            LocationLon, 
+            Sport, 
+            UserEmail, 
+            PhoneNumber, 
+            UserVisibility, 
+            AccountType, 
+            UserPublicToken, 
+            Rating
         FROM 
-            users u
-        LEFT JOIN 
-            ratings r
-        ON 
-            u.UserPublicToken = r.UserToken
+            users 
         WHERE 
-            u.UserPrivateToken = '${req.params.accountPrivateToken}';`;
+            UserPrivateToken = '${req.params.accountPrivateToken}';`;
 
         const data = await query(connection, GetUserDataQueryString);
         if (Object.keys(data).length === 0) {

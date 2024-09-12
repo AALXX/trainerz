@@ -15,9 +15,8 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/joho/godotenv"
-	"golang.org/x/crypto/bcrypt"
 	"github.com/rs/cors"
-
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -89,26 +88,7 @@ func resetCache() {
 	fileCache = make(map[string]cachedFile)
 }
 
-func restrictIP(next http.Handler, allowedIPs []string) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		remoteIP := strings.Split(r.RemoteAddr, ":")[0]
-		// log.Printf("Remote address: %s\n", remoteIP)
 
-		allowed := false
-		for _, ip := range allowedIPs {
-			if remoteIP == ip {
-				allowed = true
-				break
-			}
-		}
-
-		if !allowed {
-			http.Error(w, "Access Denied", http.StatusForbidden)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
-}
 
 func watchFiles(ctx context.Context, dir string) {
 	watcher, err := fsnotify.NewWatcher()
@@ -172,7 +152,6 @@ func main() {
 		log.Fatalf("SERVER_HOST environment variable not set")
 	}
 
-	allowedIPs := strings.Split(os.Getenv("ALLOWED_IPS"), ",")
 	username := os.Getenv("AUTH_USERNAME")
 	password := os.Getenv("AUTH_PASSWORD")
 
@@ -199,26 +178,25 @@ func main() {
 	go watchFiles(ctx, dir)
 
 	fileServer := safeFileServer(dir, db)
-	
+
 	mux := http.NewServeMux()
 	mux.Handle("/", fileServer)
 
-	handler := restrictIP(basicAuth(mux, username, string(hashedPassword)), allowedIPs)
+	handler := basicAuth(mux, username, string(hashedPassword))
 
 	// Create a CORS middleware
 	c := cors.New(cors.Options{
-	    AllowedOrigins: []string{"http://localhost:3000"},  // Be more specific in production
-	    AllowedMethods: []string{"GET", "HEAD", "POST", "OPTIONS"},
-	    AllowedHeaders: []string{"Authorization", "Content-Type"},
-	    AllowCredentials: true,
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "HEAD", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
 	})
 
 	corsHandler := c.Handler(handler)
 
-
 	server := &http.Server{
 		Addr:         serverHost,
-		Handler:      corsHandler,  // Use the CORS-enabled handler
+		Handler:      corsHandler, // Use the CORS-enabled handler
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,

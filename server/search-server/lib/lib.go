@@ -23,7 +23,7 @@ func InitializeIndex() (bleve.Index, error) {
 }
 
 func RetrieveUsersFromDB(db *sql.DB) ([]models.User, error) {
-	rows, err := db.Query("SELECT u.UserName, u.Sport, u.UserPublicToken, u.AccountType, COALESCE(r.Rating, 0) AS Rating, Description FROM users u LEFT JOIN ratings r ON u.UserPublicToken = r.UserToken;")
+	rows, err := db.Query("SELECT UserName, Sport, UserPublicToken, AccountType, Rating, Description FROM users;")
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func GetPublicTokenByPrivateToken(PrivateToken string, db *sql.DB) string {
 	return userPublicToken
 }
 func GetAccountRating(PublicToken string, db *sql.DB) int {
-	rows, err := db.Query("select Rating from ratings WHERE UserToken=?;", PublicToken)
+	rows, err := db.Query("select Rating from users WHERE UserPublicToken=?;", PublicToken)
 	if err != nil {
 		return 0
 	}

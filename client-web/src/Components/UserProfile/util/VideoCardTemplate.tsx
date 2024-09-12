@@ -12,14 +12,14 @@ export const VideoTemplate = (props: IVideoTemplate) => {
 
     if (props.status == 'processing') {
         return (
-            <div className="flex flex-col relative h-0 w-full overflow-hidden bg-[#00000080] pb-[60%] rounded-xl">
+            <div className="flex flex-col h-64 w-full overflow-hidden bg-[#00000080]  rounded-xl">
                 <h1 className="m-auto text-lg text-white"> {props.videotitle} is processing</h1>
             </div>
         )
     }
 
     return (
-        <Link href={`/watch?vt=${props.videotoken}`} className="relative h-[13rem] w-full overflow-hidden ">
+        <Link href={`/watch?vt=${props.videotoken}`} className="relative h-64 w-full overflow-hidden ">
             <div className="absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col rounded-2xl bg-white" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                 <ImgWithAuth src={`${process.env.FILE_SERVER}/${props.ownertoken}/${props.videotoken}/Thumbnail_image.jpg`} className="h-full w-full rounded-2xl object-cover" />
                 {isHovered && (
@@ -31,7 +31,7 @@ export const VideoTemplate = (props: IVideoTemplate) => {
                                 </Link>
                             ) : null}
                         </div>
-                        <div className="flex h-14 items-center justify-between rounded-b-2xl bg-black bg-opacity-60 p-2">
+                        <div className="flex h-14 items-center justify-between rounded-b-2xl bg-black bg-opacity-60 p-4">
                             <div>
                                 <TruncatedText className="text-white" characters={20} text={props.videotitle} />
                                 <hr />

@@ -25,20 +25,18 @@ const Home = async () => {
                     <h1>SEARCH NOT FOUND</h1>
                 </div>
             ) : (
-                <div className="flex h-full flex-col">
-                    <div className="mt-4 grid h-full w-[95%] gap-4 self-center overflow-y-scroll sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="flex h-full flex-col overflow-y-scroll">
+                    <div className="mt-4 grid h-full w-full grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                         {resultList.map((result: IRecommendation, index: number) => (
-                            <>
-                                <PackageCardTemplate
-                                    packagesport={result.packagesport}
-                                    packagetoken={result.packagetoken}
-                                    key={index}
-                                    rating={result.rating}
-                                    packagename={result.packagename}
-                                    isOwner={false}
-                                    ownertoken={result.ownertoken}
-                                />
-                            </>
+                            <PackageCardTemplate
+                                packagesport={result.packagesport}
+                                packagetoken={result.packagetoken}
+                                key={index}
+                                rating={result.rating}
+                                packagename={result.packagename}
+                                isOwner={false}
+                                ownertoken={result.ownertoken}
+                            />
                         ))}
                     </div>
                 </div>

@@ -38,7 +38,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 return (
                     <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
                         {Object.keys(userPackages).length > 0 ? (
-                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div className="mt-4 grid h-full w-full grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                                 {userPackages.map((packageData: IAccountPackages, index: number) => (
                                     <PackageCardTemplate
                                         packagesport={packageData.packagesport}
@@ -61,7 +61,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                 return (
                     <div className="flex w-full flex-col lg:h-[23rem] 3xl:h-[37rem]">
                         {Object.keys(userPackages).length > 0 ? (
-                            <div className="mt-4 grid h-full w-[95%] gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div className="mt-4 grid h-full w-full grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                                 {videosData.map((video: IVideoTemplate, index: number) => (
                                     <VideoTamplate
                                         isOwner={isOwner!}
@@ -114,9 +114,9 @@ const TrainerTemplate = (props: IUserPrivateData) => {
             <div className="mt-[6rem] flex h-full w-full flex-col">
                 {isLoading && <h1 className="self-center text-lg text-white">Loading</h1>}
                 {error && <h1 className="self-center text-lg text-white">Error: {error}</h1>}
-                <div className="flex h-[6rem] w-full flex-grow-0 flex-col">
-                    <div className="flex h-full w-[90%] self-center">
-                        <div className="flex h-32 w-80 self-center">
+                <div className="flex h-[6rem] w-full flex-grow-0 flex-col ">
+                    <div className="flex h-full w-[90%] flex-col self-center sm:flex-row lg:flex-row">
+                        <div className="flex h-32 w-80 flex-col self-center md:flex-row">
                             <div className="relative z-10 h-24 w-40 self-center">
                                 <ImgWithAuth
                                     className="m-auto flex h-24 w-24 self-center rounded-full"
@@ -166,17 +166,17 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                                 <h1 className="mt-1 text-white">{props.sport} coach</h1>
                             </div>
                         </div>
-                        <div className="ml-auto flex h-32 w-72 flex-col self-center rounded-xl bg-[#0000005e]">
+                        <div className="mt-12 flex h-32 w-72 flex-col self-center rounded-xl bg-[#0000005e] sm:ml-auto">
                             <div className="m-auto flex w-full flex-col">
-                                <h1 className="ml-4 self-center text-white">Account Rating</h1>
+                                <h1 className="ml-4 self-center text-lg text-white">Account Rating</h1>
                                 {props.rating == null ? (
                                     <div className="ml-8 flex h-10 self-center">
-                                        <h1 className="self-center text-white">0/5</h1>
+                                        <h1 className="self-center text-lg text-white">0/5</h1>
                                         <img className="w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
                                     </div>
                                 ) : (
                                     <div className="ml-8 flex h-10 self-center">
-                                        <h1 className="self-center text-white">props.rating/5</h1>
+                                        <h1 className="self-center text-lg text-white">{props.rating}/5</h1>
                                         <img className="w-10 self-center text-white" src={`/assets/AccountIcons/Star_Icon.svg`} alt="Picture of the author" />
                                     </div>
                                 )}
@@ -184,7 +184,7 @@ const TrainerTemplate = (props: IUserPrivateData) => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-10 flex flex-grow-0 items-center">
+                <div className="mt-40 flex flex-grow-0 items-center sm:mt-14">
                     <SelectableCards
                         Title="PACKAGES"
                         TabName="PackagesPage"

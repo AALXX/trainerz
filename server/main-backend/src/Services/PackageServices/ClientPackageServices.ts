@@ -186,6 +186,7 @@ const PostReview = async (req: CustomRequest, res: Response) => {
 
     const connection = await connect(req.pool!);
     try {
+        // Get the public token for the user
         const UserPublicToken = await utilFunctions.getUserPublicTokenFromPrivateToken(req.pool!, req.body.userPrivateToken);
         if (!UserPublicToken) {
             connection?.release();
@@ -193,44 +194,50 @@ const PostReview = async (req: CustomRequest, res: Response) => {
         }
 
         if (connection == null) {
-            return res.status(202).json({
-                error: true,
-            });
+            return res.status(202).json({ error: true });
         }
 
+        // Create a new review token
         const ReviewToken = utilFunctions.CreateToken();
 
-        const QueryString = `INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating) VALUES ($1, $2, $3, $4, $5);`;
+        // Insert the review
+        const insertReviewQuery = `
+        INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating)
+        VALUES ($1, $2, $3, $4, $5);
+        `;
+        await query(connection, insertReviewQuery, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating], true);
 
-        const products = await query(connection, QueryString, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating], true);
+        // Update the package rating after inserting the review
         const updatePackageRatingQuery = `
-WITH insert_review AS (
-    INSERT INTO reviews (ReviewToken, OwnerToken, PackageToken, ReviewText, ReviewRating)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING PackageToken
-),
-average_rating AS (
-    SELECT AVG(ReviewRating) as rating 
-    FROM reviews 
-    WHERE PackageToken = $3
-)
-UPDATE packages
-SET Rating = ROUND((SELECT rating FROM average_rating))
-WHERE PackageToken = (SELECT PackageToken FROM insert_review);
-`;
+        WITH average_rating AS (
+            SELECT AVG(ReviewRating) as rating
+            FROM reviews
+            WHERE PackageToken = $1
+        )
+        UPDATE packages
+        SET Rating = ROUND((SELECT rating FROM average_rating))
+        WHERE PackageToken = $1;
+        `;
+        await query(connection, updatePackageRatingQuery, [req.body.packageToken], true);
 
-        await query(connection, updatePackageRatingQuery, [ReviewToken, UserPublicToken, req.body.packageToken, req.body.reviewText, req.body.rating]);
+        // Calculate the new average rating across all packages by the owner
+        const updateAccountRatingQuery = `
+        WITH owner_packages_avg_rating AS (
+            SELECT AVG(p.Rating) as owner_rating
+            FROM packages p
+            WHERE p.OwnerToken = $1
+        )
+        UPDATE users
+        SET Rating = ROUND((SELECT owner_rating FROM owner_packages_avg_rating))
+        WHERE UserPublicToken = $1;
+        `;
+        await query(connection, updateAccountRatingQuery, [UserPublicToken]);
 
-        return res.status(200).json({
-            error: false,
-        });
+        return res.status(200).json({ error: false });
     } catch (error: any) {
         connection?.release();
-        logging.error('CHECKOUT_PACKAGE', error.message);
-        return res.status(500).json({
-            error: true,
-            errmsg: error.message,
-        });
+        logging.error('POST_REVIEW_FUNC', error.message);
+        return res.status(500).json({ error: true, errmsg: error.message });
     }
 };
 

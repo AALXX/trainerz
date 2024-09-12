@@ -196,3 +196,25 @@
 [2024-09-02T19:44:44.816Z] [ERROR] [PG_QUERY_FUNC] syntax error at or near "LIMIT"
 [2024-09-02T19:44:44.817Z] [ERROR] [CHECKOUT_PACKAGE] syntax error at or near "LIMIT"
 [2024-09-02T19:44:58.351Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-03T17:05:16.191Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-03T21:17:42.530Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-04T15:56:00.406Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T18:04:51.434Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:21:47.886Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:23:06.075Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:25:14.059Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:25:23.528Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:31:50.235Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:32:10.024Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:32:36.140Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:32:49.312Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:33:59.113Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:36:36.165Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-05T21:36:36.454Z] [ERROR] [PG_QUERY_FUNC] missing FROM-clause entry for table "u"
+[2024-09-05T21:36:36.455Z] [ERROR] [OwnerAccountServices] missing FROM-clause entry for table "u"
+[2024-09-05T21:36:53.861Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-08T06:42:30.724Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-08T10:35:01.252Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-11T08:04:50.497Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-12T13:16:41.393Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
+[2024-09-12T18:42:53.742Z] [INFO] [BackendApp_Api] Api is runing on: 192.168.72.81:7070
