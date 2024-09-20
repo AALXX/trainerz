@@ -1,19 +1,10 @@
-'use client'
 import Subscriptions from '@/Components/Subscriptions/Subscriptions'
-import { useAccountStatus } from '@/hooks/useAccount'
+import { checkAccountStatus } from '@/hooks/useAccountServerSide'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import React from 'react'
 
-const MySubscripoions = () => {
-    const { isLoggedIn, checkStatus } = useAccountStatus()
-
-    useEffect(() => {
-        (async () => {
-            await checkStatus()
-
-        })()
-    }, [])
+const MySubscripoions = async () => {
+    const { isLoggedIn } = await checkAccountStatus()
 
     return (
         <>

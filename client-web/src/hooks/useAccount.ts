@@ -4,6 +4,7 @@ import { setCookie, getCookie, deleteCookie } from 'cookies-next'
 import { setAccountType } from '@/lib/redux/accountSlice'
 import { useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
+import { cookies } from 'next/headers'
 
 const useAccountRegister = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -150,6 +151,7 @@ const useAccountStatus = () => {
 
     return { isLoggedIn, checkStatus }
 }
+
 
 const useAccountDelete = () => {
     const [isLoading, setIsLoading] = useState(false)

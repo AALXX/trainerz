@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import { IUserPrivateData } from './IAccountProfile'
 import PopupCanvas from '../CommonUi/util/PopupCanvas'
@@ -25,7 +26,7 @@ const SportsPersonTemplate = (props: IUserPrivateData) => {
     useEffect(() => {
         ;(async () => {
             if (getCookie('userToken') !== undefined) {
-                ownerCheck(props.userpublictoken)
+                // ownerCheck(props.userpublictoken)
             }
         })()
     }, [])

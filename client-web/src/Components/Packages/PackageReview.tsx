@@ -33,7 +33,7 @@ const PackageReview = (props: { packageToken: string; isLoggedIn: boolean }) => 
     }, [props.packageToken])
 
     return (
-        <div className="flex h-full w-full flex-col">
+        <div className="flex h-full w-full flex-col ">
             {props.isLoggedIn ? (
                 <form className="flex w-full bg-[#00000071]" onSubmit={postRating}>
                     <input className="h-10 w-full bg-transparent p-4 text-white placeholder:text-white" placeholder="Write a review..." onChange={e => setReviewText(e.target.value)} value={reviewText} />
@@ -44,7 +44,7 @@ const PackageReview = (props: { packageToken: string; isLoggedIn: boolean }) => 
                 </form>
             ) : null}
 
-            <div className="flex h-full flex-col overflow-y-scroll">
+            <div className="flex h-full flex-col overflow-y-scroll ">
                 {reviews.map((review, index) => (
                     <div key={index} className="mt-2 flex flex-col border-b border-gray-600 p-4">
                         <div className="flex w-full">

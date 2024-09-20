@@ -25,6 +25,8 @@ const useVideoSubscriptionCheck = () => {
             const res = await axios.get<SubscriptionCheckResponse>(`${process.env.SERVER_BACKEND}/videos-manager/subscription-check/${VideoToken}/${getCookie('userToken')}`, { cancelToken: source.token })
             clearTimeout(timeout)
             if (res.data.error) {
+                console.log(res.data.error)
+
                 setError('An error occurred during subscription check.')
                 setSubscribed(false)
             } else {

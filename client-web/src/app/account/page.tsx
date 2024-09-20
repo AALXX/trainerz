@@ -1,58 +1,37 @@
-'use client'
-
 import { IUserPrivateData } from '@/Components/UserProfile/IAccountProfile'
 import SportsPersonTemplate from '@/Components/UserProfile/SportsPersonTemplate'
 import TrainerTemplate from '@/Components/UserProfile/TrainerTemplate'
-import { useAccountStatus } from '@/hooks/useAccount'
+import { checkAccountStatus } from '@/hooks/useAccountServerSide'
 import axios from 'axios'
-import { CookieValueTypes, getCookie } from 'cookies-next'
+import { CookieValueTypes } from 'cookies-next'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { redirect } from 'next/navigation'
 
-const Account = () => {
-    const { isLoggedIn, checkStatus } = useAccountStatus()
+export const dynamic = 'force-dynamic'
 
-    const userToken: string = getCookie('userToken') as string
-    const router = useRouter()
+const Account = async () => {
+    const { isLoggedIn, userPrivateToken, userPublicToken } = await checkAccountStatus()
 
-    const [userData, setUserData] = useState<IUserPrivateData>({
-        username: '',
-        description: '',
-        birthDate: new Date(),
-        locationlon: '',
-        locationlat: '',
-        sport: '',
-        useremail: '',
-        phonenumber: '',
-        uservisibility: '',
-        accounttype: '',
-        userpublictoken: '',
-        rating: 0
-    })
+    let userData: IUserPrivateData
 
     const getProfileData = async (userToken: CookieValueTypes) => {
-        const resData = await axios.get(`${process.env.SERVER_BACKEND}/user-account-manager/get-account-data/${userToken}`)
-        if (resData.data.error == true) {
-            router.push('/account/login-register')
-            return console.error('ERROR GET PROFILE DATA FAILED')
+        const resData = await fetch(`${process.env.SERVER_BACKEND}/user-account-manager/get-account-data/${userToken}`, {
+            next: { revalidate: 0 } // This will revalidate the data on every request
+        })
+        if (resData.ok == false) {
+            redirect('/account/login-register')
         }
-        return resData.data
+        return resData.json()
     }
 
-    useEffect(() => {
-        /**
-         * Get user profile Data
-         */
-        ;(async () => {
-            if ((await checkStatus()) == false) {
-                return
-            }
-
-            const profileData = await getProfileData(userToken)
-            setUserData(profileData.userData)
-        })()
-    }, [userToken])
+    try {
+        const profileData = await getProfileData(userPrivateToken)
+        userData = profileData.userData
+    } catch (error) {
+        console.error('Error fetching profile data:', error)
+        redirect('/account/login-register')
+    }
 
     return (
         <div className="flex h-full flex-col overflow-y-scroll">
@@ -69,7 +48,7 @@ const Account = () => {
                             phonenumber={userData.phonenumber}
                             useremail={userData.useremail}
                             username={userData.username}
-                            userpublictoken={getCookie('userPublicToken') as string}
+                            userpublictoken={userPublicToken}
                             uservisibility={userData.uservisibility}
                             rating={userData.rating}
                         />
@@ -84,7 +63,7 @@ const Account = () => {
                             phonenumber={userData.phonenumber}
                             useremail={userData.useremail}
                             username={userData.username}
-                            userpublictoken={getCookie('userPublicToken') as string}
+                            userpublictoken={userPublicToken}
                             uservisibility={userData.uservisibility}
                         />
                     )}

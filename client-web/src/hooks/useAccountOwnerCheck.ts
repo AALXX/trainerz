@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { getCookie } from 'cookies-next'
+import { CookieValueTypes, getCookie } from 'cookies-next'
 
 interface OwnerCheckResponse {
     error: boolean
@@ -12,7 +12,7 @@ const useOwnerCheck = () => {
     const [error, setError] = useState<string | null>(null)
     const [isOwner, setIsOwner] = useState<boolean | null>(null)
 
-    const ownerCheck = async (profilePublicToken: string): Promise<void> => {
+    const ownerCheck = async (profilePublicToken: CookieValueTypes): Promise<void> => {
         setIsLoading(true)
         setError(null)
 

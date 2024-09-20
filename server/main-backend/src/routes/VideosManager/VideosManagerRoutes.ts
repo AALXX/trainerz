@@ -8,7 +8,6 @@ const router = express.Router();
 // *client video related
 router.post('/like-dislike-video/', body('UserPublicToken').not().isEmpty().trim(), body('videoToken').not().isEmpty().trim(), ClientVideoServices.LikeDislikeVideoFunc);
 router.get('/get-video-data/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty(), param('UserPrivateToken').not().isEmpty(), ClientVideoServices.GetVideoDataByToken);
-// router.get('/search-video/:search_query', param('search_query').not().isEmpty(), ClientVideosServices.SearchVideo);
 
 router.get('/subscription-check/:VideoToken/:UserPrivateToken', param('VideoToken').not().isEmpty().trim(), param('UserPrivateToken').not().isEmpty().trim(), ClientVideoServices.SubscribtionCheck);
 
@@ -20,9 +19,7 @@ router.post(
     '/update-creator-video-data',
     body('VideoTitle').not().isEmpty().isLength({ max: 40 }),
     body('VideoVisibility').not().isEmpty(),
-    // body('ShowComments').not().isEmpty(),
     body('PackageToken').not().isEmpty(),
-    // body('ShowLikesDislikes').not().isEmpty(),
     body('VideoToken').not().isEmpty(),
     body('UserPrivateToken').not().isEmpty(),
     OwnerVideoServices.UpdateCreatorVideoData,

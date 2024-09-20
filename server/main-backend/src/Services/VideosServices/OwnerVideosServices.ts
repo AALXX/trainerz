@@ -267,7 +267,7 @@ const GetAccountVideos = async (req: CustomRequest, res: Response) => {
 
         return res.status(200).json({ error: true, errors: errors.array() });
     }
-    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoToken, v.Visibility, v.Views, v.Status, u.UserName as OwnerName, p.PackageSport
+    const GetVideoDataQueryString = `SELECT v.VideoTitle, v.OwnerToken, v.likes, v.dislikes, v.PublishDate, v.VideoToken, v.Visibility, v.Packagetoken, v.Views, v.Status, u.UserName as OwnerName, p.PackageSport
     FROM videos AS v
     JOIN users AS u ON v.OwnerToken = u.UserPublicToken
     LEFT JOIN packages AS p ON v.PackageToken = p.PackageToken

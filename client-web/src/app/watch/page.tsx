@@ -22,7 +22,7 @@ const VideoContent = () => {
 
     if (error) {
         return (
-            <div>
+            <div className="flex h-full">
                 <h1 className="m-auto text-white">Error: {error}</h1>
             </div>
         )

@@ -259,7 +259,7 @@ export default function LoginRegisterScreen() {
     return (
         <div className="flex h-full flex-col justify-center">
             {!registerForm ? (
-                <div className="flex h-[80vh] w-[40%] flex-col self-center rounded-3xl bg-[#0000004d] shadow-xl">
+                <div className="flex h-[60vh] w-[90%] flex-col self-center rounded-3xl bg-[#0000004d] shadow-xl md:h-[80vh] md:w-[60%] xl:w-[40%]">
                     <form
                         className="flex h-[100%] w-[100%] flex-col items-center"
                         onSubmit={async e => {
@@ -267,6 +267,7 @@ export default function LoginRegisterScreen() {
                             const succesfullLogin = await login(loginEmail, loginPassword)
                             if (succesfullLogin) {
                                 router.push('/account')
+                                router.refresh()
                             }
                         }}
                     >
@@ -303,7 +304,8 @@ export default function LoginRegisterScreen() {
                                 e.preventDefault()
                                 const succesfullLogin = await login(loginEmail, loginPassword)
                                 if (succesfullLogin) {
-                                    router.replace('/account')
+                                    router.push('/account')
+                                    router.refresh()
                                 }
                             }}
                         >
@@ -325,7 +327,7 @@ export default function LoginRegisterScreen() {
                     </form>
                 </div>
             ) : (
-                <div className="flex h-[80vh] w-[40%] flex-col self-center rounded-3xl bg-[#0000004d] shadow-xl">
+                <div className="flex h-[60vh] w-[90%] flex-col self-center overflow-y-scroll rounded-3xl bg-[#0000004d] shadow-xl md:h-[80vh] md:w-[60%] xl:w-[40%]">
                     <div className="flex h-[100%] w-[100%] flex-col items-center">
                         <h1 className="mt-[2rem] text-[1.5rem] text-white">Create Account</h1>
                         <h1 className="mt-2 text-[0.7rem] text-white">SignIn and find a new partener/Trainer</h1>

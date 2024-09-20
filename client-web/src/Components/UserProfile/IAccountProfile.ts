@@ -1,3 +1,4 @@
+import { CookieValueTypes } from 'cookies-next'
 import { Dispatch, SetStateAction } from 'react'
 
 export interface IUserPrivateData {
@@ -11,7 +12,7 @@ export interface IUserPrivateData {
     phonenumber: string
     uservisibility: string
     accounttype: string
-    userpublictoken: string
+    userpublictoken: CookieValueTypes
     rating?: number
 }
 
@@ -47,10 +48,17 @@ export interface IVideoTemplate {
     ownertoken: string
     packagesport: string
     videotitle: string
+    packagetoken: string
     publishdate: Date
     likes: number
     dislikes: number
     visibility: string
     isOwner: boolean
     status: string
+}
+
+export interface VideoListProps {
+    userPackages: Array<{ packagename: string; packagetoken: string }>
+    videosData: IVideoTemplate[]
+    isOwner: boolean
 }

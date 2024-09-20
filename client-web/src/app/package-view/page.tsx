@@ -18,11 +18,10 @@ import { useRouter } from 'next/navigation'
 const PackageView = () => {
     const [componentToShow, setComponentToShow] = useState<string>('Basic')
     const { isLoggedIn, checkStatus } = useAccountStatus()
-    const urlParams = useSearchParams() //* t =  search query
+    const urlParams = useSearchParams()
     const [checkoutPoUp, setCheckoutPoUp] = useState<boolean>(false)
     const [photos, setPhotos] = useState<string[]>([])
 
-    const router = useRouter()
 
     const [basicTierData, setBasicTierData] = useState<IPackageData>({
         acces_videos: false,
@@ -66,9 +65,7 @@ const PackageView = () => {
             await checkStatus()
 
             const { data } = await axios.get(`${process.env.SERVER_BACKEND}/package-manager/get-package-data/${urlParams.get('t') as string}`)
-
-            if (data.packageData == null) {
-                // router.push('/ss')
+            if (data == null) {
                 setFound(false)
                 return
             }
@@ -135,23 +132,23 @@ const PackageView = () => {
     if (!found) {
         return (
             <div className="flex h-screen flex-col">
-                <h1 className="text-white self-center mt-5">Package not found</h1>
+                <h1 className="mt-5 self-center text-white">Package not found</h1>
             </div>
         )
     }
 
     return (
-        <div className="flex h-full w-full flex-col self-center">
-            <div className="m-auto flex lg:h-[30rem] lg:w-[60rem] xl:h-[40rem] xl:w-[85%] 3xl:h-[50rem] 3xl:w-[80rem]">
-                <div className="flex flex-col rounded-2xl bg-[#0000005e] lg:w-[29rem] xl:w-[39rem] 2xl:w-[49rem]">
-                    <div className="flex w-full items-center justify-center xl:h-16 3xl:h-24">
-                        <h1 className="text-lg text-white">{packageName}</h1>
+        <div className="flex h-full w-full flex-col self-center p-4 overflow-y-scroll lg:overflow-y-hidden">
+            <div className="m-auto flex w-full max-w-7xl flex-col lg:flex-row">
+                <div className="mb-4 flex w-full flex-col rounded-2xl bg-[#0000005e] h-[40rem] sm:h-[30rem] lg:mb-0 lg:mr-4 lg:h-[40rem] 3xl:h-[50rem]">
+                    <div className="flex h-16 w-full flex-grow-0 items-center justify-center">
+                        <h1 className="text-lg text-white md:text-xl lg:text-2xl">{packageName}</h1>
                     </div>
                     <hr className="w-full border-gray-400" />
-                    <div className="flex w-full flex-col p-5">
+                    <div className="flex w-full flex-col p-4">
                         <PhotoViewer images={photos} />
                     </div>
-                    <div className="flex h-[10rem] flex-col">
+                    <div className="flex h-[40%] lg:h-[20%] 3xl:h-[25%] flex-col">
                         <div className="flex items-center justify-between px-4 py-2">
                             <h1 className="text-lg text-white">Sport: {sport}</h1>
                             <h1 className="text-lg text-white">Rating: {rating}/5</h1>
@@ -161,13 +158,13 @@ const PackageView = () => {
                     </div>
                 </div>
 
-                <div className="ml-auto flex flex-col rounded-2xl bg-[#0000005e] lg:w-[20rem] xl:w-[25rem] 2xl:w-[30rem]">
-                    <div className="mt-12 flex justify-around">
+                <div className="flex w-full flex-col rounded-2xl bg-[#0000005e] lg:h-[40rem] lg:w-1/2 3xl:h-[50rem]">
+                    <div className="mt-4 flex flex-wrap justify-around lg:mt-12">
                         <SelectableCards
                             Title="BASIC"
                             TabName="Basic"
                             setComponentToShow={setComponentToShow}
-                            className="ml h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            className="mb-2 h-[3rem] w-[30%] cursor-pointer justify-center rounded-t-xl bg-[#0000003d] lg:mb-0 "
                             onClick={() => setSelectedPriceId(basicTierData.priceId)}
                             activeTab={componentToShow}
                         />
@@ -175,7 +172,7 @@ const PackageView = () => {
                             Title="STANDARD"
                             TabName="Standard"
                             setComponentToShow={setComponentToShow}
-                            className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            className="mb-2 h-[3rem] w-[30%] cursor-pointer justify-center rounded-t-xl bg-[#0000003d] lg:mb-0"
                             onClick={() => setSelectedPriceId(standardTierData.priceId)}
                             activeTab={componentToShow}
                         />
@@ -183,7 +180,7 @@ const PackageView = () => {
                             Title="PREMIUM"
                             TabName="Premium"
                             setComponentToShow={setComponentToShow}
-                            className="h-[3rem] w-[9rem] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
+                            className="h-[3rem] w-[30%] cursor-pointer justify-center rounded-t-xl bg-[#0000003d]"
                             onClick={() => setSelectedPriceId(premiumTierData.priceId)}
                             activeTab={componentToShow}
                         />

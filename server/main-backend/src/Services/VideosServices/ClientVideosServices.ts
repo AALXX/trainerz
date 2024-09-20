@@ -215,7 +215,8 @@ const SubscribtionCheck = async (req: CustomRequest, res: Response) => {
         if (UserPublicToken == null) {
             connection!.release();
             return res.status(200).json({
-                error: true,
+                error: false,
+                subscribed: false,
             });
         }
 
